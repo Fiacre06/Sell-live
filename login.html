@@ -68,149 +68,157 @@ main p { font-size:1.1em; line-height:1.6; color:#333; }
   <div class="error" id="errorMsg"></div>
 </div>
 
-<script type="module">
+  <script type="module">
 import { supabase } from './supabase.js';
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
 
-const sidebar = document.getElementById('sidebar');
-const closeSidebar = document.getElementById('closeSidebar');
-const loginBtn = document.getElementById('loginBtn');
-const signupBtn = document.getElementById('signupBtn');
+  /* ================= ELEMENTS ================= */
+  const sidebar = document.getElementById('sidebar');
+  const closeSidebar = document.getElementById('closeSidebar');
+  const loginBtn = document.getElementById('loginBtn');
+  const signupBtn = document.getElementById('signupBtn');
 
-const formTitle = document.getElementById('formTitle');
-const actionBtn = document.getElementById('actionBtn');
-const errorMsg = document.getElementById('errorMsg');
-const usernameInput = document.getElementById('username');
-const emailInput = document.getElementById('email');
-const passwordInput = document.getElementById('password');
-const togglePass = document.getElementById('togglePass');
+  const formTitle = document.getElementById('formTitle');
+  const actionBtn = document.getElementById('actionBtn');
+  const errorMsg = document.getElementById('errorMsg');
+  const usernameInput = document.getElementById('username');
+  const emailInput = document.getElementById('email');
+  const passwordInput = document.getElementById('password');
+  const togglePass = document.getElementById('togglePass');
 
-let isLogin = true;
+  let isLogin = true;
 
-/* ================= UI ================= */
-loginBtn.onclick = () => {
-  isLogin = true;
-  sidebar.classList.add('open');
-  usernameInput.style.display = 'none';
-  formTitle.textContent = "Connexion";
-  actionBtn.textContent = "Se connecter";
-  errorMsg.textContent = "";
-};
+  /* ================= UI ================= */
+  loginBtn.onclick = () => {
+    isLogin = true;
+    sidebar.classList.add('open');
+    usernameInput.style.display = 'none';
+    formTitle.textContent = "Connexion";
+    actionBtn.textContent = "Se connecter";
+    errorMsg.textContent = "";
+  };
 
-signupBtn.onclick = () => {
-  isLogin = false;
-  sidebar.classList.add('open');
-  usernameInput.style.display = 'block';
-  formTitle.textContent = "Inscription";
-  actionBtn.textContent = "S'inscrire";
-  errorMsg.textContent = "";
-};
+  signupBtn.onclick = () => {
+    isLogin = false;
+    sidebar.classList.add('open');
+    usernameInput.style.display = 'block';
+    formTitle.textContent = "Inscription";
+    actionBtn.textContent = "S'inscrire";
+    errorMsg.textContent = "";
+  };
 
-closeSidebar.onclick = () => {
-  sidebar.classList.remove('open');
-  emailInput.value = "";
-  passwordInput.value = "";
-  usernameInput.value = "";
-  errorMsg.textContent = "";
-};
+  closeSidebar.onclick = () => {
+    sidebar.classList.remove('open');
+    emailInput.value = "";
+    passwordInput.value = "";
+    usernameInput.value = "";
+    errorMsg.textContent = "";
+  };
 
-togglePass.onclick = () => {
-  passwordInput.type =
-    passwordInput.type === "password" ? "text" : "password";
-};
+  togglePass.onclick = () => {
+    passwordInput.type =
+      passwordInput.type === "password" ? "text" : "password";
+  };
 
-/* ================= AUTH ================= */
-actionBtn.onclick = async () => {
-  errorMsg.textContent = "";
+  /* ================= AUTH ================= */
+  actionBtn.onclick = async () => {
+    errorMsg.textContent = "";
 
-  const email = emailInput.value.trim();
-  const password = passwordInput.value.trim();
-  const username = usernameInput.value.trim();
+    const email = emailInput.value.trim();
+    const password = passwordInput.value.trim();
+    const username = usernameInput.value.trim();
 
-  if (!email || !password || (!isLogin && !username)) {
-    errorMsg.textContent = "Remplis tous les champs";
-    return;
-  }
-
-  /* ===== LOGIN ===== */
-  if (isLogin) {
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password
-    });
-
-    if (error) {
-      errorMsg.textContent = error.message;
+    if (!email || !password || (!isLogin && !username)) {
+      errorMsg.textContent = "Remplis tous les champs";
       return;
     }
 
-    window.location.href = "index.html";
-    return;
-  }
+    /* ===== LOGIN ===== */
+    if (isLogin) {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password
+      });
 
-  /* ===== SIGNUP ===== */
-  const { error: signUpError } = await supabase.auth.signUp({
-  email,
-  password,
-  options: {
-    data: { username },
+      if (error) {
+        errorMsg.textContent = error.message;
+        return;
+      }
 
-    // 🔥 REDIRECTION APRÈS CONFIRMATION EMAIL
-    emailRedirectTo: "https://fiacre06.github.io/Sell-live/login.html"
-  }
-});
+      // 🔒 sécurité : empêcher login sans email confirmé
+      if (!data.user.email_confirmed_at) {
+        errorMsg.textContent = "⚠️ Confirme ton email avant de te connecter";
+        await supabase.auth.signOut();
+        return;
+      }
 
-  if (signUpError) {
-    errorMsg.textContent = signUpError.message;
-    return;
-  }
+      window.location.href = "index.html";
+      return;
+    }
 
-  alert("✅ Inscription réussie 🎉 Un email de confirmation vient de vous être envoyé.Veuillez cliquer sur le lien dans votre boîte mail pour activer votre compte.");
-  sidebar.classList.remove('open');
-};
+    /* ===== SIGNUP ===== */
+    const { error: signUpError } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: { username },
 
-  // 🔄 Vérifier session après confirmation email
-const { data: sessionData } = await supabase.auth.getSession();
+        // 🔥 REDIRECTION APRÈS CONFIRMATION EMAIL (OBLIGATOIRE)
+        emailRedirectTo: "https://fiacre06.github.io/Sell-live/login.html"
+      }
+    });
 
-if (sessionData.session) {
-  console.log("✅ Email confirmé avec succès");
-}
+    if (signUpError) {
+      errorMsg.textContent = signUpError.message;
+      return;
+    }
+
+    alert(
+      "✅ Inscription réussie 🎉\n\n" +
+      "Un email de confirmation t'a été envoyé.\n" +
+      "Clique sur le lien dans ton email pour activer ton compte."
+    );
+
+    sidebar.classList.remove('open');
+  };
+
+  /* ================= SESSION CHECK (POST CONFIRM) ================= */
+  const { data: sessionData } = await supabase.auth.getSession();
 
   if (sessionData.session) {
-  window.location.href = "index.html";
+    console.log("✅ Session active après confirmation email");
   }
-/* ================= PROFILE AUTO CREATE ================= */
-supabase.auth.onAuthStateChange(async (event, session) => {
-  if (event !== "SIGNED_IN" || !session?.user) return;
 
-  const user = session.user;
+  /* ================= PROFILE AUTO CREATE ================= */
+  supabase.auth.onAuthStateChange(async (event, session) => {
+    if (event !== "SIGNED_IN" || !session?.user) return;
 
-  // Vérifier si le profil existe déjà
-  const { data: existingProfile } = await supabase
-    .from("profiles")
-    .select("id")
-    .eq("id", user.id)
-    .single();
+    const user = session.user;
 
-  if (existingProfile) return;
+    const { data: existingProfile } = await supabase
+      .from("profiles")
+      .select("id")
+      .eq("id", user.id)
+      .maybeSingle();
 
-  // Créer le profil
-  const { error } = await supabase.from("profiles").insert({
-    id: user.id,
-    email: user.email,
-    username: user.user_metadata?.username || "user",
-    is_acheteur: true,
-    is_vendeur: true,
-    is_premium: false
+    if (existingProfile) return;
+
+    const { error } = await supabase.from("profiles").insert({
+      id: user.id,
+      email: user.email,
+      username: user.user_metadata?.username || "user",
+      is_acheteur: true,
+      is_vendeur: true,
+      is_premium: false
+    });
+
+    if (error) {
+      console.error("❌ Erreur création profil :", error);
+    }
   });
 
-  if (error) {
-    console.error("Impossible de créer le profil :", error);
-  }
 });
-
-});
-</script>
+  </script>
 </body>
 </html>
