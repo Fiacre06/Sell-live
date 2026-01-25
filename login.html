@@ -151,12 +151,15 @@ actionBtn.onclick = async () => {
 
   /* ===== SIGNUP ===== */
   const { error: signUpError } = await supabase.auth.signUp({
-    email,
-    password,
-    options: {
-      data: { username }
-    }
-  });
+  email,
+  password,
+  options: {
+    data: { username },
+
+    // 🔥 REDIRECTION APRÈS CONFIRMATION EMAIL
+    emailRedirectTo: "https://fiacre06.github.io/Sell-live/login.html"
+  }
+});
 
   if (signUpError) {
     errorMsg.textContent = signUpError.message;
@@ -167,6 +170,16 @@ actionBtn.onclick = async () => {
   sidebar.classList.remove('open');
 };
 
+  // 🔄 Vérifier session après confirmation email
+const { data: sessionData } = await supabase.auth.getSession();
+
+if (sessionData.session) {
+  console.log("✅ Email confirmé avec succès");
+}
+
+  if (sessionData.session) {
+  window.location.href = "index.html";
+  }
 /* ================= PROFILE AUTO CREATE ================= */
 supabase.auth.onAuthStateChange(async (event, session) => {
   if (event !== "SIGNED_IN" || !session?.user) return;
