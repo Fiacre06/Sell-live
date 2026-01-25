@@ -1,0 +1,3361 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Boutique en ligne – Marché-Agricole</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+/* ===== GLOBAL ===== */
+body {
+  margin: 0;
+  padding: 0 15px 15px 15px;
+  font-family: Arial, sans-serif;
+  background: #f2f7f4;
+  overflow-x: hidden;
+}
+
+/* ===== HEADER ===== */
+header.topbar {
+  background: #2e8b57;
+  color: white;
+  padding: 15px 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+header.topbar span#userEmail {
+  font-weight: bold;
+  display: block;
+}
+
+header.topbar .top-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+header.topbar .top-actions button {
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 25px;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-weight: 600;
+}
+#userEmail{font-size:14px; margin-bottom: 8px;background:rgba(255,255,255,0.2);padding:10px 10px;border-radius:20px; height:25px;}
+/* SEARCH BAR */
+.search-bar{max-width:950px;margin:10px auto 20px;}
+#searchInput{width:80%;padding:14px 18px;border-radius:30px;border:1px solid #cbd5e1;font-size:15px;outline:none;box-shadow:0 4px 12px rgba(0,0,0,0.05);}
+#searchInput:focus{border-color:#2e8b57;box-shadow:0 4px 18px rgba(46,139,87,0.3);}
+
+/* ===== BOUTIQUES : 2 PAR LIGNE + SCROLL VERTICAL ===== */
+.shops-container{
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 2 boutiques par ligne */
+  gap: 15px;
+  padding: 10px 15px;
+
+  max-height: calc(100vh - 220px); /* scroll vertical */
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+/* Scrollbar vertical */
+.shops-container::-webkit-scrollbar{
+  width: 8px;
+}
+.shops-container::-webkit-scrollbar-thumb{
+  background: #2e8b57;
+  border-radius: 4px;
+}
+
+/* Carte boutique */
+.shopCard{
+  width: 100%;
+  height: auto;
+  min-height: 280px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 5px;
+  margin-right:20px;
+  background: white;
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.shopCard:hover{
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+}
+
+.shopCard img{
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 5px;
+}
+.shopCard h4{margin-bottom:4px;}
+.shopCard small{color:#555;}
+.shopCard button{margin-top:8px;padding:6px 12px;border:none;border-radius:8px;background:#3b82f6;color:white;cursor:pointer;}
+
+/* MODAL BOUTIQUE */
+#shopViewModal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);justify-content:center;align-items:center;z-index:1000;}
+#shopViewContent{background:white;padding:20px;border-radius:10px;width:90%;max-width:600px;height:95%;overflow-y:auto;position:relative;}
+#closeShopView{position:absolute;top:10px;right:15px;cursor:pointer;font-size:20px;}
+#shopProductsScroll{display:flex;gap:10px;overflow-x:auto;margin:15px 0;}
+#shopProductsScroll::-webkit-scrollbar{height:6px;}
+#shopProductsScroll::-webkit-scrollbar-thumb{background:#2e8b57;border-radius:3px;}
+
+.productCard {
+  background: #fff;
+  border-radius: 10px;
+  padding: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  transition: transform 0.2s;
+}
+
+.productCard:hover {
+  transform: scale(1.03);
+}
+
+.productCard img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
+
+.productCard h5 {
+  margin: 5px 0;
+  font-size: 1em;
+  color: #333;
+}
+
+.productCard p {
+  margin: 0;
+  font-weight: bold;
+  color: #007bff;
+}
+  #contactShopBtn{background:#2e8b57; border-radius:10px; color:white; height:30px; width:200px;font-size:15px; cursor:pointer;}
+
+/* CHAT ET MESSAGERIE (inchangés) */
+.chat-container{position:fixed;top:0;right:-380px;width:360px;height:100%;background:white;border-left:4px solid #2e8b57;transition:0.3s;z-index:1001;display:flex;flex-direction:column;}
+.chat-container.open{right:0;}
+.chat-header{background:#2e8b57;color:white;padding:15px;display:flex;justify-content:space-between;align-items:center;}
+.chat-header button{background:none;border:none;color:white;font-size:20px;cursor:pointer;}
+.messages-list{flex:1;padding:10px;overflow-y:auto;display:flex;flex-direction:column;gap:10px;}
+.message{max-width:75%;padding:10px 14px;border-radius:18px;}
+.message.from{background:#ecf0f1;}
+.message.to{background:#2e8b57;color:white;align-self:flex-end;}
+.input-area{display:flex;flex-direction:column;gap:8px;padding:10px;border-top:1px solid #ccc;}
+#chatInputContainer{display:flex;flex-direction:column;gap:8px;}
+#messageInput{flex:1;padding:10px;border-radius:25px;border:1px solid #ccc;font-size:14px;}
+#mediaPreview img,#mediaPreview video,#mediaPreview audio{max-width:120px;border-radius:8px;margin-bottom:8px;}
+.btn-send,.btn-file,.btn-audio{border:none;color:white;border-radius:50%;width:44px;height:44px;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.btn-send{background:linear-gradient(135deg,#3b82f6,#2563eb);}
+.btn-file{background:linear-gradient(135deg,#10b981,#047857);}
+.btn-audio{background:linear-gradient(135deg,#f59e0b,#b45309);}
+.btn-send:hover,.btn-file:hover,.btn-audio:hover{transform:scale(1.1);box-shadow:0 6px 16px rgba(0,0,0,0.3);}
+#discussionsPanel{position:fixed;top:0;right:-400px;width:360px;height:100%;background:#fff;box-shadow:-4px 0 12px rgba(0,0,0,0.2);transition:right 0.3s ease;z-index:1000;display:flex;flex-direction:column;}
+.messagerie-header{display:flex;justify-content:space-between;align-items:center;padding:12px;background:#2e8b57;color:white;}
+.messagerie-header .close-btn{cursor:pointer;font-size:18px;}
+.tabs button{flex:1;padding:20px;background:#e5e7eb;border:none;cursor:pointer;font-size:22px;}
+#tabVente{width:175px;height:50px;}
+#tabAchat{width:175px;height:50px;}
+.tabs button.active{background:#2e8b57;color:white;height:50px;width:170px;}
+.discussion-item{padding:12px;margin:15px;border-radius:10px;background:#f9f9f9;cursor:pointer;}
+
+  .message {
+  position: relative;
+  padding: 10px 14px;
+  border-radius: 18px;
+  max-width: 75%;
+  word-wrap: break-word;
+}
+
+.message.from {
+  background: #ecf0f1;
+  align-self: flex-start;
+}
+
+.message.to {
+  background: #2e8b57;
+  color: white;
+  align-self: flex-end;
+}
+
+.message-actions {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.message.from .message-actions {
+  right: -36px;
+}
+
+.message.to .message-actions {
+  left: -36px;
+}
+
+.message:hover .message-actions {
+  opacity: 1;
+}
+
+.delete-btn {
+  background: #f3f4f6;
+  border: none;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+.delete-btn:hover {
+  background: #fee2e2;
+}
+#logoutBtn{background: #c0392b;}
+  #sellBtn{background:#f39c12;}
+  
+  /* ===== LIKE ===== */
+#shopLikesSection {
+  margin-top: 12px;
+}
+
+#likeShopBtn {
+  background: #4caf50;
+  border: none;
+  border-radius: 20px;
+  padding: 8px 14px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+  /* ================= COMMENTAIRES ================= */
+.comments-section {
+  background: #f1f2f6;
+  padding: 12px;
+  border-radius: 10px;
+  height: 60vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.comments-section h4 {
+  margin: 0 0 6px;
+  font-size: 16px;
+}
+
+#commentsList {
+  flex: 1;
+  overflow-y: auto;
+  margin-bottom: 10px;
+}
+
+.commentInputWrapper {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+#commentInput {
+  flex: 1;
+  height: 34px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  border: 1px solid #ccc;
+  font-size: 13px;
+}
+
+#sendCommentBtn {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  border: none;
+  background: #4caf50;
+  color: white;
+  cursor: pointer;
+}
+  
+  .notif-btn {
+  position: relative;
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+#notifCount {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: red;
+  color: white;
+  font-size: 10px;
+  padding: 2px 5px;
+  border-radius: 50%;
+  display: none;
+}
+
+#notificationsPanel {
+  position: absolute;
+  top: 45px;
+  right: 0;
+  width: 260px;
+  max-height: 300px;
+  overflow-y: auto;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+  padding: 10px;
+  z-index: 9999;
+  display: none;
+}
+
+#notificationsPanel h4 {
+  margin: 0 0 6px;
+  font-size: 14px;
+}
+.favorite-shop-btn {
+  margin-top: 8px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  background: white;
+  cursor: pointer;
+}
+
+.favorite-shop-btn.active {
+  background: #ffe5e5;
+  border-color: red;
+}
+  /* Overlay sombre */
+#topShopsOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+/* Panneau */
+#topShopsPanel {
+  background: #fff;
+  width: 90%;
+  max-width: 420px;
+  max-height: 80vh;
+  border-radius: 16px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+}
+
+/* Header */
+.topShopsHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.topShopsHeader h3 {
+  margin: 0;
+  font-size: 18px;
+}
+
+#closeTopShops {
+  background: none;
+  border: none;
+  font-size: 26px;
+  cursor: pointer;
+}
+
+/* Scroll contenu */
+#topShopsContainer {
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+</style>
+</head>
+<body>
+
+<header class="topbar">
+<div id="userHeader">
+   <span id="userEmail"></span>
+</div>
+  <div class="top-actions">
+    <button id="messageBtn">
+      💬 Messagerie
+      <span id="messageBadge"
+        style="
+          background:red;
+          color:white;
+          border-radius:50%;
+          padding:2px 6px;
+          font-size:12px;
+          margin-left:6px;
+          display:none;
+        ">0</span>
+    </button>
+      <!-- 🔔 BOUTON NOTIFICATION -->
+  <div class="top-bar">
+  <button id="notifBtn" class="notif-btn">
+    🔔
+    <span id="notifCount">0</span>
+  </button>
+
+<!-- Bouton Favoris avec badge -->
+<button id="favoritesBtn" style="position:relative;">
+  ❤️ Favoris
+  <span id="favoritesBadge" style="
+    display:none;
+    position:absolute;
+    top:-5px;
+    right:-5px;
+    background:red;
+    color:white;
+    font-size:12px;
+    padding:2px 6px;
+    border-radius:50%;
+  ">0</span>
+</button>
+
+<!-- Modal Favoris -->
+<div id="favoritesModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:3000; justify-content:center; align-items:center;">
+  <div style="background:#fff; width:90%; max-width:500px; max-height:80vh; overflow-y:auto; border-radius:12px; padding:16px;">
+    <h3>❤️ Favoris</h3>
+    <div style="display:flex; gap:10px; margin-bottom:10px;">
+      <button id="btnFavorisBoutiques">Boutiques</button>
+      <button id="btnFavorisProduits">Produits</button>
+      <button id="btnFavorisNotifications">Notifications</button> <!-- <-- nouvel onglet -->
+    </div>
+
+    <div id="favoritesShopsList"></div>
+    <div id="favoritesProductsList" style="display:none;"></div>
+    <div id="favoritesList" style="display:none;"></div> <!-- notifications -->
+
+    <button id="closeFavorites" style="margin-top:12px;width:100%;">Fermer</button>
+  </div>
+</div>
+    
+  <div id="notificationsPanel">
+    <h4>Notifications</h4>
+    <div id="notificationsList"></div>
+  </div>
+</div>
+  <button id="logoutBtn">Déconnexion</button>
+    <button id="sellBtn">Vendre</button>
+  </div>
+</header>
+<!-- ===== BOUTON TOP BOUTIQUES ===== -->
+<button id="topShopsBtn"
+  style="
+    width:40%;
+    margin-bottom:10px;
+    padding:10px;
+    border:none;
+    border-radius:10px;
+    background:#ff9800;
+    color:white;
+    font-weight:700;
+    cursor:pointer;
+  ">
+  🔥 Top boutiques
+</button>
+
+<!-- ===== OVERLAY TOP BOUTIQUES ===== -->
+<div id="topShopsOverlay" style="display:none;">
+  <div id="topShopsPanel">
+    <div class="topShopsHeader">
+      <h3>🔥 Top 5 Boutiques</h3>
+      <button id="closeTopShops">×</button>
+    </div>
+
+    <!-- ⚠️ UN SEUL container -->
+    <div id="topShopsContainer"></div>
+  </div>
+</div>
+
+<div class="search-bar">
+  <input type="text" id="searchInput" placeholder="🔍 Rechercher une boutique...">
+</div>
+ 
+  <!-- LISTE DES BOUTIQUES -->
+<div class="shops-container" id="shopsList">
+  <!-- Les boutiques seront injectées ici par JS -->
+  
+</div>
+<!-- MODAL VUE BOUTIQUE -->
+  <div id="shopViewModal">
+  <div id="shopViewContent">
+    <span id="closeShopView">✕</span>
+    <h2 id="shopViewName"></h2>
+    <p id="shopViewDesc"></p>
+    <p><strong>Catégorie:</strong> <span id="shopViewCategory"></span></p>
+    <p><strong>Localisation:</strong> <span id="shopViewLocation"></span></p>
+    <p><strong>Produits disponibles</strong></p>
+    <div id="shopProductsScroll"></div>
+    <button id="contactShopBtn">Contacter la boutique</button>
+  
+    <!-- Likes et commentaires -->
+    <div style="display:flex; align-items:center; gap:8px; margin-top:6px;">
+
+      <!-- Bouton Like principal -->
+      <button id="likeShopBtn" style="
+          padding:4px 8px;
+          font-size:12px;
+          cursor:pointer;
+          border:none;
+          border-radius:6px;
+          background:#e0f7fa;
+          color:#007bff;
+          font-weight:500;
+          display:flex;
+          align-items:center;
+          gap:4px;
+          transition:0.2s;"
+          onmouseover="this.style.background='#b2ebf2'" 
+          onmouseout="this.style.background='#e0f7fa'">
+        👍 J'aime
+      </button>
+
+      <!-- Compteur / point cliquable -->
+      <div id="likeCountContainer" style="display:flex; align-items:center; gap:4px; cursor:pointer;">
+        <span id="likeCount" style="font-size:12px; color:#555;">0</span>
+        <span style="
+          display:inline-block;
+          width:10px;
+          height:10px;
+          background:#007bff;
+          border-radius:50%;
+          transition:0.2s;"
+          onmouseover="this.style.background='#005bbb'"
+          onmouseout="this.style.background='#007bff'">
+        </span>
+      </div>
+    </div>
+
+    <!-- Liste des utilisateurs likant la boutique -->
+    <div id="shopLikesList" style="
+        position:absolute;
+        display:none;
+        background:#fff;
+        border:1px solid #ddd;
+        border-radius:6px;
+        box-shadow:0 2px 8px rgba(0,0,0,0.1);
+        padding:8px;
+        max-height:200px;
+        overflow-y:auto;
+        font-size:12px;
+        z-index:999;">
+    </div>
+
+    <div class="comments-section" style="background:#f1f2f6; padding:10px; border-radius:8px;">
+      <h4>Commentaires</h4>
+      <div id="commentsList" style="height:400px; overflow-y:auto; margin-bottom:5px;"></div>
+    <div class="commentInputWrapper">
+  <input type="text" id="commentInput" placeholder="Écrire un commentaire...">
+  <button id="sendCommentBtn">➤</button>
+</div>
+
+    <!-- ✅ Copier lien boutique (MAINTENANT DANS LE MODAL) -->
+    <button id="copyLinkBtn" style="
+      margin-top:12px;
+      padding:8px 12px;
+      background:#17a2b8;
+      color:#fff;
+      border:none;
+      border-radius:6px;
+      cursor:pointer;
+      height:30px;
+      width:80%;">
+      Copier le lien
+    </button>
+
+  </div>
+</div>
+</div>
+<!-- Chat et Messagerie restent inchangés -->
+<div class="chat-container" id="chatContainer">
+  <div class="chat-header">
+    <span id="chatTitle">Discussion</span>
+    <div>
+      <button onclick="openShopStats()">📊</button>
+      <button id="deleteChat">🗑️</button>
+      <button id="closeChat">✕</button>
+    </div>
+  </div>
+  <div id="shopStats"
+     style="
+       display:none;
+       padding:12px;
+       background:#f7f7f7;
+       border-bottom:1px solid #ddd;
+       font-size:14px;
+     ">
+  </div>
+  <div id="shopStatsModal" style="
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.5);
+  z-index:10000;
+  justify-content:center;
+  align-items:center;
+">
+  <div style="
+    background:#fff;
+    padding:16px;
+    border-radius:12px;
+    width:90%;
+    max-width:320px;
+  ">
+    <h3>📊 Statistiques</h3>
+    <div id="shopStatsContent"></div>
+    <button onclick="closeShopStats()" style="margin-top:12px;width:100%;">
+      Fermer
+    </button>
+  </div>
+</div>
+  <div class="messages-list" id="messagesList"></div>
+  <div class="input-area">
+    <div id="chatInputContainer">
+      <div id="mediaPreview"></div>
+      <div style="display:flex; gap:8px; align-items:center; width:100%;">
+        <button id="fileBtn" class="btn-file">📎</button>
+        <input type="text" id="messageInput" placeholder="Écris un message...">
+        <button id="sendBtn" class="btn-send">➤</button>
+        <button id="audioBtn" class="btn-audio">🎤</button>
+      </div>
+      <input type="file" id="fileInput" style="display:none;" accept="image/*,video/*,audio/*">
+    </div>
+  </div>
+</div>
+
+<div id="discussionsPanel">
+  <div class="messagerie-header">
+    <strong>Messagerie</strong>
+    <span class="close-btn" id="closeMessagerie">✕</span>
+  </div>
+  <div class="tabs">
+  <button id="tabAchat" class="active">Achat</button>
+  <button id="tabVente" >Vente</button>
+</div>
+<div id="discussionsList"></div>
+</div>
+
+<div id="mediaModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.7); justify-content:center; align-items:center; z-index:10000;">
+  <div id="mediaContent" style="max-width:90%; max-height:90%;"></div>
+  <span id="closeMediaModal" style="position:absolute; top:20px; right:30px; font-size:30px; color:white; cursor:pointer; font-weight:bold;">✕</span>
+</div>
+
+ 
+  
+<script type="module">
+import { supabase } from './supabase.js';
+
+// ====== UTILISATEUR CONNECTÉ + BADGE PREMIUM ======
+let currentUser = null;
+let currentProfile = null;
+let currentShopId = null;
+async function loadCurrentUser() {
+  const { data: { user }, error } = await supabase.auth.getUser();
+
+  if (error || !user) {
+    console.error("Erreur utilisateur :", error);
+    location.href = "login.html";
+    return;
+  }
+
+  currentUser = user;
+  
+
+  // Récupérer le profil
+  const { data: profile, error: profileError } = await supabase
+    .from('profiles')
+    .select('premium_level')
+    .eq('id', user.id)
+    .single();
+
+  if (profileError) {
+    console.error("Erreur profil :", profileError);
+  } else {
+    currentProfile = profile;
+  }
+loadNotifications();
+  // Badge premium
+  let badge = '';
+  switch (currentProfile?.premium_level) {
+    case 'premium1': badge = ' ⭐'; break;
+    case 'premium2': badge = ' ⭐⭐'; break;
+    case 'premium3': badge = ' ⭐⭐⭐'; break;
+    default: badge = '';
+  }
+
+  // EMAIL + BADGE (même ligne)
+  document.getElementById("userEmail").textContent =
+    user.email + badge;
+}
+
+// Lancer
+await loadCurrentUser();
+  // ====== BOUTON DÉCONNEXION ======
+const logoutBtn = document.getElementById("logoutBtn");
+logoutBtn.onclick = async () => {
+  try {
+    const { error } = await supabase.auth.signOut();
+    if (error) throw error;
+    // Rediriger vers la page login
+    location.href = "login.html";
+  } catch (err) {
+    console.error("Erreur lors de la déconnexion :", err);
+    alert("Impossible de se déconnecter pour le moment");
+  }
+};
+
+  // ====== BOUTON VENDRE ======
+const sellBtn = document.getElementById("sellBtn");
+sellBtn.onclick = () => {
+  // Rediriger vers la page vente.html
+  location.href = "vente.html";
+};
+  
+  // Mettre à jour le statut en ligne de l'utilisateur
+async function setUserOnline() {
+  if (!currentUser) return;
+  await supabase
+    .from('profiles')
+    .update({ last_seen: new Date().toISOString() })
+    .eq('id', currentUser.id);
+}
+
+// Envoyer la première fois
+setUserOnline();
+
+// Ping toutes les 30 secondes pour garder le statut en ligne
+setInterval(setUserOnline, 30000);
+  function isUserOnline(lastSeen) {
+  if (!lastSeen) return false;
+  const diff = (new Date() - new Date(lastSeen)) / 1000; // en secondes
+  return diff < 120; // moins de 2 minutes = en ligne
+}
+// ====== ELEMENTS DOM ======
+const shopsList = document.getElementById("shopsList");
+const modal = document.getElementById("shopViewModal");
+const closeModal = document.getElementById("closeShopView");
+const shopViewName = document.getElementById("shopViewName");
+const shopViewDesc = document.getElementById("shopViewDesc");
+const shopViewCategory = document.getElementById("shopViewCategory");
+const shopViewLocation = document.getElementById("shopViewLocation");
+const shopProductsScroll = document.getElementById("shopProductsScroll");
+const contactShopBtn = document.getElementById("contactShopBtn");
+  
+  const likeShopBtn = document.getElementById('likeShopBtn');
+const likeCountEl = document.getElementById('likeCount');
+const shopLikesList = document.getElementById("shopLikesList");
+const likeCountContainer = document.getElementById("likeCountContainer");
+
+const commentsList = document.getElementById('commentsList');
+const commentInput = document.getElementById('commentInput');
+const sendCommentBtn = document.getElementById('sendCommentBtn');
+
+const copyLinkBtn = document.getElementById('copyLinkBtn');
+
+const notifBtn = document.getElementById("notifBtn");
+const notifPanel = document.getElementById("notificationsPanel");
+const notifList = document.getElementById("notificationsList");
+const notifCountEl = document.getElementById("notifCount");
+
+const btnFavorisNotifications = document.getElementById("btnFavorisNotifications");
+
+
+const tabAchat = document.getElementById("tabAchat"); // Achat
+const tabVente = document.getElementById("tabVente"); // Vente
+
+const chatContainer = document.getElementById("chatContainer");
+const chatTitle = document.getElementById("chatTitle");
+const messagesList = document.getElementById("messagesList");
+const messageInput = document.getElementById("messageInput");
+const sendBtn = document.getElementById("sendBtn");
+const fileBtn = document.getElementById("fileBtn");
+const fileInput = document.getElementById("fileInput");
+const audioBtn = document.getElementById("audioBtn");
+const mediaPreview = document.getElementById("mediaPreview");
+document.addEventListener("DOMContentLoaded", () => {
+  updateUnreadBadge();
+  
+});
+// ====== VARIABLES ======
+let currentShop = null;
+let mediaRecorder = null;
+let audioChunks = [];
+let pendingFile = null;
+
+const messageBtn = document.getElementById("messageBtn");
+const discussionsPanel = document.getElementById("discussionsPanel");
+const closeMessagerie = document.getElementById("closeMessagerie");
+const discussionsList = document.getElementById("discussionsList");
+  
+ 
+// Fermer modal boutique
+closeModal.onclick = () => modal.style.display = "none";
+
+// Ouvrir messagerie et mettre à jour badge
+messageBtn.onclick = () => {
+  discussionsPanel.style.display = "block";
+  discussionsPanel.style.right = "0";
+
+  // 🔥 FORCER LE REPAINT
+  discussionsPanel.offsetHeight;
+};
+// Fermer messagerie
+closeMessagerie.onclick = () => discussionsPanel.style.right = "-400px";
+
+// Fermer chat
+document.getElementById("closeChat").onclick = () => chatContainer.classList.remove("open");
+
+  
+  
+// Changer onglets Achat / Vente
+tabAchat.onclick = async () => {
+  tabAchat.classList.add("active");
+  tabVente.classList.remove("active");
+  discussionsList.innerHTML = ""; // vider la liste avant de recharger
+  if (currentUser) await loadDiscussionsAchat();
+};
+
+tabVente.onclick = async () => {
+  tabVente.classList.add("active");
+  tabAchat.classList.remove("active");
+  discussionsList.innerHTML = ""; // vider la liste avant de recharger
+  if (currentUser) await loadDiscussionsVente();
+};
+  
+  
+
+  
+    const waitForTopBtn = setInterval(() => {
+  const topBtn = document.getElementById("topShopsBtn");
+  const overlay = document.getElementById("topShopsOverlay");
+  const closeBtn = document.getElementById("closeTopShops");
+  const container = document.getElementById("topShopsContainer");
+
+  if (!topBtn || !overlay || !closeBtn || !container) return;
+
+  clearInterval(waitForTopBtn);
+
+  console.log("✅ Top boutiques JS attaché");
+
+  topBtn.onclick = async () => {
+    overlay.style.display = "flex";
+    container.innerHTML = "<p>Chargement des top boutiques...</p>";
+
+    // 1️⃣ Récupérer boutiques
+    const { data: shops, error: shopErr } = await supabase
+      .from("shops")
+      .select("*");
+
+    if (shopErr || !shops) {
+      console.error(shopErr);
+      container.innerHTML = "<p>Erreur chargement boutiques</p>";
+      return;
+    }
+
+    // 2️⃣ Récupérer favoris
+    const { data: favs, error: favErr } = await supabase
+      .from("favorite_shops")
+      .select("shop_id");
+
+    if (favErr) {
+      console.error(favErr);
+      container.innerHTML = "<p>Erreur chargement favoris</p>";
+      return;
+    }
+
+    // 3️⃣ Comptage global
+    const countMap = {};
+    favs.forEach(f => {
+      countMap[f.shop_id] = (countMap[f.shop_id] || 0) + 1;
+    });
+
+    // 4️⃣ Top 5
+    const topShops = shops
+      .map(s => ({ ...s, favCount: countMap[s.id] || 0 }))
+      .sort((a, b) => b.favCount - a.favCount)
+      .slice(0, 5);
+
+    container.innerHTML = "";
+
+    if (topShops.length === 0) {
+      container.innerHTML = "<p>Aucune boutique suivie</p>";
+      return;
+    }
+
+    // ⭐ utilitaire premium
+    const getPremiumStars = (level) => {
+      switch (level) {
+        case "premium3": return "⭐⭐⭐";
+        case "premium2": return "⭐⭐";
+        case "premium1": return "⭐";
+        default: return "—";
+      }
+    };
+
+    // 5️⃣ Affichage cartes
+    topShops.forEach((shop, index) => {
+      const div = document.createElement("div");
+      div.style.cssText = `
+        position:relative;
+        display:flex;
+        gap:30px;
+        padding:10px;
+        margin-bottom:10px;
+        background:#fff;
+        border-radius:12px;
+        box-shadow:0 4px 10px rgba(0,0,0,0.08);
+        cursor:pointer;
+        align-items:center;
+      `;
+
+      div.innerHTML = `
+        <div style="
+          position:absolute;
+          top:-8px;
+          left:-3px;
+          width:28px;
+          height:28px;
+          border-radius:50%;
+          background:#e74c3c;
+          color:white;
+          font-weight:700;
+          display:flex;
+          align-items:center;
+          justify-content:center;
+          font-size:14px;
+        ">
+          ${index + 1}
+        </div>
+
+        <img 
+          src="${shop.image_url || 'https://via.placeholder.com/80'}"
+          style="width:70px;height:70px;border-radius:10px;object-fit:cover;"
+        >
+
+        <div style="flex:1;display:flex;flex-direction:column;gap:3px;">
+          <strong style="font-size:15px;">${shop.name}</strong>
+
+          <span style="font-size:13px;color:#f1c40f;font-weight:600;">
+            Statut : ${getPremiumStars(shop.premium_level)}
+          </span>
+
+          <span style="font-size:13px;color:#e74c3c;font-weight:600;">
+            ❤️ ${shop.favCount >= 1000 
+              ? (shop.favCount / 1000).toFixed(1) + "k" 
+              : shop.favCount
+            } abonnés
+          </span>
+
+          <div style="display:flex;gap:6px;margin-top:4px;">
+            <button 
+              class="favoriteShopBtn"
+              data-shop-id="${shop.id}"
+              style="
+                padding:4px 8px;
+                border-radius:16px;
+                border:1px solid #ddd;
+                background:white;
+                cursor:pointer;
+                font-size:13px;
+                display:flex;
+                align-items:center;
+                gap:5px;
+              "
+            >
+              <span class="favIcon">🤍</span>
+              <span class="favText">Suivre</span>
+              <span class="favCount">0</span>
+            </button>
+
+            <button
+              class="openShopBtn"
+              style="
+                padding:4px 8px;
+                border:none;
+                border-radius:8px;
+                background:#2e8b57;
+                color:white;
+                font-size:13px;
+                cursor:pointer;
+              "
+            >
+              Ouvrir
+            </button>
+          </div>
+        </div>
+      `;
+
+      // Boutons
+      div.querySelector(".favoriteShopBtn").onclick = (e) => {
+        e.stopPropagation();
+        toggleFavoriteShop(shop.id, e.currentTarget);
+      };
+
+      div.querySelector(".openShopBtn").onclick = (e) => {
+  e.stopPropagation();
+  overlay.style.display = "none";
+  openShop(shop);
+};
+
+      // Init bouton état + compteur
+      initFavoriteShop(shop.id, div.querySelector(".favoriteShopBtn"));
+
+      // clic carte = fermer panel puis ouvrir boutique
+div.onclick = () => {
+  overlay.style.display = "none"; // fermer le panel
+  openShop(shop); // ouvrir la boutique
+};
+      container.appendChild(div);
+    });
+  };
+
+  // FERMETURE
+  closeBtn.onclick = () => {
+    overlay.style.display = "none";
+  };
+
+  // Click en dehors du panel = fermer
+  overlay.onclick = (e) => {
+    if (e.target === overlay) overlay.style.display = "none";
+  };
+}, 100);
+      
+      
+
+    
+btnFavorisNotifications.onclick = async () => {
+  // cacher boutiques & produits
+  favoritesShopsList.style.display = "none";
+  favoritesProductsList.style.display = "none";
+
+  // afficher notifications
+  favoritesList.style.display = "block";
+
+  // charger notifications
+  await loadFavoriteNotifications();
+ await initNotificationsRealtime();
+};
+
+  
+updateFavoritesBadge();
+  
+  let notificationsChannel = null;
+
+function initNotificationsRealtime() {
+  // 🔒 Sécurité absolue
+  if (!currentUser || !currentUser.id) {
+    console.warn("Realtime non initialisé : utilisateur absent");
+    return;
+  }
+
+  // 🔒 Éviter double abonnement
+  if (notificationsChannel) {
+    return;
+  }
+
+  notificationsChannel = supabase
+    .channel('favorite-notifications-' + currentUser.id)
+    .on(
+      'postgres_changes',
+      {
+        event: 'INSERT',
+        schema: 'public',
+        table: 'favorite_notifications',
+        filter: `user_id=eq.${currentUser.id}`
+      },
+      payload => {
+        console.log("🔔 Nouvelle notification reçue", payload);
+
+        // 🔹 Mettre à jour badge (sécurisé)
+        updateFavoritesBadge();
+
+        // 🔹 Rafraîchir la liste SI le modal est ouvert
+        if (
+          typeof favoritesModal !== "undefined" &&
+          typeof favoritesList !== "undefined" &&
+          favoritesModal &&
+          favoritesList &&
+          favoritesModal.style.display === "flex"
+        ) {
+          loadFavoriteNotifications(favoritesList);
+        }
+      }
+    )
+    .subscribe(status => {
+      console.log("📡 Realtime notifications :", status);
+    });
+}
+  
+// ===================================================
+// 🔔 NOTIFICATIONS FAVORIS + BADGE (VERSION STABLE)
+// ===================================================
+
+// 🔹 Créer notification pour utilisateurs favoris
+async function notifyFavoriteUsers(target, type, action) {
+  try {
+    if (!currentUser) return;
+
+    let users = [];
+
+    if (type === "shop") {
+      const { data } = await supabase
+        .from("favorite_shops")
+        .select("user_id")
+        .eq("shop_id", target.id);
+
+      users = data?.map(u => u.user_id) || [];
+    }
+
+    if (type === "product") {
+      const { data: prodFavs } = await supabase
+        .from("favorite_products")
+        .select("user_id")
+        .eq("product_id", target.id);
+
+      const { data: shopFavs } = await supabase
+        .from("favorite_shops")
+        .select("user_id")
+        .eq("shop_id", target.shop_id);
+
+      users = [
+        ...new Set([
+          ...(prodFavs?.map(u => u.user_id) || []),
+          ...(shopFavs?.map(u => u.user_id) || [])
+        ])
+      ];
+    }
+
+    if (!users.length) return;
+
+    const notifications = users.map(user_id => ({
+      user_id,
+      type,
+      target_id: target.id,
+      message:
+        type === "shop"
+          ? `La boutique "${target.name}" a été ${action}`
+          : `Le produit "${target.name}" a été ${action}`,
+      read: false,
+      created_at: new Date().toISOString()
+    }));
+
+    await supabase.from("favorite_notifications").insert(notifications);
+    updateFavoritesBadge();
+
+  } catch (err) {
+    console.error("❌ Erreur notification :", err);
+  }
+}
+
+// 🔹 Badge sur bouton favoris
+
+  
+  async function updateFavoritesBadge() {
+  console.log("🔔 updateFavoritesBadge appelée");
+
+  if (!currentUser || !currentUser.id) {
+    console.warn("⛔ currentUser non défini");
+    return;
+  }
+
+  const favoritesBtn = document.getElementById("favoritesBtn");
+  if (!favoritesBtn) {
+    console.warn("⛔ favoritesBtn introuvable dans le DOM");
+    return;
+  }
+
+  const { count, error } = await supabase
+    .from("favorite_notifications")
+    .select("*", { count: "exact", head: true })
+    .eq("user_id", currentUser.id)
+    .eq("read", false);
+
+  if (error) {
+    console.error("❌ Erreur Supabase badge :", error);
+    return;
+  }
+
+  console.log("🔔 Notifications non lues :", count);
+
+  let badge = favoritesBtn.querySelector(".favorites-badge");
+
+  if (!badge) {
+    badge = document.createElement("span");
+    badge.className = "favorites-badge";
+    badge.style.cssText = `
+      background:red;
+      color:white;
+      border-radius:50%;
+      padding:2px 6px;
+      font-size:12px;
+      margin-left:6px;
+      display:none;
+    `;
+    favoritesBtn.appendChild(badge);
+  }
+
+  if (count > 0) {
+    badge.textContent = count;
+    badge.style.display = "inline-block";
+  } else {
+    badge.style.display = "none";
+  }
+}
+// 🔹 Charger notifications dans Favoris
+async function loadFavoriteNotifications() {
+  if (!currentUser) return;
+
+  const container = document.getElementById("favoritesList");
+  container.innerHTML = "<p>Chargement...</p>";
+
+  const { data } = await supabase
+    .from("favorite_notifications")
+    .select("*")
+    .eq("user_id", currentUser.id)
+    .order("created_at", { ascending: false });
+
+  container.innerHTML = "";
+
+  if (!data || data.length === 0) {
+    container.innerHTML = "<p>Aucune notification.</p>";
+    return;
+  }
+
+  data.forEach(n => {
+    const div = document.createElement("div");
+    div.style.cssText = `
+      padding:10px;
+      border-bottom:1px solid #eee;
+      cursor:pointer;
+      background:${n.read ? "#fff" : "#4caf50"};
+    `;
+    div.textContent = n.message;
+
+    div.onclick = async () => {
+      await supabase
+        .from("favorite_notifications")
+        .update({ read: true })
+        .eq("id", n.id);
+
+      updateFavoritesBadge();
+
+      if (n.type === "shop") {
+        const { data: shop } = await supabase
+          .from("shops")
+          .select("*")
+          .eq("id", n.target_id)
+          .single();
+        if (shop) openShop(shop);
+      }
+
+      if (n.type === "product") {
+        const { data: product } = await supabase
+          .from("shop_products")
+          .select("*")
+          .eq("id", n.target_id)
+          .single();
+        if (product) {
+          const { data: shop } = await supabase
+            .from("shops")
+            .select("*")
+            .eq("id", product.shop_id)
+            .single();
+          if (shop) openShop(shop);
+        }
+      }
+    };
+
+    container.appendChild(div);
+  });
+}
+
+// 🔹 Initialiser badge au chargement
+updateFavoritesBadge();
+
+
+// ====== CHARGER BOUTIQUES (PRO + STATUS PREMIUM) ======
+async function loadShops() {
+  try {
+    const { data: shops, error } = await supabase
+      .from('shops')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error("Erreur loadShops:", error);
+      shopsList.innerHTML = "<p style='color:red;'>Erreur chargement boutiques</p>";
+      return;
+    }
+
+    if (!shops || shops.length === 0) {
+      shopsList.innerHTML = "<p>Aucune boutique trouvée</p>";
+      return;
+    }
+
+    // 🔹 Récupérer les profils des propriétaires
+    const ownerIds = shops.map(s => s.owner_id);
+    const { data: profiles } = await supabase
+      .from('profiles')
+      .select('id, username, premium_level')
+      .in('id', ownerIds);
+
+    // 🔹 Associer chaque boutique à son profil et définir étoiles + statut
+    shops.forEach(shop => {
+      const profile = profiles.find(p => p.id === shop.owner_id);
+      shop.ownerUsername = profile?.username || "Utilisateur";
+      shop.premium_level = profile?.premium_level || 'free';
+
+      // Définir score pour tri
+      switch(shop.premium_level){
+        case 'premium3': shop.premiumScore = 3; break;
+        case 'premium2': shop.premiumScore = 2; break;
+        case 'premium1': shop.premiumScore = 1; break;
+        default: shop.premiumScore = 0;
+      }
+
+      // Définir étoiles
+      switch(shop.premium_level){
+        case 'premium3': shop.stars = '⭐⭐⭐'; break;
+        case 'premium2': shop.stars = '⭐⭐'; break;
+        case 'premium1': shop.stars = '⭐'; break;
+        default: shop.stars = '—';
+      }
+    });
+
+    // 🔹 Trier par score premium décroissant
+    shops.sort((a,b) => b.premiumScore - a.premiumScore);
+
+    // 🔹 Affichage cartes
+    shopsList.innerHTML = "";
+    shops.forEach(shop => {
+      const div = document.createElement("div");
+      div.className = "shopCard";
+      div.dataset.description = shop.description || "";
+
+      div.innerHTML = `
+        <div style="position:relative;">
+          <img src="${shop.image_url || 'https://via.placeholder.com/300x160'}" alt="${shop.name}" style="width:100%;height:160px;object-fit:cover;">
+          ${shop.premium_level !== 'free' ? `<span style="position:absolute;top:10px;right:10px;background:#f1c40f;color:#fff;padding:5px 10px;border-radius:20px;font-weight:600;font-size:12px;">Premium</span>` : ""}
+        </div>
+        <div style="padding:12px; display:flex; flex-direction:column; gap:4px;">
+          <h3 style="margin:0;font-size:18px;font-weight:700;color:#2c3e50;">${shop.name}</h3>
+          <span style="color:#555;font-size:15px;">Propriétaire : ${shop.ownerUsername}</span>
+          <span style="color:#f1c40f;font-weight:600;font-size:15px;">Statut : ${shop.stars}</span>
+          <p style="color:#777;font-size:15px;min-height:40px;line-height:1.3;">${shop.description || ""}</p>
+       <div style="
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+">
+
+  <button class="favoriteShopBtn"
+    data-shop-id="${shop.id}"
+    style="
+          padding:4px 8px;
+          font-size:12px;
+          cursor:pointer;
+          border:none;
+          border-radius:6px;
+          background:#e0f7fa;
+          color:#007bff;
+          font-weight:500;
+          display:flex;
+          align-items:center;
+          gap:4px;
+          transition:0.2s;"
+          onmouseover="this.style.background='#b2ebf2'" 
+          onmouseout="this.style.background='#e0f7fa'">
+        
+    
+    
+    <span class="favIcon">🤍</span>
+    <span class="favText">Suivre</span>
+    <span class="favCount">0</span>
+  </button>
+
+  <button class="openShopBtn"
+    style="
+      padding:8px;
+      border:none;
+      border-radius:10px;
+      background:green;
+      color:white;
+      font-weight:600;
+      cursor:pointer;
+      transition:0.2s;
+      width:100%;
+    ">
+    Ouvrir la boutique
+  </button>
+
+</div>
+      
+      </div>
+      `;
+
+      const favBtn = div.querySelector(".favoriteShopBtn");
+
+favBtn.onclick = () => toggleFavoriteShop(shop.id, favBtn);
+
+// Initialiser l’état (déjà suivi ou non)
+initFavoriteShop(shop.id, favBtn);
+      
+      // Bouton hover
+      const btn = div.querySelector(".openShopBtn");
+      btn.onmouseover = () => btn.style.background = "#27ae60";
+      btn.onmouseout = () => btn.style.background = "#2e8b57";
+
+      // Carte hover lift
+      div.onmouseover = () => div.style.transform = "translateY(-4px)";
+      div.onmouseout = () => div.style.transform = "translateY(0)";
+      div.style.transition = "0.25s";
+      div.style.boxShadow = "0 6px 18px rgba(0,0,0,0.12)";
+      div.style.borderRadius = "12px";
+      div.style.background = "#fff";
+      div.style.overflow = "hidden";
+
+      // Click ouvrir boutique
+      div.querySelector(".openShopBtn").onclick = () => openShop(shop);
+
+      shopsList.appendChild(div);
+    });
+
+  } catch(err) {
+    console.error("Erreur inattendue loadShops:", err);
+    shopsList.innerHTML = "<p style='color:red;'>Erreur inattendue lors du chargement</p>";
+  }
+}
+  
+  // 🔹 Formater le compteur
+function formatCount(count) {
+  if (!count) return "0";
+  if (count >= 1000) return (count / 1000).toFixed(1) + "k";
+  return count.toString();
+}
+
+// 🔹 Initialiser le bouton favori pour une boutique
+async function initFavoriteShop(shopId, btn) {
+  if (!currentUser) return;
+
+  const icon = btn.querySelector(".favIcon");
+  const text = btn.querySelector(".favText");
+  const countSpan = btn.querySelector(".favCount");
+
+  // 1️⃣ Vérifier si currentUser suit la boutique
+  const { data: myFav } = await supabase
+    .from("favorite_shops")
+    .select("id")
+    .eq("shop_id", shopId)
+    .eq("user_id", currentUser.id)
+    .maybeSingle();
+
+  if (myFav) {
+    icon.textContent = "❤️";
+    text.textContent = "Abonnés";
+    btn.classList.add("active");
+  } else {
+    icon.textContent = "🤍";
+    text.textContent = "Suivre";
+    btn.classList.remove("active");
+  }
+
+  // 2️⃣ Charger le compteur global
+  await updateShopFavoriteCount(shopId, btn);
+}
+
+// 🔹 Mettre à jour le compteur global d’une boutique
+async function updateShopFavoriteCount(shopId, btn) {
+  const countSpan = btn.querySelector(".favCount");
+  if (!countSpan) return;
+
+  const { data: favs, error } = await supabase
+    .from("favorite_shops")
+    .select("id", { count: "exact" })
+    .eq("shop_id", shopId);
+
+  if (error) {
+    console.error("Erreur compteur favoris:", error);
+    countSpan.textContent = "0";
+    return;
+  }
+
+  const total = favs?.length || 0;
+  countSpan.textContent = formatCount(total);
+}
+
+// 🔹 Ajouter ou retirer des favoris (toggle)
+async function toggleFavoriteShop(shopId, btn) {
+  if (!currentUser) {
+    alert("Connecte-toi pour suivre une boutique");
+    return;
+  }
+
+  const icon = btn.querySelector(".favIcon");
+  const text = btn.querySelector(".favText");
+
+  // Vérifier si déjà suivi
+  const { data: existing } = await supabase
+    .from("favorite_shops")
+    .select("id")
+    .eq("shop_id", shopId)
+    .eq("user_id", currentUser.id)
+    .maybeSingle();
+
+  if (existing) {
+    // Supprimer
+    await supabase
+      .from("favorite_shops")
+      .delete()
+      .eq("id", existing.id);
+
+    icon.textContent = "🤍";
+    text.textContent = "Suivre";
+    btn.classList.remove("active");
+  } else {
+    // Ajouter
+    await supabase
+      .from("favorite_shops")
+      .insert({ shop_id: shopId, user_id: currentUser.id });
+
+    icon.textContent = "❤️";
+    text.textContent = "Abonnés";
+    btn.classList.add("active");
+  }
+
+  // 🔥 Mettre à jour le compteur global après chaque action
+  await updateShopFavoriteCount(shopId, btn);
+}
+
+
+// ===================== INITIALISATION BOUTONS FAVORIS SUR LA PAGE =====================
+function setupFavoriteShopButtons() {
+  document.querySelectorAll(".favoriteShopBtn").forEach(btn => {
+    const shopId = btn.dataset.shopId;
+    if (!shopId) return;
+
+    // Initialiser état + compteur
+    initFavoriteShop(shopId, btn);
+
+    // Clic toggle
+    btn.onclick = () => toggleFavoriteShop(shopId, btn);
+  });
+}
+
+// ===================== NOTIFICATION TEMPS RÉEL (OPTIONNEL) =====================
+function initFavoriteShopRealtime() {
+  supabase
+    .channel("public:favorite_shops")
+    .on(
+      "postgres_changes",
+      { event: "INSERT", schema: "public", table: "favorite_shops" },
+      payload => {
+        // Met à jour le compteur pour tous les boutons correspondants
+        const shopId = payload.new.shop_id;
+        document.querySelectorAll(`.favoriteShopBtn[data-shop-id='${shopId}']`).forEach(btn => {
+          updateShopFavoriteCount(shopId, btn);
+        });
+      }
+    )
+    .on(
+      "postgres_changes",
+      { event: "DELETE", schema: "public", table: "favorite_shops" },
+      payload => {
+        const shopId = payload.old.shop_id;
+        document.querySelectorAll(`.favoriteShopBtn[data-shop-id='${shopId}']`).forEach(btn => {
+          updateShopFavoriteCount(shopId, btn);
+        });
+      }
+    )
+    .subscribe();
+}
+  
+// ===================== OUVRIR UNE BOUTIQUE =====================
+async function openShop(shop) {
+  try {
+    if (!shop) return;
+    currentShop = shop;
+
+    // Affichage modal
+    modal.style.display = "flex";
+    shopViewName.textContent = shop.name || "Nom boutique";
+    shopViewDesc.textContent = shop.description || "-";
+    shopViewCategory.textContent = shop.category || "-";
+    shopViewLocation.textContent = shop.location || "-";
+
+    // 🔹 Charger produits
+    let query = supabase
+      .from('shop_products')
+      .select('*')
+      .eq('shop_id', shop.id)
+      .order('created_at', { ascending: false });
+
+    // Si on vient du modal favoris, filtrer seulement les produits favoris de cet utilisateur
+    if (shop.fromFavorites && currentUser) {
+      const { data: favData, error: favError } = await supabase
+        .from('favorite_products')
+        .select('product_id')
+        .eq('user_id', currentUser.id);
+
+      if (!favError && favData && favData.length > 0) {
+        const favIds = favData.map(f => f.product_id);
+        query = query.in('id', favIds);
+      } else {
+        // Aucun produit favori
+        shopProductsScroll.innerHTML = "<p>Aucun produit suivi dans cette boutique.</p>";
+        return;
+      }
+    }
+
+    const { data: products, error: prodError } = await query;
+
+    shopProductsScroll.innerHTML = "";
+    if (prodError) {
+      shopProductsScroll.innerHTML = `<p style="color:red;">Erreur chargement produits</p>`;
+    } else if (!products || products.length === 0) {
+      shopProductsScroll.innerHTML = "<p>Aucun produit disponible</p>";
+    } else {
+      products.forEach(p => {
+        const div = document.createElement("div");
+        div.className = "productCard";
+        div.innerHTML = `
+          <img src="${p.image_url || 'https://via.placeholder.com/150'}" alt="${p.name || 'Produit'}">
+          <h5>${p.name || 'Produit'}</h5>
+          <p>${p.price || '-'} FCFA</p>
+          <button class="favoriteProductBtn" data-id="${p.id}">🤍</button>
+        `;
+        shopProductsScroll.appendChild(div);
+      });
+
+      // 🔹 Initialiser les boutons favoris produits
+      document.querySelectorAll(".favoriteProductBtn").forEach(btn => {
+        const productId = btn.dataset.id;
+
+        // Vérifier si déjà favori
+        initFavoriteProduct(productId, btn);
+
+        // Clic pour ajouter / retirer
+        btn.onclick = async (e) => {
+          e.stopPropagation();
+          await toggleFavoriteProduct(productId, btn);
+        };
+      });
+    }
+
+    // Charger likes et commentaires
+    await loadShopLikes();
+    await loadShopComments();
+
+  } catch (err) {
+    console.error("Erreur openShop :", err);
+    shopProductsScroll.innerHTML = "<p style='color:red;'>Erreur chargement boutique</p>";
+  }
+}
+
+// ===================== FONCTIONS FAVORIS PRODUITS =====================
+async function toggleFavoriteProduct(productId, btn) {
+  if (!currentUser) {
+    alert("Connecte-toi pour suivre un produit");
+    return;
+  }
+
+  const { data: existing } = await supabase
+    .from("favorite_products")
+    .select("id")
+    .eq("product_id", productId)
+    .eq("user_id", currentUser.id)
+    .maybeSingle();
+
+  if (existing) {
+    await supabase
+      .from("favorite_products")
+      .delete()
+      .eq("id", existing.id);
+
+    btn.textContent = "🤍";
+    btn.classList.remove("active");
+  } else {
+    await supabase
+      .from("favorite_products")
+      .insert({
+        product_id: productId,
+        user_id: currentUser.id
+      });
+
+    btn.textContent = "❤️";
+    btn.classList.add("active");
+  }
+}
+
+async function initFavoriteProduct(productId, btn) {
+  if (!currentUser) return;
+
+  const { data } = await supabase
+    .from("favorite_products")
+    .select("id")
+    .eq("product_id", productId)
+    .eq("user_id", currentUser.id)
+    .maybeSingle();
+
+  if (data) {
+    btn.textContent = "❤️";
+    btn.classList.add("active");
+  }
+}
+
+// 🔹 RÉFÉRENCES
+const favoritesBtn = document.getElementById("favoritesBtn");
+const favoritesModal = document.getElementById("favoritesModal");
+const closeFavorites = document.getElementById("closeFavorites");
+const btnFavorisBoutiques = document.getElementById("btnFavorisBoutiques");
+const btnFavorisProduits = document.getElementById("btnFavorisProduits");
+const favoritesShopsList = document.getElementById("favoritesShopsList");
+const favoritesProductsList = document.getElementById("favoritesProductsList");
+
+// ===================== BOUTON FAVORIS =====================
+favoritesBtn.onclick = async () => {
+  favoritesModal.style.display = "flex";
+  await loadFavoriteNotifications();  // Charge toutes notifications
+  updateFavoritesBadge();
+};
+
+closeFavorites.onclick = () => {
+  favoritesModal.style.display = "none";
+};
+
+// ===================== ONGLET BOUTIQUES =====================
+btnFavorisBoutiques.onclick = () => loadFavoriteShops();
+
+// ===================== ONGLET PRODUITS =====================
+btnFavorisProduits.onclick = () => loadFavoriteProducts();
+
+// ===================== CHARGER BOUTIQUES FAVORIS =====================
+async function loadFavoriteShops() {
+  favoritesShopsList.style.display = "block";
+  favoritesProductsList.style.display = "none";
+  favoritesShopsList.innerHTML = "<p>Chargement...</p>";
+
+  if (!currentUser || !currentUser.id) {
+    favoritesShopsList.innerHTML = "<p>Utilisateur non connecté.</p>";
+    return;
+  }
+
+  const { data: favs, error: favError } = await supabase
+    .from("favorite_shops")
+    .select("shop_id")
+    .eq("user_id", currentUser.id);
+
+  if (favError) {
+    favoritesShopsList.innerHTML = "<p>Erreur chargement favoris.</p>";
+    console.error(favError);
+    return;
+  }
+
+  if (!favs || favs.length === 0) {
+    favoritesShopsList.innerHTML = "<p>Aucune boutique suivie.</p>";
+    return;
+  }
+
+  const shopIds = favs.map(f => f.shop_id);
+
+  const { data: shops, error: shopError } = await supabase
+    .from("shops")
+    .select("*")
+    .in("id", shopIds);
+
+  if (shopError) {
+    favoritesShopsList.innerHTML = "<p>Erreur chargement boutiques.</p>";
+    console.error(shopError);
+    return;
+  }
+
+  favoritesShopsList.innerHTML = "";
+
+  shops.forEach(shop => {
+    const div = document.createElement("div");
+    div.style.cssText = `
+      display:flex;
+      gap:10px;
+      padding:10px;
+      border-bottom:1px solid #eee;
+      cursor:pointer;
+    `;
+
+    div.innerHTML = `
+      <img src="${shop.image_url || 'https://via.placeholder.com/80'}"
+           style="width:80px;height:60px;border-radius:8px;object-fit:cover;">
+      <div>
+        <strong>${shop.name}</strong>
+        <p style="font-size:14px;color:#666;">${shop.description || ""}</p>
+      </div>
+    `;
+
+    div.onclick = async () => {
+      favoritesModal.style.display = "none";
+      await openShop(shop); // Utilise ta fonction existante
+    };
+
+    favoritesShopsList.appendChild(div);
+  });
+}
+
+// ===================== CHARGER PRODUITS FAVORIS =====================
+async function loadFavoriteProducts() {
+  favoritesProductsList.style.display = "block";
+  favoritesShopsList.style.display = "none";
+  favoritesProductsList.innerHTML = "<p>Chargement...</p>";
+
+  if (!currentUser || !currentUser.id) {
+    favoritesProductsList.innerHTML = "<p>Utilisateur non connecté.</p>";
+    return;
+  }
+
+  // 🔹 1️⃣ Récupérer les produits favoris
+  const { data: favData, error: favError } = await supabase
+    .from("favorite_products")
+    .select("product_id")
+    .eq("user_id", currentUser.id);
+
+  if (favError) {
+    favoritesProductsList.innerHTML = "<p>Erreur chargement produits.</p>";
+    console.error(favError);
+    return;
+  }
+
+  if (!favData || favData.length === 0) {
+    favoritesProductsList.innerHTML = "<p>Aucun produit suivi.</p>";
+    return;
+  }
+
+  const productIds = favData.map(f => f.product_id);
+
+  // 🔹 2️⃣ Récupérer les infos des produits
+  const { data: products, error: prodError } = await supabase
+    .from("shop_products")
+    .select("*")
+    .in("id", productIds)
+    .order("created_at", { ascending: false });
+
+  if (prodError) {
+    favoritesProductsList.innerHTML = "<p>Erreur chargement produits.</p>";
+    console.error(prodError);
+    return;
+  }
+
+  if (!products || products.length === 0) {
+    favoritesProductsList.innerHTML = "<p>Aucun produit suivi.</p>";
+    return;
+  }
+
+  favoritesProductsList.innerHTML = "";
+
+  // 🔹 3️⃣ Afficher les produits et gérer clic
+  for (const p of products) {
+    const div = document.createElement("div");
+    div.style.cssText = `
+      display:flex;
+      gap:10px;
+      padding:10px;
+      border-bottom:1px solid #eee;
+      cursor:pointer;
+    `;
+
+    div.innerHTML = `
+      <img src="${p.image_url || 'https://via.placeholder.com/80'}"
+           style="width:80px;height:60px;border-radius:8px;object-fit:cover;">
+      <div>
+        <strong>${p.name}</strong>
+        <p style="color:#2e8b57;font-weight:600;">${p.price || "-"} FCFA</p>
+      </div>
+    `;
+
+    div.onclick = async () => {
+      favoritesModal.style.display = "none";
+
+            // 🔹 Récupérer la boutique complète du produit
+      const { data: shopData, error: shopError } = await supabase
+        .from("shops")
+        .select("*")
+        .eq("id", p.shop_id)
+        .single();
+
+      if (shopError || !shopData) {
+        alert("Impossible de charger la boutique de ce produit.");
+        console.error(shopError);
+        return;
+      }
+
+      // 🔹 Ouvrir la boutique avec toutes les infos
+      await openShop(shopData);
+    };
+
+    favoritesProductsList.appendChild(div);
+  }
+}
+
+// ===== COPIER LE LIEN =====
+copyLinkBtn.onclick = () => {
+  navigator.clipboard.writeText(window.location.href)
+    .then(() => alert("Lien copié !"))
+    .catch(err => alert("Erreur copie lien : " + err));
+};
+
+
+// ===== GESTION LIKE / UNLIKE =====
+async function loadShopLikes() {
+  if (!currentShop) return;
+
+  try {
+    // Récupérer les likes avec les usernames
+    const { data: likes, error } = await supabase
+      .from('shop_likes')
+      .select('user_id, user:profiles(username)')
+      .eq('shop_id', currentShop.id);
+
+    if (error) { console.error("Erreur loadShopLikes:", error); return; }
+
+    // Mettre à jour le compteur
+    const count = likes?.length || 0;
+    likeCountEl.textContent = count;
+
+    // Vérifier si currentUser a déjà liké
+    const userLiked = likes?.some(l => l.user_id === currentUser?.id);
+    likeShopBtn.style.opacity = userLiked ? 0.6 : 1;
+
+    // Préparer le contenu de la liste des utilisateurs
+    if (likes && likes.length > 0) {
+      shopLikesList.innerHTML = likes
+        .map(l => `<div style="padding:2px 4px;">${l.user?.username || 'Anonyme'}</div>`)
+        .join('');
+    } else {
+      shopLikesList.innerHTML = "<div style='padding:2px 4px;'>Aucun like</div>";
+    }
+
+  } catch (err) {
+    console.error("Erreur loadShopLikes:", err);
+  }
+}
+
+// =====================
+// Like / Unlike au clic sur le bouton 👍
+// =====================
+likeShopBtn.onclick = async (e) => {
+  e.stopPropagation(); // éviter que le clic ferme la liste
+
+  if (!currentUser || !currentShop) return;
+
+  try {
+    // Vérifier si l'utilisateur a déjà liké
+    const { data: existing } = await supabase
+      .from('shop_likes')
+      .select('*')
+      .eq('shop_id', currentShop.id)
+      .eq('user_id', currentUser.id);
+
+    if (existing && existing.length > 0) {
+      // Retirer le like
+      const { error } = await supabase
+        .from('shop_likes')
+        .delete()
+        .eq('shop_id', currentShop.id)
+        .eq('user_id', currentUser.id);
+      if (error) { console.error(error); return; }
+    } else {
+      // Ajouter le like
+      const { error } = await supabase
+        .from('shop_likes')
+        .insert({ shop_id: currentShop.id, user_id: currentUser.id });
+      if (error) { console.error(error); return; }
+    }
+
+    await loadShopLikes();
+  } catch (err) {
+    console.error("Erreur likeShopBtn:", err);
+  }
+};
+
+// =====================
+// Afficher la liste des utilisateurs qui ont liké au clic sur le point
+// =====================
+likeCountContainer.onclick = (e) => {
+  e.stopPropagation(); // éviter fermeture immédiate
+  shopLikesList.style.display = shopLikesList.style.display === 'block' ? 'none' : 'block';
+
+  // Positionner la liste sous le point
+  const rect = likeShopBtn.getBoundingClientRect();
+    shopLikesList.style.top = `${rect.bottom + window.scrollY + 6}px`;
+    shopLikesList.style.left = `${rect.left + window.scrollX}px`;
+};
+
+// =====================
+// Masquer la liste si clic en dehors
+// =====================
+shopLikesList.style.display =
+      shopLikesList.style.display === 'block' ? 'none' : 'block';
+
+
+// =====================
+// Initialisation
+// =====================
+loadShopLikes();
+// =====================
+// Charger les commentaires et replies
+// =====================
+async function loadShopComments(scrollToId = null) {
+  if (!currentShop) return;
+
+  try {
+    const { data, error } = await supabase
+      .from('shop_comments')
+      .select('id, content, user_id, parent_id, created_at, user:profiles(username)')
+      .eq('shop_id', currentShop.id)
+      .order('created_at', { ascending: true });
+
+    commentsList.innerHTML = "";
+
+    if (error) {
+      console.error("Erreur chargement commentaires :", error);
+      commentsList.innerHTML = "<p style='color:red;'>Erreur chargement commentaires</p>";
+      return;
+    }
+
+    if (!data || data.length === 0) {
+      commentsList.innerHTML = "<p>Aucun commentaire</p>";
+      return;
+    }
+    
+    function renderComment(c, parentEl, level = 0) {
+      const div = document.createElement('div');
+      div.id = `comment-${c.id}`;
+      div.style.marginLeft = `${level * 20}px`;
+      div.style.padding = "4px 6px";
+      div.style.borderBottom = "1px solid #eee";
+
+      const date = new Date(c.created_at).toLocaleString();
+
+      div.innerHTML = `
+  <div style="
+      display:flex; 
+      justify-content:space-between; 
+      align-items:center; 
+      margin-bottom:6px;
+    ">
+    <strong style="font-size:14px; color:#222;">${c.user?.username || "Anonyme"}</strong>
+    <span style="font-size:11px; color:#888;">${date}</span>
+  </div>
+  <p style="margin:6px 0; font-size:13px; line-height:1.4; color:#333;">${c.content}</p>
+  <div style="
+      display:flex; 
+      gap:8px; 
+      margin-top:4px; 
+      margin-bottom:6px;
+    ">
+    <button class="replyBtn" style="
+        padding:4px 8px; 
+        font-size:12px; 
+        cursor:pointer; 
+        border:none; 
+        border-radius:6px; 
+        background:#f0f0f0; 
+        transition:0.2s;"
+        onmouseover="this.style.background='#dce4ff'" onmouseout="this.style.background='#f0f0f0'">
+      Répondre
+    </button>
+  <button class="likeCommentBtn" style="
+      padding:4px 8px;
+      font-size:12px;
+      cursor:pointer;
+      border:none;
+      border-radius:6px;
+      background:#e0f7fa;
+      color:#007bff;
+      font-weight: normal;
+      display:flex;
+      align-items:center;
+      gap:4px;
+      transition:0.2s;"
+      onmouseover="this.style.background='#b2ebf2'" 
+      onmouseout="this.style.background='#e0f7fa'">
+    👍 Like <span class="likeCount">0</span>
+  </button>
+
+    ${c.user_id === currentUser?.id 
+      ? `<button class="deleteCommentBtn" style="
+            padding:4px 8px; 
+            font-size:12px; 
+            cursor:pointer; 
+            border:none; 
+            border-radius:6px; 
+            background:#e53935;
+            color:white;
+            transition:0.2s;"
+            onmouseover="this.style.background='#d32f2f'" onmouseout="this.style.background='#e53935'">
+          Supprimer
+        </button>` 
+      : '' }
+    ${c.user_id === currentUser?.id 
+      ? `<button class="editCommentBtn" style="
+            padding:4px 8px; 
+            font-size:12px; 
+            cursor:pointer; 
+            border:none; 
+            border-radius:6px; 
+            background:#f0f0f0;
+            transition:0.2s;"
+            onmouseover="this.style.background='#dce4ff'" onmouseout="this.style.background='#f0f0f0'">
+          ✏️ Modifier
+        </button>` 
+      : '' }
+  </div>
+  <div class="repliesContainer" style="
+      margin-left:20px;
+      border-left:2px solid #eee;
+      padding-left:10px;
+  "></div>
+`;
+
+  parentEl.appendChild(div);
+    
+      // ===== MODIFIER COMMENTAIRE =====
+const editBtn = div.querySelector('.editCommentBtn');
+if (editBtn) {
+  editBtn.onclick = () => {
+    const p = div.querySelector('p');
+    const originalText = p.textContent;
+
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.value = originalText;
+    input.style.width = '100%';
+    input.style.padding = '4px';
+
+    const saveBtn = document.createElement('button');
+    saveBtn.textContent = 'Sauvegarder';
+    saveBtn.style.marginTop = '4px';
+
+    p.replaceWith(input);
+    div.appendChild(saveBtn);
+    editBtn.disabled = true;
+
+    saveBtn.onclick = async () => {
+      const newText = input.value.trim();
+      if (!newText) return;
+
+      const { error } = await supabase
+        .from('shop_comments')
+        .update({ content: newText })
+        .eq('id', c.id)
+        .eq('user_id', currentUser.id);
+
+      if (error) {
+        alert("Erreur modification");
+        console.error(error);
+        return;
+      }
+
+      loadShopComments();
+    };
+  };
+}
+      
+      // ===== Répondre =====
+      const replyBtn = div.querySelector('.replyBtn');
+      if (replyBtn) {
+        replyBtn.onclick = () => {
+          if (div.querySelector('input')) return;
+          const input = document.createElement('input');
+          input.type = 'text';
+          input.placeholder = 'Écrire une réponse...';
+          input.style.width = '100%';
+          input.style.padding = '4px 6px';
+          input.style.borderRadius = '6px';
+          input.style.border = '1px solid #ccc';
+          input.style.marginBottom = '4px';
+
+          const sendBtn = document.createElement('button');
+          sendBtn.textContent = 'Envoyer';
+          sendBtn.style.padding = '4px 8px';
+          sendBtn.style.borderRadius = '6px';
+          sendBtn.style.border = 'none';
+          sendBtn.style.background = '#007bff';
+          sendBtn.style.color = 'white';
+          sendBtn.style.cursor = 'pointer';
+
+          div.appendChild(input);
+          div.appendChild(sendBtn);
+          replyBtn.disabled = true;
+
+          sendBtn.onclick = async () => {
+            const text = input.value.trim();
+            if (!text) return;
+            const { data: inserted, error } = await supabase.from('shop_comments').insert({
+              shop_id: currentShop.id,
+              user_id: currentUser.id,
+              content: text,
+              parent_id: c.id
+            }).select().single();
+
+            if (error) { alert("Erreur ajout réponse"); console.error(error); return; }
+
+            // ⚡ Notification pour l'auteur du commentaire parent
+            if (c.user_id !== currentUser.id) {
+              await supabase.from('notifications').insert({
+                user_id: c.user_id,
+                actor_id: currentUser.id,
+                type: 'reply_comment',
+                comment_id: inserted.id,
+                shop_id: currentShop.id
+              });
+            }
+
+            loadShopComments(inserted.id);
+          };
+        };
+      }
+
+      // ===== Supprimer =====
+      const delBtn = div.querySelector('.deleteCommentBtn');
+      if (delBtn) {
+        delBtn.onclick = async () => {
+          if (!confirm("Supprimer ce commentaire ?")) return;
+          const { error } = await supabase.from('shop_comments').delete().eq('id', c.id);
+          if (error) { alert("Erreur suppression"); console.error(error); return; }
+          loadShopComments();
+        };
+      }
+
+      // ===== Likes =====
+      const likeBtn = div.querySelector('.likeCommentBtn');
+      if (likeBtn) {
+        loadCommentLikes(c.id, likeBtn);
+        likeBtn.onclick = () => toggleCommentLike(c.id, likeBtn);
+      }
+
+      // ===== Replies =====
+      const childReplies = data.filter(x => x.parent_id === c.id);
+      const repliesContainer = div.querySelector('.repliesContainer');
+      childReplies.forEach(r => renderComment(r, repliesContainer, level + 1));
+    }
+
+    data.filter(c => !c.parent_id).forEach(c => renderComment(c, commentsList));
+
+    // Scroll vers un commentaire spécifique
+    if (scrollToId) {
+      requestAnimationFrame(() => {
+        const el = document.getElementById(`comment-${scrollToId}`);
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          el.style.background = '#fffbcc';
+          setTimeout(() => el.style.background = '', 2000);
+        }
+      });
+    }
+
+  } catch (err) {
+    console.error("Erreur loadShopComments :", err);
+    commentsList.innerHTML = "<p style='color:red;'>Erreur chargement commentaires</p>";
+  }
+}
+
+  // Ouvrir / fermer le panneau de notifications
+notifBtn.onclick = () => {
+  if (!notifPanel) return;
+  notifPanel.style.display = notifPanel.style.display === "none" ? "block" : "none";
+  if (notifPanel.style.display === "block") {
+    loadNotifications(); // Recharge les notifications à l'ouverture
+  }
+};
+  // =====================
+// Envoyer un commentaire principal
+// =====================
+sendCommentBtn.onclick = async () => {
+  if (!currentShop || !currentUser) return;
+  const content = commentInput.value.trim();
+  if (!content) return;
+
+  const { data: inserted, error } = await supabase.from('shop_comments')
+    .insert({ shop_id: currentShop.id, user_id: currentUser.id, content })
+    .select().single();
+
+  if (error) { alert("Impossible d'envoyer"); console.error(error); return; }
+
+  commentInput.value = "";
+  loadShopComments(inserted.id);
+};
+
+// =====================
+// Charger notifications
+// =====================
+async function loadNotifications() {
+  if (!currentUser) return;
+  notifList.innerHTML = "<p>Chargement...</p>";
+
+  const { data, error } = await supabase.from("notifications")
+    .select(`
+      id,
+      type,
+      is_read,
+      created_at,
+      actor:actor_id(username),
+      comment_id
+    `)
+    .eq("user_id", currentUser.id)
+    .order("created_at", { ascending: false });
+
+  if (error) { console.error(error); notifList.innerHTML = "<p style='color:red;'>Erreur</p>"; return; }
+
+  if (!data || data.length === 0) {
+    notifList.innerHTML = "<p>Aucune notification</p>";
+    updateNotifCount();
+    return;
+  }
+
+  notifList.innerHTML = "";
+
+  data.forEach(n => {
+    const div = document.createElement("div");
+    div.style.padding = "8px 10px";
+    div.style.borderBottom = "1px solid #ddd";
+    div.style.cursor = "pointer";
+    div.style.background = n.is_read ? "#fff" : "#e8f4ff";
+    div.style.borderLeft = n.is_read ? "4px solid transparent" : "4px solid #007bff";
+
+    const date = new Date(n.created_at);
+    const diff = Math.floor((Date.now() - date)/60000);
+    let timeText = diff < 1 ? "à l'instant" : diff < 60 ? `il y a ${diff} min` : `il y a ${Math.floor(diff/60)} h`;
+
+    let message = "🔔 Nouvelle notification";
+    if (n.type === "reply_comment") {
+      message = `💬 <strong>${n.actor?.username || "Quelqu’un"}</strong> a répondu à votre commentaire`;
+    }
+
+    div.innerHTML = `
+      <div style="font-size:13px; color:#000;">${message}</div>
+      <div style="font-size:11px; color:#777; margin-top:3px;">${timeText}</div>
+    `;
+
+    div.onclick = async () => {
+      await supabase.from("notifications").update({ is_read: true }).eq("id", n.id);
+      notifPanel.style.display = "none";
+      if (n.comment_id) loadShopComments(n.comment_id);
+      loadNotifications();
+    };
+
+    notifList.appendChild(div);
+  });
+
+  updateNotifCount();
+}
+  function scrollToComment(commentId) {
+  // Récupérer l'élément
+  const el = document.getElementById(`comment-${commentId}`);
+  if (!el) return;
+
+  // Scroll avec animation
+  el.scrollIntoView({ behavior: "smooth", block: "center" });
+
+  // Petit effet visuel pour montrer le commentaire
+  const originalBg = el.style.background;
+  el.style.background = "#fffbcc"; // surlignage temporaire
+  setTimeout(() => el.style.background = originalBg, 2000);
+}
+  
+// =====================
+// Mettre à jour compteur notifications
+// =====================
+function updateNotifCount() {
+  const unread = notifList.querySelectorAll("div[style*='background: rgb(232, 244, 255)']").length;
+  notifCountEl.style.display = unread > 0 ? "inline-block" : "none";
+  notifCountEl.textContent = unread;
+}
+
+// =====================
+// Likes commentaire
+// =====================
+async function loadCommentLikes(commentId, btn) {
+  const { data, error } = await supabase.from("comment_likes").select("*").eq("comment_id", commentId);
+  if (!error) btn.textContent = `${data?.length || 0} ❤️`;
+}
+
+async function toggleCommentLike(commentId, btn) {
+  if (!currentUser) return alert("Connectez-vous pour liker !");
+  const { data: existing } = await supabase.from("comment_likes")
+    .select("*").eq("comment_id", commentId).eq("user_id", currentUser.id);
+
+  if (existing?.length > 0) {
+    await supabase.from("comment_likes").delete().eq("id", existing[0].id);
+  } else {
+    await supabase.from("comment_likes").insert({ comment_id: commentId, user_id: currentUser.id });
+  }
+
+  loadCommentLikes(commentId, btn);
+}
+              
+async function loadShopStats(shopId) {
+  if (!shopId) return;
+
+  // total messages
+  const { count: totalCount } = await supabase
+    .from("messages_shop")
+    .select("*", { count: "exact", head: true })
+    .eq("shop_id", shopId);
+
+  // messages non lus reçus par MOI
+  const { count: unreadCount } = await supabase
+    .from("messages_shop")
+    .select("*", { count: "exact", head: true })
+    .eq("shop_id", shopId)
+    .eq("to_user", currentUser.id)
+    .or(`read_by.is.null,read_by.not.cs.{${currentUser.id}}`);
+
+  const statsDiv = document.getElementById("shopStats");
+
+  statsDiv.innerHTML = `
+    <strong>📊 Statistiques</strong><br>
+    Total messages : ${totalCount || 0}<br>
+    Messages non lus : ${unreadCount || 0}
+  <div style="margin-top:6px; font-size:12px; color:#666;">
+  Dernière mise à jour : ${new Date().toLocaleTimeString()}
+</div>
+  `;
+
+  statsDiv.style.display = "block";
+}
+  window.openShopStats = function () {
+  const statsDiv = document.getElementById("shopStats");
+
+  if (!currentShop) return;
+
+  if (statsDiv.style.display === "block") {
+    statsDiv.style.display = "none";
+    return;
+  }
+
+  loadShopStats(currentShop.id);
+};
+// ====== CONTACTER BOUTIQUE ======
+contactShopBtn.onclick = async () => {
+  if (!currentShop) return alert("Aucune boutique sélectionnée");
+  chatContainer.classList.add("open");
+  chatTitle.textContent = `Boutique: ${currentShop.name}`;
+  await loadMessagesShop();
+  loadshops();
+};
+  
+  const searchInput = document.getElementById("searchInput");
+
+// Fonction pour filtrer boutiques
+searchInput.addEventListener("input", () => {
+  const query = searchInput.value.toLowerCase();
+
+  // Parcourir toutes les cartes de boutique
+  const shopCards = shopsList.querySelectorAll(".shopCard");
+  shopCards.forEach(card => {
+    const name = card.querySelector("h4")?.textContent.toLowerCase() || "";
+    const category = card.querySelector("small")?.textContent.toLowerCase() || "";
+    const desc = card.dataset.description?.toLowerCase() || "";
+
+    if (name.includes(query) || category.includes(query) || desc.includes(query)) {
+      card.style.display = "block";
+    } else {
+      card.style.display = "none";
+    }
+  });
+});
+// ====== ENVOI MESSAGE ======
+sendBtn.onclick = async () => {
+  const text = messageInput.value.trim();
+  if (!text && !pendingFile) return;
+  await sendMessageShop(text, pendingFile);
+  messageInput.value = "";
+  mediaPreview.innerHTML = "";
+  pendingFile = null;
+};
+
+fileBtn.onclick = () => fileInput.click();
+fileInput.onchange = async (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  pendingFile = file;
+  mediaPreview.innerHTML = "";
+  if (file.type.startsWith("image/")) {
+    const img = document.createElement("img"); img.src = URL.createObjectURL(file); mediaPreview.appendChild(img);
+  } else if (file.type.startsWith("video/")) {
+    const video = document.createElement("video"); video.controls = true; video.src = URL.createObjectURL(file); mediaPreview.appendChild(video);
+  } else if (file.type.startsWith("audio/")) {
+    const audio = document.createElement("audio"); audio.controls = true; audio.src = URL.createObjectURL(file); mediaPreview.appendChild(audio);
+  }
+};
+
+// Bouton audio
+audioBtn.onclick = async () => {
+  // Si déjà en enregistrement
+  if (mediaRecorder && mediaRecorder.state === "recording") {
+    mediaRecorder.stop(); // stoppe l'enregistrement
+    audioBtn.textContent = "🎤"; // reset bouton
+    return;
+  }
+
+  // Demande l'accès au micro
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    mediaRecorder = new MediaRecorder(stream);
+    audioChunks = [];
+
+    mediaRecorder.ondataavailable = e => {
+      audioChunks.push(e.data);
+    };
+
+    mediaRecorder.onstop = async () => {
+      const blob = new Blob(audioChunks, { type: "audio/webm" });
+      const fileName = `audio_${Date.now()}.webm`;
+
+      // Envoi dans Supabase Storage
+      const { data, error } = await supabase.storage
+        .from("messages_shop_files")
+        .upload(fileName, blob);
+
+      if (error) return console.error("Erreur upload audio :", error);
+
+      // Récupérer l'URL publique
+      const url = supabase.storage
+        .from("messages_shop_files")
+        .getPublicUrl(fileName).data.publicUrl;
+
+      // Créer le message audio
+      const { error: insertError } = await supabase
+        .from("messages_shop")
+        .insert({
+          shop_id: currentShop.id,
+          from_user: currentUser.id,
+          to_user: currentShop.owner_id || null,
+          audio_url: fileName, // on garde le nom pour récupérer depuis storage
+          created_at: new Date().toISOString()
+        });
+
+      if (insertError) return console.error("Erreur envoi audio :", insertError);
+
+      // Recharger les messages
+      await loadMessagesShop();
+    };
+
+    mediaRecorder.start();
+    audioBtn.textContent = "⏹️"; // changement visuel du bouton
+  } catch (err) {
+    console.error("Erreur accès micro :", err);
+    alert("Impossible d'accéder au micro. Vérifie les permissions.");
+  }
+};
+
+// ====== ENVOI AU SERVEUR ======
+async function sendMessageShop(text, file) {
+  if (!currentShop) return alert("Aucune boutique sélectionnée");
+
+  let insertData = {
+    shop_id: currentShop.id,
+    from_user: currentUser.id,
+    to_user: currentShop.owner_id,
+    message: text || null,
+    is_read: false
+  };
+
+  if (file) {
+    const fileExt = file.type.split('/')[1] || 'webm';
+    const filePath = `messages_shop/${currentUser.id}_${Date.now()}.${fileExt}`;
+
+    const { data: uploaded, error: uploadError } = await supabase
+      .storage
+      .from('messages_shop_files')
+      .upload(filePath, file, {
+        contentType: file.type,
+        upsert: false
+      });
+
+    if (uploadError) {
+      console.error("Upload échoué :", uploadError.message);
+      alert("Erreur lors de l’envoi du fichier");
+      return;
+    }
+
+    if (!file.name) insertData.audio_url = uploaded.path;
+    else if (file.type.startsWith("image/")) insertData.image_url = uploaded.path;
+    else if (file.type.startsWith("video/")) insertData.video_url = uploaded.path;
+
+    insertData.message = file.name ? null : "[Audio]";
+  }
+
+  const { error } = await supabase.from('messages_shop').insert([insertData]);
+  if (error) { console.error(error); return; }
+
+  await loadMessagesShop();
+}
+
+
+  async function openShopChat(shop) {
+  currentShop = shop;
+
+  await markMessagesAsRead(); // ✅ ici
+  await loadMessagesShop();   // ensuite affichage
+}
+ async function markMessagesAsRead() {
+  if (!currentShop || !currentUser) return;
+
+  const { error } = await supabase
+    .from("messages_shop")
+    .update({ is_read: true })
+    .eq("shop_id", currentShop.id)
+    .eq("to_user", currentUser.id)
+    .eq("is_read", false);
+
+  if (error) {
+    console.error("Erreur markMessagesAsRead:", error);
+  }
+}
+  async function updateUnreadBadge() {
+  if (!currentUser) return;
+
+  const { data, error } = await supabase
+    .from("messages_shop")
+    .select("id")
+    .eq("to_user", currentUser.id)
+    .eq("is_read", false)
+    .or(`deleted_by.is.null,deleted_by.not.cs.{${currentUser.id}}`);
+
+  if (error) {
+    console.error("Erreur updateUnreadBadge:", error);
+    return;
+  }
+
+  const badge = document.getElementById("messageBadge");
+  const count = data.length;
+
+  if (count > 0) {
+    badge.textContent = count;
+    badge.style.display = "inline-block";
+  } else {
+    badge.style.display = "none";
+  }
+}
+  async function getUnreadCountForShop(shopId) {
+  const { data, error } = await supabase
+    .from("messages_shop")
+    .select("id")
+    .eq("shop_id", shopId)
+    .eq("to_user", currentUser.id)
+    .eq("is_read", false)
+    .or(`deleted_by.is.null,deleted_by.not.cs.{${currentUser.id}}`);
+
+  if (error) {
+    console.error("Erreur unread count:", error);
+    return 0;
+  }
+
+  return data.length;
+}
+  // Pour gérer le message actuellement sélectionné pour une réaction
+let currentMsgForReaction = null;
+
+// ===== EMOJI PICKER (CORRIGÉ) =====
+let emojiPicker = document.getElementById("emojiPicker");
+
+if (!emojiPicker) {
+  emojiPicker = document.createElement("div");
+  emojiPicker.id = "emojiPicker";
+
+  // Styles
+  emojiPicker.style.position = "absolute";
+  emojiPicker.style.display = "none";
+  emojiPicker.style.background = "#fff";
+  emojiPicker.style.border = "1px solid #ccc";
+  emojiPicker.style.borderRadius = "12px";
+  emojiPicker.style.padding = "15px";
+  emojiPicker.style.boxShadow = "0 2px 12px rgba(0,0,0,0.2)";
+  emojiPicker.style.zIndex = "5";
+  emojiPicker.style.gap = "6px";
+  emojiPicker.style.flexWrap = "wrap";
+  emojiPicker.style.flexDirection = "row";
+  emojiPicker.style.fontSize = "20px";
+  emojiPicker.style.cursor = "pointer";
+  emojiPicker.style.userSelect = "none";
+  emojiPicker.style.display = "flex";
+
+  // Position DANS le chat
+  emojiPicker.style.bottom = "10px";
+  emojiPicker.style.left = "0px";
+  emojiPicker.style.width = "320px";
+
+  // Emojis
+  ["👍","❤️","😂","😮","😢","👏","🎉","😡"].forEach(e => {
+    const span = document.createElement("span");
+    span.textContent = e;
+    span.style.padding = "6px";
+    span.onclick = () => {
+      const input = document.getElementById("messageInput");
+      input.value += e;
+      input.focus();
+    };
+    emojiPicker.appendChild(span);
+  });
+
+  // 🔴 IMPORTANT : on l’attache AU CHAT, PAS AU BODY
+  const chatContainer = document.getElementById("chatContainer");
+  chatContainer.appendChild(emojiPicker);
+}
+
+// Click sur emoji pour l'ajouter au message
+emojiPicker.querySelectorAll("span").forEach(span => {
+  span.onclick = async () => {
+    if (!currentMsgForReaction) return;
+    const emoji = span.textContent;
+
+    let newReactions = currentMsgForReaction.reactions || {};
+    // 1 emoji max par utilisateur
+    if (!newReactions[emoji]) newReactions[emoji] = [currentUser.id];
+    else if (!newReactions[emoji].includes(currentUser.id)) newReactions[emoji].push(currentUser.id);
+
+    await supabase.from("messages_shop")
+      .update({ reactions: newReactions })
+      .eq("id", currentMsgForReaction.id);
+
+    emojiPicker.style.display = "none";
+    currentMsgForReaction = null;
+
+    await loadMessagesShop();
+  };
+});
+
+// Clic en dehors pour cacher le picker
+document.addEventListener("click", (e) => {
+  if (!emojiPicker.contains(e.target)) {
+    emojiPicker.style.display = "none";
+    currentMsgForReaction = null;
+  }
+});
+  
+  async function loadMessagesShop() {
+  if (!currentShop || !currentUser) return;
+
+  // 🔴 0️⃣ MARQUER LES MESSAGES COMME LUS
+  await markMessagesAsRead();
+
+  // 🔴 1️⃣ METTRE À JOUR LE BADGE IMMÉDIATEMENT
+  await updateUnreadBadge();
+
+  // 1️⃣ Charger les messages
+  const { data: messages, error } = await supabase
+    .from("messages_shop")
+    .select("*")
+    .eq("shop_id", currentShop.id)
+    .order("created_at", { ascending: true });
+
+  if (error) {
+    console.error("Erreur loadMessagesShop:", error);
+    return;
+  }
+
+  // 2️⃣ Filtrer les messages supprimés pour l'utilisateur
+  const visibleMessages = messages.filter(
+    m => !m.deleted_by || !m.deleted_by.includes(currentUser.id)
+  );
+
+  // 3️⃣ Nettoyer l'affichage
+  messagesList.innerHTML = "";
+
+  // 4️⃣ Afficher les messages
+  visibleMessages.forEach(msg => {
+    const div = document.createElement("div");
+    div.className = "message " + (msg.from_user === currentUser.id ? "to" : "from");
+    div.style.position = "relative";
+    div.style.marginBottom = "8px";
+
+    // ---- contenu ----
+    if (msg.message) {
+      div.textContent = msg.message;
+    } 
+    else if (msg.image_url) {
+      const url = supabase.storage.from('messages_shop_files').getPublicUrl(msg.image_url).data.publicUrl;
+      div.innerHTML = `<img src="${url}" style="max-width:100%; border-radius:8px; cursor:pointer;">`;
+      div.querySelector("img").onclick = () => {
+          mediaContent.innerHTML = `<img src="${url}" style="max-width:100%; max-height:100%;">`;
+          mediaModal.style.display = "flex";
+      };
+    } 
+    else if (msg.video_url) {
+  const url = supabase.storage.from('messages_shop_files').getPublicUrl(msg.video_url).data.publicUrl;
+  
+  const videoEl = document.createElement("video");
+      videoEl.src = url;
+      videoEl.controls = true;
+      videoEl.style.maxWidth = "100%";
+      videoEl.style.borderRadius = "8px";
+      videoEl.style.cursor = "pointer";
+
+      videoEl.onclick = () => {
+        mediaContent.innerHTML = `<video src="${url}" controls autoplay style="max-width:90vw; max-height:90vh;"></video>`;
+        mediaModal.style.display = "flex";
+      };
+
+      div.appendChild(videoEl);
+    }
+    else if (msg.audio_url) {
+      const url = supabase.storage.from('messages_shop_files').getPublicUrl(msg.audio_url).data.publicUrl;
+      div.innerHTML = `<audio controls src="${url}"></audio>`;
+    } 
+    else if (msg.file_url) {
+      const url = supabase.storage.from('messages_shop_files').getPublicUrl(msg.file_url).data.publicUrl;
+      const fileName = msg.file_name || "Fichier";
+      div.innerHTML = `
+        <div style="display:flex; align-items:center; gap:8px; background:#f4f4f4; padding:6px 10px; border-radius:6px;">
+          <span>📄</span>
+          <a href="${url}" target="_blank" style="text-decoration:none; color:#333;">${fileName}</a>
+        </div>
+      `;
+    }
+// ======= CONTENEUR HEURE =======
+const timeContainer = document.createElement("div");
+timeContainer.style.display = "flex";
+timeContainer.style.justifyContent = "flex-end"; // aligner à droite
+timeContainer.style.marginTop = "4px";
+timeContainer.style.fontSize = "12px";
+timeContainer.style.color = "#555";
+
+// Heure
+const date = new Date(msg.created_at);
+const hours = date.getHours().toString().padStart(2, "0");
+const minutes = date.getMinutes().toString().padStart(2, "0");
+timeContainer.textContent = `${hours}:${minutes}`;
+
+// Ajouter au message
+div.appendChild(timeContainer);
+    // ===== STATUT VU / NON VU (UNIQUEMENT POUR MES MESSAGES) =====
+if (msg.from_user === currentUser.id) {
+  const seen = document.createElement("div");
+  seen.textContent = msg.is_read ? "✓✓ Vu" : "✓";
+
+  seen.style.fontSize = "11px";
+  seen.style.color = "#fff"; // BLANC
+  seen.style.opacity = "0.8";
+  seen.style.marginTop = "4px";
+  seen.style.textAlign = "right";
+
+  // optionnel : meilleure lisibilité
+  seen.style.textShadow = "0 1px 2px rgba(0,0,0,0.6)";
+
+  div.appendChild(seen);
+}
+    // ---- bouton supprimer ----
+    const actions = document.createElement("div");
+    actions.className = "message-actions";
+    const deleteBtn = document.createElement("button");
+    deleteBtn.className = "delete-btn";
+    deleteBtn.textContent = "🗑️";
+    deleteBtn.onclick = async (e) => { e.stopPropagation(); await deleteMessage(msg.id); };
+    actions.appendChild(deleteBtn);
+    div.appendChild(actions);
+
+    // ---- réactions existantes ----
+    if (msg.reactions && Object.keys(msg.reactions).length > 0) {
+      const reactionsDiv = document.createElement("div");
+      reactionsDiv.style.display = "flex";
+      reactionsDiv.style.gap = "6px";
+      reactionsDiv.style.marginTop = "6px";
+      reactionsDiv.style.fontSize = "14px";
+      Object.entries(msg.reactions).forEach(([emoji, users]) => {
+        if (!Array.isArray(users) || users.length === 0) return;
+        const span = document.createElement("span");
+        span.textContent = `${emoji} ${users.length}`;
+        span.style.background = "#f1f1f1";
+        span.style.padding = "2px 6px";
+        span.style.borderRadius = "12px";
+        span.style.fontSize = "13px";
+        reactionsDiv.appendChild(span);
+      });
+      div.appendChild(reactionsDiv);
+    }
+
+    // ---- appui long pour emoji picker ----
+    if (msg.from_user !== currentUser.id) {
+      let timer = null;
+      div.addEventListener("pointerdown", (e) => {
+        e.preventDefault();
+        timer = setTimeout(() => {
+          currentMsgForReaction = msg;
+          const rect = div.getBoundingClientRect();
+          let top = rect.bottom + window.scrollY + 8;
+          if (top + emojiPicker.offsetHeight > window.scrollY + window.innerHeight) {
+            top = rect.top + window.scrollY - emojiPicker.offsetHeight - 8;
+          }
+          emojiPicker.style.top = `${top}px`;
+          emojiPicker.style.left = `${rect.left + window.scrollX}px`;
+          emojiPicker.style.display = "flex";
+        }, 600);
+      });
+      div.addEventListener("pointerup", () => clearTimeout(timer));
+      div.addEventListener("pointerleave", () => clearTimeout(timer));
+      div.addEventListener("pointercancel", () => clearTimeout(timer));
+    }
+
+    messagesList.appendChild(div);
+  });
+
+  // 5️⃣ scroll en bas
+  setTimeout(() => { messagesList.scrollTop = messagesList.scrollHeight; }, 100);
+}
+  async function getShopStats(shopId) {
+  const { data: messages, error } = await supabase
+    .from("messages_shop")
+    .select("*")
+    .eq("shop_id", shopId);
+
+  if (error) {
+    console.error("Erreur stats boutique :", error);
+    return null;
+  }
+
+  const visibleMessages = messages.filter(
+    m => !m.deleted_by || !m.deleted_by.includes(currentUser.id)
+  );
+
+  const stats = {
+    total: visibleMessages.length,
+    sent: visibleMessages.filter(m => m.from_user === currentUser.id).length,
+    received: visibleMessages.filter(m => m.to_user === currentUser.id).length,
+    images: visibleMessages.filter(m => m.image_url).length,
+    videos: visibleMessages.filter(m => m.video_url).length,
+    audios: visibleMessages.filter(m => m.audio_url).length,
+    files: visibleMessages.filter(m => m.file_url).length,
+    lastMessageAt: null
+  };
+
+  if (visibleMessages.length > 0) {
+    stats.lastMessageAt =
+      visibleMessages[visibleMessages.length - 1].created_at;
+  }
+
+  return stats;
+}
+  function closeShopStats() {
+  document.getElementById("shopStatsModal").style.display = "none";
+}
+
+async function openShopStats() {
+  if (!currentShop) return;
+
+  const stats = await getShopStats(currentShop.id);
+  if (!stats) return;
+
+  const div = document.getElementById("shopStatsContent");
+
+  div.innerHTML = `
+    <p>📩 Total messages : <strong>${stats.total}</strong></p>
+    <p>📤 Envoyés : <strong>${stats.sent}</strong></p>
+    <p>📥 Reçus : <strong>${stats.received}</strong></p>
+    <p>🖼️ Images : <strong>${stats.images}</strong></p>
+    <p>🎥 Vidéos : <strong>${stats.videos}</strong></p>
+    <p>🎤 Audios : <strong>${stats.audios}</strong></p>
+    <p>📎 Fichiers : <strong>${stats.files}</strong></p>
+    <p>⏱️ Dernier message : <strong>
+      ${stats.lastMessageAt
+        ? new Date(stats.lastMessageAt).toLocaleString()
+        : "—"}
+    </strong></p>
+  `;
+
+  document.getElementById("shopStatsModal").style.display = "flex";
+}
+  const mediaModal = document.getElementById("mediaModal");
+const mediaContent = document.getElementById("mediaContent");
+const closeMediaModal = document.getElementById("closeMediaModal");
+
+closeMediaModal.onclick = () => {
+    mediaModal.style.display = "none";
+    mediaContent.innerHTML = "";
+};
+
+// Fermer au clic en dehors
+mediaModal.addEventListener("click", (e) => {
+    if (e.target === mediaModal) {
+        mediaModal.style.display = "none";
+        mediaContent.innerHTML = "";
+    }
+});
+async function deleteMessage(messageId) {
+  const ok = confirm("Supprimer ce message ?");
+  if (!ok) return;
+
+  // Récupérer le message
+  const { data: msg, error } = await supabase
+    .from("messages_shop")
+    .select("deleted_by, shop_id")
+    .eq("id", messageId)
+    .single();
+
+  if (error) { console.error(error); return; }
+
+  // Ajouter l'utilisateur dans deleted_by
+  const newDeletedBy = msg.deleted_by ? [...msg.deleted_by, currentUser.id] : [currentUser.id];
+
+  const { error: updateError } = await supabase
+    .from("messages_shop")
+    .update({ deleted_by: newDeletedBy })
+    .eq("id", messageId);
+
+  if (updateError) { console.error(updateError); return; }
+
+  // Recharger la discussion
+  await loadMessagesShop();
+
+  // Vérifier si tous les messages sont supprimés → enlever discussion
+  const { data: remainingMessages } = await supabase
+    .from("messages_shop")
+    .select("id")
+    .eq("shop_id", msg.shop_id)
+    .or(`deleted_by.is.null,deleted_by.not.cs.{${currentUser.id}}`);
+
+  if (!remainingMessages || remainingMessages.length === 0) {
+    await loadDiscussionsAchat();
+    await loadDiscussionsVente();
+  }
+
+  updateUnreadBadge();
+}
+async function loadDiscussionsAchat() {
+  const { data, error } = await supabase
+    .from('messages_shop')
+    .select('shop_id, message, image_url, video_url, audio_url, from_user, to_user, created_at, shops(name)')
+    .eq('from_user', currentUser.id)
+    .or(`deleted_by.is.null,deleted_by.not.cs.{${currentUser.id}}`)
+    .order('created_at', { ascending: false });
+
+  if (error) { console.error(error); return; }
+
+  discussionsList.innerHTML = "";
+
+  const filteredData = data.filter(msg => msg.message || msg.image_url || msg.video_url || msg.audio_url);
+
+  const grouped = {};
+  filteredData.forEach(msg => {
+    if (!grouped[msg.shop_id]) grouped[msg.shop_id] = [];
+    grouped[msg.shop_id].push(msg);
+  });
+
+  for (const [shopId, msgs] of Object.entries(grouped)) {
+    const lastMsg = msgs[msgs.length - 1];
+
+    // Vérifier si la discussion existe déjà
+    const existingDiv = document.querySelector(`.discussion-item[data-shop-id='${shopId}']`);
+    if (existingDiv) {
+      // Mettre à jour le preview du dernier message
+      const previewSpan = existingDiv.querySelector("small");
+      if (previewSpan) {
+        let preview = lastMsg.message 
+          ? lastMsg.message.slice(0, 30) + (lastMsg.message.length > 30 ? "…" : "")
+          : lastMsg.image_url ? "[Image]" 
+          : lastMsg.video_url ? "[Vidéo]" 
+          : lastMsg.audio_url ? "[Audio]" 
+          : "";
+        previewSpan.textContent = preview;
+      }
+      continue; // ne pas créer de nouveau div
+    }
+
+    // récupérer username et last_seen du propriétaire
+    const { data: ownerProfile } = await supabase
+      .from('profiles')
+      .select('username, last_seen')
+      .eq('id', lastMsg.to_user)
+      .single();
+
+    const ownerUsername = ownerProfile?.username || "Propriétaire";
+    const isOnline = ownerProfile?.last_seen 
+      ? ((new Date() - new Date(ownerProfile.last_seen)) / 1000) < 120 
+      : false;
+
+    let preview = lastMsg.message 
+      ? lastMsg.message.slice(0, 30) + (lastMsg.message.length > 30 ? "…" : "")
+      : lastMsg.image_url ? "[Image]" 
+      : lastMsg.video_url ? "[Vidéo]" 
+      : lastMsg.audio_url ? "[Audio]" 
+      : "";
+
+    const div = document.createElement('div');
+    div.className = "discussion-item";
+    div.dataset.shopId = shopId;
+
+    const nameSpan = document.createElement("span");
+    nameSpan.innerHTML = `<strong>${ownerUsername}</strong> · ${lastMsg.shops?.name || "Boutique inconnue"}`;
+
+    const onlineIndicator = document.createElement("span");
+    onlineIndicator.style.display = "inline-block";
+    onlineIndicator.style.width = "10px";
+    onlineIndicator.style.height = "10px";
+    onlineIndicator.style.borderRadius = "50%";
+    onlineIndicator.style.marginLeft = "6px";
+    onlineIndicator.style.background = isOnline ? "green" : "gray";
+    nameSpan.appendChild(onlineIndicator);
+
+    const previewSpan = document.createElement("small");
+    previewSpan.textContent = preview;
+    previewSpan.style.display = "block";
+
+    div.appendChild(nameSpan);
+    div.appendChild(previewSpan);
+
+    div.onclick = async () => {
+      currentShop = { id: lastMsg.shop_id, name: lastMsg.shops?.name, owner_id: lastMsg.to_user };
+      chatContainer.classList.add("open");
+      chatTitle.textContent = `Boutique: ${currentShop.name}`;
+      await loadMessagesShop();
+    };
+
+    discussionsList.appendChild(div);
+  }
+}
+  
+      async function loadDiscussionsVente() {
+  const { data, error } = await supabase
+    .from('messages_shop')
+    .select('shop_id, message, image_url, video_url, audio_url, from_user, to_user, created_at, is_read, shops(name)')
+    .eq('to_user', currentUser.id)
+    .or(`deleted_by.is.null,deleted_by.not.cs.{${currentUser.id}}`)
+    .order('created_at', { ascending: false });
+
+  if (error) { console.error(error); return; }
+
+  discussionsList.innerHTML = "";
+
+  const filteredData = data.filter(msg => msg.message || msg.image_url || msg.video_url || msg.audio_url);
+
+  const grouped = {};
+  filteredData.forEach(msg => {
+    if (!grouped[msg.shop_id]) grouped[msg.shop_id] = [];
+    grouped[msg.shop_id].push(msg);
+  });
+
+  for (const [shopId, msgs] of Object.entries(grouped)) {
+    const lastMsg = msgs[msgs.length - 1];
+
+    // Vérifier si la discussion existe déjà
+    const existingDiv = document.querySelector(`.discussion-item[data-shop-id='${shopId}']`);
+    if (existingDiv) {
+      // Mettre à jour le preview et badge non lu
+      const previewSpan = existingDiv.querySelector("small");
+      if (previewSpan) {
+        let preview = lastMsg.message 
+          ? lastMsg.message.slice(0, 30) + (lastMsg.message.length > 30 ? "…" : "")
+          : lastMsg.image_url ? "[Image]" 
+          : lastMsg.video_url ? "[Vidéo]" 
+          : lastMsg.audio_url ? "[Audio]" 
+          : "";
+        previewSpan.textContent = preview;
+      }
+
+      const nameSpan = existingDiv.querySelector("span");
+      const unreadCount = msgs.filter(m => !m.is_read).length;
+      let badge = nameSpan.querySelector(".unread-badge");
+      if (!badge && unreadCount > 0) {
+        badge = document.createElement("span");
+        badge.className = "unread-badge";
+        nameSpan.appendChild(badge);
+      }
+      if (badge) {
+        badge.textContent = unreadCount;
+        badge.style.background = "red";
+        badge.style.color = "white";
+        badge.style.borderRadius = "50%";
+        badge.style.padding = "2px 6px";
+        badge.style.fontSize = "12px";
+        badge.style.marginLeft = "8px";
+      }
+      continue; // ne pas créer de nouveau div
+    }
+
+    const { data: senderProfile } = await supabase
+      .from('profiles')
+      .select('username, last_seen')
+      .eq('id', lastMsg.from_user)
+      .single();
+
+    const senderUsername = senderProfile?.username || "Utilisateur";
+    const isOnline = senderProfile?.last_seen 
+      ? ((new Date() - new Date(senderProfile.last_seen)) / 1000) < 120 
+      : false;
+
+    let preview = lastMsg.message 
+      ? lastMsg.message.slice(0, 30) + (lastMsg.message.length > 30 ? "…" : "")
+      : lastMsg.image_url ? "[Image]" 
+      : lastMsg.video_url ? "[Vidéo]" 
+      : lastMsg.audio_url ? "[Audio]" 
+      : "";
+
+    const div = document.createElement('div');
+    div.className = "discussion-item";
+    div.dataset.shopId = shopId;
+
+    const nameSpan = document.createElement("span");
+    nameSpan.innerHTML = `<strong>${senderUsername}</strong> · ${lastMsg.shops?.name || "Boutique inconnue"}`;
+
+    const onlineIndicator = document.createElement("span");
+    onlineIndicator.style.display = "inline-block";
+    onlineIndicator.style.width = "10px";
+    onlineIndicator.style.height = "10px";
+    onlineIndicator.style.borderRadius = "50%";
+    onlineIndicator.style.marginLeft = "6px";
+    onlineIndicator.style.background = isOnline ? "green" : "gray";
+    nameSpan.appendChild(onlineIndicator);
+
+    const unreadCount = msgs.filter(m => !m.is_read).length;
+    if (unreadCount > 0) {
+      const badge = document.createElement("span");
+      badge.className = "unread-badge";
+      badge.textContent = unreadCount;
+      badge.style.background = "red";
+      badge.style.color = "white";
+      badge.style.borderRadius = "50%";
+      badge.style.padding = "2px 6px";
+      badge.style.fontSize = "12px";
+      badge.style.marginLeft = "8px";
+      nameSpan.appendChild(badge);
+    }
+
+    const previewSpan = document.createElement("small");
+    previewSpan.textContent = preview;
+    previewSpan.style.display = "block";
+
+    div.appendChild(nameSpan);
+    div.appendChild(previewSpan);
+
+    div.onclick = async () => {
+      currentShop = { id: lastMsg.shop_id, name: lastMsg.shops?.name, owner_id: lastMsg.from_user };
+      chatContainer.classList.add("open");
+      chatTitle.textContent = `Boutique: ${currentShop.name}`;
+      await loadMessagesShop();
+    };
+
+    discussionsList.appendChild(div);
+  }
+}
+  
+// ====== SUPPRIMER DISCUSSION ======
+async function deleteCurrentDiscussion() {
+  if (!currentShop || !currentUser) {
+    alert("Aucune discussion sélectionnée");
+    return;
+  }
+
+  const ok = confirm("Supprimer toute la discussion ?");
+  if (!ok) return;
+
+  // 1️⃣ Récupérer les messages NON déjà supprimés par l'utilisateur
+  const { data: messages, error } = await supabase
+    .from("messages_shop")
+    .select("id, deleted_by")
+    .eq("shop_id", currentShop.id)
+    .not("deleted_by", "cs", `{${currentUser.id}}`);
+
+  if (error) {
+    console.error(error);
+    alert("Erreur récupération messages");
+    return;
+  }
+
+  if (!messages || messages.length === 0) {
+    console.log("Aucun message à supprimer");
+  }
+
+  // 2️⃣ Marquer chaque message comme supprimé pour l'utilisateur
+  for (const msg of messages) {
+    const deletedBy = Array.isArray(msg.deleted_by)
+      ? [...new Set([...msg.deleted_by, currentUser.id])]
+      : [currentUser.id];
+
+    const { error: updateError } = await supabase
+      .from("messages_shop")
+      .update({ deleted_by: deletedBy })
+      .eq("id", msg.id);
+
+    if (updateError) {
+      console.error("Erreur update:", updateError);
+    }
+  }
+
+  // 3️⃣ Nettoyage UI
+  chatContainer.classList.remove("open");
+  messagesList.innerHTML = "";
+  currentShop = null;
+
+  // 4️⃣ Recharger listes + badge
+  await loadDiscussionsAchat();
+  await loadDiscussionsVente();
+  await updateUnreadBadge();
+
+  console.log("✅ Discussion supprimée définitivement pour l'utilisateur");
+}
+
+deleteChat.onclick = deleteCurrentDiscussion;
+  
+  // ====== REALTIME : NOUVEAUX MESSAGES ======
+const messagesChannel = supabase
+  .channel('messages-shop-realtime')
+  .on(
+    'postgres_changes',
+    {
+      event: 'INSERT',
+      schema: 'public',
+      table: 'messages_shop'
+    },
+    async (payload) => {
+      const newMsg = payload.new;
+
+      // ❌ ignorer ses propres messages
+      if (newMsg.from_user === currentUser.id) return;
+
+      // ✅ Si on est DANS la discussion ouverte
+      if (currentShop && newMsg.shop_id === currentShop.id) {
+        await loadMessagesShop();      // afficher le message
+        await markMessagesAsRead();    // le marquer lu
+      } 
+      // ✅ Sinon → badge
+      else {
+        await updateUnreadBadge();
+      }
+    }
+  )
+  .subscribe();
+
+// ====== INIT ======
+await loadShops();  // maj correct de la casse
+await updateUnreadBadge();
+await loadDiscussionsAchat();
+  
+</script>
+
+</body>
+</html>
