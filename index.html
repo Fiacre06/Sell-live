@@ -1,4 +1,6 @@
-<!DOCTYPE html>
+
+ 
+ <!DOCTYPE html>
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
@@ -77,7 +79,7 @@ header.topbar .top-actions button {
 /* Carte boutique */
 .shopCard{
   width: 100%;
-  height: auto;
+  height:auto;
   min-height: 280px;
   border: 1px solid #ddd;
   border-radius: 10px;
@@ -96,7 +98,7 @@ header.topbar .top-actions button {
 
 .shopCard img{
   width: 100%;
-  height: 200px;
+  height: auto;
   object-fit: cover;
   border-radius: 8px;
   margin-bottom: 5px;
@@ -292,11 +294,44 @@ header.topbar .top-actions button {
   cursor: pointer;
 }
   
+#notifOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+#notifPanel {
+  width: 95%;
+  max-width: 420px;
+  background: white;
+  border-radius: 12px;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.notifHeader {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:12px;
+  border-bottom:1px solid #ddd;
+}
+
+.notifHeader button {
+  font-size:20px;
+  background:none;
+  border:none;
+  cursor:pointer;
+}
   .notif-btn {
   position: relative;
   background: none;
   border: none;
-  font-size: 20px;
+  font-size: 15px;
   cursor: pointer;
 }
 
@@ -310,26 +345,6 @@ header.topbar .top-actions button {
   padding: 2px 5px;
   border-radius: 50%;
   display: none;
-}
-
-#notificationsPanel {
-  position: absolute;
-  top: 45px;
-  right: 0;
-  width: 260px;
-  max-height: 300px;
-  overflow-y: auto;
-  background: white;
-  border-radius: 10px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.2);
-  padding: 10px;
-  z-index: 9999;
-  display: none;
-}
-
-#notificationsPanel h4 {
-  margin: 0 0 6px;
-  font-size: 14px;
 }
 .favorite-shop-btn {
   margin-top: 8px;
@@ -393,7 +408,176 @@ header.topbar .top-actions button {
   overflow-y: auto;
   padding-right: 4px;
 }
+/* ===== BARRE FILTRE ===== */
+.filterBar {
+  display: flex;
+  gap: 10px;
+  margin: 15px 0;
+}
 
+.filterBtn {
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: none;
+  background: #2e7d32;
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 14px;
+  transition: 0.2s;
+}
+
+.filterBtn.secondary {
+  background: #607d8b;
+}
+
+.filterBtn:hover {
+  opacity: 0.9;
+}
+
+/* ===== MODALE ===== */
+.categoryModal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 10px;
+}
+
+.categoryModal.hidden {
+  display: none;
+}
+
+.categoryBox {
+  background: #fff;
+  width: 100%;
+  max-width: 400px;
+  max-height: 80vh;
+  border-radius: 16px;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+}
+
+/* ===== RECHERCHE ===== */
+.categorySearch {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid #ccc;
+  margin-bottom: 10px;
+  font-size: 14px;
+  outline: none;
+}
+
+#categoryList {
+  flex: 1;
+  overflow-y: auto;
+}
+
+/* ===== GROUPE ===== */
+.categoryGroupTitle {
+  font-weight: bold;
+  margin: 12px 0 6px;
+  font-size: 14px;
+  color: #333;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 4px;
+}
+
+/* ===== SOUS CATÉGORIE ===== */
+.categoryItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 12px;
+  margin-bottom: 6px;
+  cursor: pointer;
+  background: #f7f7f7;
+  transition: 0.2s;
+  font-size: 14px;
+}
+
+.categoryItem:hover {
+  background: #e8f5e9;
+}
+
+.catIcon {
+  font-size: 18px;
+}
+
+/* ===== ACTIONS ===== */
+.categoryActions {
+  margin-top: 10px;
+}
+
+#closeCategoryBtn {
+  width: 100%;
+  padding: 10px;
+  border-radius: 12px;
+  border: none;
+  background: #e53935;
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+}
+/* CONTENEUR BOUTONS HORIZONTAUX */
+.topButtons {
+  display: flex;
+  gap: 10px;               /* espace entre les boutons */
+  padding: 10px;
+  overflow-x: auto;         /* scroll horizontal si trop large */
+  -webkit-overflow-scrolling: touch; /* scroll smooth sur mobile */
+  scrollbar-width: thin;    /* Firefox */
+}
+#nearbyShopsBtn{
+  flex: 0 0 auto;          /* empêche les boutons de s’étirer */
+  padding: 8px 14px;
+  border-radius: 12px;
+  border: none;
+  background-color: #2e7d32;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+  white-space: nowrap;      /* empêche le texte de passer à la ligne */
+}
+  
+/* Scrollbar personnalisée */
+.topButtons::-webkit-scrollbar {
+  height: 6px;
+}
+.topButtons::-webkit-scrollbar-thumb {
+  background-color: rgba(0,0,0,0.2);
+  border-radius: 3px;
+}
+
+/* BOUTONS */
+.topBtn {
+  flex: 0 0 auto;          /* empêche les boutons de s’étirer */
+  padding: 8px 14px;
+  border-radius: 12px;
+  border: none;
+  background-color: #2e7d32;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+  white-space: nowrap;      /* empêche le texte de passer à la ligne */
+}
+
+.topBtn.secondary {
+  background-color:  #2e7d32;
+}
+
+.topBtn:hover {
+  filter: brightness(0.9);
+}
 </style>
 </head>
 <body>
@@ -416,13 +600,19 @@ header.topbar .top-actions button {
           display:none;
         ">0</span>
     </button>
-      <!-- 🔔 BOUTON NOTIFICATION -->
-  <div class="top-bar">
-  <button id="notifBtn" class="notif-btn">
-    🔔
-    <span id="notifCount">0</span>
-  </button>
+     <button id="notifBtn" class="notif-btn">
+  🔔 <span id="notifCount">0</span>
+</button>
 
+<div id="notifOverlay" style="display:none;">
+  <div id="notifPanel">
+    <div class="notifHeader">
+      <h3>Notifications</h3>
+      <button id="closeNotif">×</button>
+    </div>
+    <div id="notifList"></div>
+  </div>
+</div>
 <!-- Bouton Favoris avec badge -->
 <button id="favoritesBtn" style="position:relative;">
   ❤️ Favoris
@@ -446,7 +636,7 @@ header.topbar .top-actions button {
     <div style="display:flex; gap:10px; margin-bottom:10px;">
       <button id="btnFavorisBoutiques">Boutiques</button>
       <button id="btnFavorisProduits">Produits</button>
-      <button id="btnFavorisNotifications">Notifications</button> <!-- <-- nouvel onglet -->
+      
     </div>
 
     <div id="favoritesShopsList"></div>
@@ -457,44 +647,53 @@ header.topbar .top-actions button {
   </div>
 </div>
     
-  <div id="notificationsPanel">
-    <h4>Notifications</h4>
-    <div id="notificationsList"></div>
-  </div>
-</div>
+  
   <button id="logoutBtn">Déconnexion</button>
     <button id="sellBtn">Vendre</button>
   </div>
 </header>
-<!-- ===== BOUTON TOP BOUTIQUES ===== -->
-<button id="topShopsBtn"
-  style="
-    width:40%;
-    margin-bottom:10px;
-    padding:10px;
-    border:none;
-    border-radius:10px;
-    background:#ff9800;
-    color:white;
-    font-weight:700;
-    cursor:pointer;
-  ">
-  🔥 Top boutiques
+  
+  <!-- CONTENEUR BOUTONS HORIZONTAUX -->
+<div class="topButtons">
+  <button id="topShopsBtn" class="topBtn">🔥 Top boutiques</button>
+  <button id="filterCategoryBtn" class="topBtn">📂 Catégories</button>
+  <button id="resetFilterBtn" class="topBtn secondary">🔄 Toutes les boutiques</button>
+  <button id="nearbyShopsBtn">
+  📍 Boutiques proches
 </button>
+</div>
+  
 
-<!-- ===== OVERLAY TOP BOUTIQUES ===== -->
+<!-- MODALE CATÉGORIES -->
+<div id="categoryModal" class="categoryModal hidden">
+  <div class="categoryBox">
+
+    <input
+      type="text"
+      id="categorySearch"
+      class="categorySearch"
+      placeholder="🔍 Rechercher une catégorie..."
+    >
+
+    <div id="categoryList"></div>
+
+    <div class="categoryActions">
+      <button id="closeCategoryBtn">Fermer</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- OVERLAY TOP BOUTIQUES -->
 <div id="topShopsOverlay" style="display:none;">
   <div id="topShopsPanel">
     <div class="topShopsHeader">
       <h3>🔥 Top 5 Boutiques</h3>
       <button id="closeTopShops">×</button>
     </div>
-
-    <!-- ⚠️ UN SEUL container -->
     <div id="topShopsContainer"></div>
   </div>
 </div>
-
 <div class="search-bar">
   <input type="text" id="searchInput" placeholder="🔍 Rechercher une boutique...">
 </div>
@@ -511,7 +710,7 @@ header.topbar .top-actions button {
     <h2 id="shopViewName"></h2>
     <p id="shopViewDesc"></p>
     <p><strong>Catégorie:</strong> <span id="shopViewCategory"></span></p>
-    <p><strong>Localisation:</strong> <span id="shopViewLocation"></span></p>
+    <p><strong>Lieu:</strong> <span id="shopViewLocation"></span></p>
     <p><strong>Produits disponibles</strong></p>
     <div id="shopProductsScroll"></div>
     <button id="contactShopBtn">Contacter la boutique</button>
@@ -701,7 +900,7 @@ async function loadCurrentUser() {
   } else {
     currentProfile = profile;
   }
-loadNotifications();
+
   // Badge premium
   let badge = '';
   switch (currentProfile?.premium_level) {
@@ -780,12 +979,6 @@ const sendCommentBtn = document.getElementById('sendCommentBtn');
 
 const copyLinkBtn = document.getElementById('copyLinkBtn');
 
-const notifBtn = document.getElementById("notifBtn");
-const notifPanel = document.getElementById("notificationsPanel");
-const notifList = document.getElementById("notificationsList");
-const notifCountEl = document.getElementById("notifCount");
-
-const btnFavorisNotifications = document.getElementById("btnFavorisNotifications");
 
 
 const tabAchat = document.getElementById("tabAchat"); // Achat
@@ -850,8 +1043,638 @@ tabVente.onclick = async () => {
   if (currentUser) await loadDiscussionsVente();
 };
   
-  
+  const nearbyShopsBtn = document.getElementById("nearbyShopsBtn");
+const maxDistance = 15; // km maximum à afficher
 
+// Fonction calcul distance en km
+function distanceKm(lat1, lon1, lat2, lon2) {
+  const R = 6371; // rayon terre en km
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a =
+    Math.sin(dLat/2) ** 2 +
+    Math.cos(lat1 * Math.PI / 180) *
+    Math.cos(lat2 * Math.PI / 180) *
+    Math.sin(dLon/2) ** 2;
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  return R * c;
+}
+
+// Charger boutiques depuis Supabase
+async function loadNearbyShops() {
+  try {
+    const { data: shops, error } = await supabase.from("shops").select("*");
+    if (error) throw error;
+    if (!shops || shops.length === 0) {
+      alert("Aucune boutique trouvée");
+      return;
+    }
+
+    // Récupérer la position de l'utilisateur
+    navigator.geolocation.getCurrentPosition(async pos => {
+      const userLat = pos.coords.latitude;
+      const userLon = pos.coords.longitude;
+
+      // Filtrer boutiques proches
+      const nearby = shops.filter(shop => {
+        if (!shop.latitude || !shop.longitude) return false;
+        const dist = distanceKm(userLat, userLon, shop.latitude, shop.longitude);
+        shop.distance = dist; // stocker distance pour affichage
+        return dist <= maxDistance;
+      });
+
+      // Trier par proximité
+      nearby.sort((a,b) => a.distance - b.distance);
+
+      // Affichage
+      const shopsList = document.getElementById("shopsList"); // ton container
+      shopsList.innerHTML = "";
+
+      if (nearby.length === 0) {
+        shopsList.innerHTML = "<p>Aucune boutique à moins de "+maxDistance+" km</p>";
+        return;
+      }
+
+      nearby.forEach(shop => {
+        const div = document.createElement("div");
+        div.className = "shopCard";
+        div.innerHTML = `
+          <h3>${shop.name}</h3>
+          <p>${shop.description || ""}</p>
+          <p>Distance : ${shop.distance.toFixed(1)} km</p>
+        `;
+        shopsList.appendChild(div);
+      });
+
+    }, err => {
+      alert("Impossible de récupérer votre position : " + err.message);
+    });
+
+  } catch(err) {
+    console.error(err);
+    alert("Erreur lors du chargement des boutiques");
+  }
+}
+
+// Événement bouton
+nearbyShopsBtn.onclick = loadNearbyShops;
+  
+console.log("✅ JS ACHAT – FILTRE CATÉGORIES INITIALISÉ");
+
+/* ==============================
+   CATÉGORIES
+============================== */
+const categories = [
+  {
+    name: "Production végétale",
+    icon: "🌱",
+    color: "#E8F5E9",
+    items: [
+      "Céréales & grains",
+      "Légumes",
+      "Fruits",
+      "Racines & tubercules",
+      "Plantes industrielles",
+      "Plantes aromatiques & médicinales"
+    ]
+  },
+  {
+    name: "Production animale",
+    icon: "🐄",
+    color: "#FFF3E0",
+    items: [
+      "Bovins",
+      "Ovins & caprins",
+      "Porcins",
+      "Aviculture",
+      "Apiculture",
+      "Pisciculture & aquaculture"
+    ]
+  },
+  {
+    name: "Transformation agricole",
+    icon: "🍯",
+    color: "#FCE4EC",
+    items: [
+      "Produits céréaliers transformés",
+      "Produits fruitiers transformés",
+      "Produits tubercules transformés",
+      "Produits animaux transformés"
+    ]
+  },
+  {
+    name: "Machines & équipements agricoles",
+    icon: "🚜",
+    color: "#E3F2FD",
+    items: [
+      "Machines lourdes",
+      "Équipements motorisés",
+      "Outils agricoles",
+      "Irrigation & énergie",
+      "Pièces & maintenance"
+    ]
+  },
+  {
+    name: "Intrants agricoles",
+    icon: "🌿",
+    color: "#E0F2F1",
+    items: [
+      "Semences & plants",
+      "Engrais organiques",
+      "Engrais chimiques",
+      "Amendements du sol",
+      "Produits phytosanitaires"
+    ]
+  },
+  {
+    name: "Espaces verts",
+    icon: "🌳",
+    color: "#E8F8F5",
+    items: [
+      "Plantes ornementales",
+      "Arbres & arbustes",
+      "Gazon & pelouses",
+      "Fleurs & pépinières",
+      "Aménagement paysager",
+      "Entretien des espaces verts",
+      "Matériel de jardinage"
+    ]
+  },
+  {
+    name: "Services agricoles",
+    icon: "🛠️",
+    color: "#F3E5F5",
+    items: [
+      "Labour & préparation du sol",
+      "Récolte & battage",
+      "Transport & logistique",
+      "Stockage & conservation",
+      "Formation & conseil",
+      "Commercialisation & export"
+    ]
+  }
+];
+
+/* ==============================
+   RÉCUP DOM (SANS DOMContentLoaded)
+============================== */
+const filterCategoryBtn = document.getElementById("filterCategoryBtn");
+const resetFilterBtn    = document.getElementById("resetFilterBtn");
+const categoryModal     = document.getElementById("categoryModal");
+const categoryList      = document.getElementById("categoryList");
+const categorySearch    = document.getElementById("categorySearch");
+const closeCategoryBtn  = document.getElementById("closeCategoryBtn");
+
+/* ==============================
+   VÉRIFICATION FORCÉE
+============================== */
+if (!filterCategoryBtn) console.error("❌ filterCategoryBtn introuvable");
+if (!resetFilterBtn)    console.error("❌ resetFilterBtn introuvable");
+if (!categoryModal)     console.error("❌ categoryModal introuvable");
+if (!categoryList)      console.error("❌ categoryList introuvable");
+if (!categorySearch)    console.error("❌ categorySearch introuvable");
+if (!closeCategoryBtn)  console.error("❌ closeCategoryBtn introuvable");
+
+/* ==============================
+   OUVERTURE MODALE
+============================== */
+filterCategoryBtn.onclick = () => {
+  console.log("📂 Bouton Catégories cliqué");
+  categoryModal.classList.remove("hidden");
+  categoryModal.style.display = "flex";
+  document.body.style.overflow = "hidden";
+  categorySearch.value = "";
+  renderCategoryList("");
+};
+
+/* ==============================
+   FERMETURE MODALE
+============================== */
+function closeCategoryModal() {
+  console.log("❌ Fermeture modale");
+  categoryModal.classList.add("hidden");
+  categoryModal.style.display = "none";
+  document.body.style.overflow = "auto";
+}
+
+closeCategoryBtn.onclick = closeCategoryModal;
+
+categoryModal.onclick = () => closeCategoryModal();
+
+const categoryBox = categoryModal.querySelector(".categoryBox");
+if (categoryBox) {
+  categoryBox.onclick = e => e.stopPropagation();
+}
+
+/* ==============================
+   AFFICHAGE DES CATÉGORIES
+============================== */
+function renderCategoryList(filter = "") {
+  console.log("📋 Render catégories :", filter);
+  categoryList.innerHTML = "";
+
+  categories.forEach(group => {
+    const title = document.createElement("div");
+    title.className = "categoryGroupTitle";
+    title.textContent = `${group.icon} ${group.name}`;
+    categoryList.appendChild(title);
+
+    group.items.forEach(item => {
+      const txt = `${group.name} ${item}`.toLowerCase();
+      if (filter && !txt.includes(filter.toLowerCase())) return;
+
+      const div = document.createElement("div");
+      div.className = "categoryItem";
+      div.style.background = group.color;
+      div.innerHTML = `
+        <span class="catIcon">${group.icon}</span>
+        <span>${item}</span>
+      `;
+
+      div.onclick = () => {
+        console.log("✅ Filtre :", group.name, item);
+        applyCategoryFilter(group.name, item);
+        closeCategoryModal();
+      };
+
+      categoryList.appendChild(div);
+    });
+  });
+}
+
+/* ==============================
+   FILTRAGE DES BOUTIQUES
+============================== */
+function applyCategoryFilter(mainCategory, subCategory) {
+  const shops = document.querySelectorAll(".shopCard");
+
+  shops.forEach(shop => {
+    const raw = shop.dataset.category;
+    if (!raw) {
+      shop.style.display = "none";
+      return;
+    }
+
+    // 🔹 Normalisation
+    const text = raw.toLowerCase();
+
+    const main = mainCategory.toLowerCase();
+    const sub  = subCategory.toLowerCase();
+
+    // 🔹 Découper les sous-catégories
+    // Exemple : "Agriculture · Fruits, Légumes"
+    const parts = text.split("·");
+    const shopMain = parts[0]?.trim() || "";
+    const shopSubs = parts[1]
+      ? parts[1].split(",").map(s => s.trim())
+      : [];
+
+    // 🔹 Vérification
+    const match =
+      shopMain === main &&
+      shopSubs.includes(sub);
+
+    shop.style.display = match ? "block" : "none";
+  });
+}
+/* ==============================
+   RESET : TOUTES LES BOUTIQUES
+============================== */
+resetFilterBtn.onclick = () => {
+  console.log("🔄 Reset filtre");
+  document.querySelectorAll(".shopCard").forEach(card => {
+    card.style.display = "block";
+  });
+};
+
+/* ==============================
+   RECHERCHE
+============================== */
+categorySearch.oninput = () => {
+  renderCategoryList(categorySearch.value);
+};
+    
+    
+    
+    
+
+
+// ===============================
+// 🔔 NOTIFICATIONS GLOBALES
+// ===============================
+
+let notifChannel = null;
+
+// 🔹 Icônes par type
+function notifIcon(type) {
+  switch (type) {
+    case "favorite_shop": return "⭐";
+    case "favorite_product": return "❤️";
+    case "comment": return "💬";
+    case "like": return "👍";
+    case "new_product": return "🆕";
+    case "deleted_product": return "❌";
+    default: return "🔔";
+  }
+}
+
+ // 🔹 Charger notifications
+async function loadNotifications() {
+  if (!currentUser) return;
+
+  const { data, error } = await supabase
+  
+  .from("notif_market")
+.select("*")
+.eq("user_id", currentUser.id)
+.eq("is_deleted", false)  // <- important !
+.order("created_at", { ascending: false })
+     .limit(50);
+
+  if (error) {
+    console.error("Erreur notifications:", error);
+    return;
+  }
+
+  const list = document.getElementById("notifList");
+  list.innerHTML = "";
+
+  if (!data || data.length === 0) {
+    list.innerHTML = `<div style="padding:12px;text-align:center;color:#777">
+      Aucune notification
+    </div>`;
+    updateNotifBadge(0);
+    return;
+  }
+
+  let unreadCount = 0;
+
+  for (const n of data) {
+    if (!n.is_read) unreadCount++;
+
+    const item = document.createElement("div");
+    item.className = "notifItem";
+    item.style = `
+      padding:12px;
+      border-bottom:1px solid #eee;
+      background:${n.is_read ? "#fff" : "#f1f8ff"};
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      cursor:pointer;
+    `;
+
+    // Contenu notification
+    const contentDiv = document.createElement("div");
+    contentDiv.style.flex = "1";
+    contentDiv.innerHTML = `
+      <div style="display:flex;gap:10px;">
+        <div style="font-size:22px">${notifIcon(n.type)}</div>
+        <div>
+          <strong>${n.title}</strong>
+          <div style="font-size:14px;color:#555">${n.message}</div>
+          <div style="font-size:12px;color:#999">
+            ${new Date(n.created_at).toLocaleString()}
+          </div>
+        </div>
+      </div>
+    `;
+
+    // Clic sur notification = marquer comme lu + action
+    contentDiv.onclick = async () => {
+  console.log("🔔 Notification cliquée :", n);
+
+  if (!n.is_read) {
+    await supabase.from("notif_market")
+      .update({ is_read: true })
+      .eq("id", n.id);
+  }
+
+  if (n.link) {
+    console.log("➡️ Lien notification :", n.link);
+    handleInternalLink(n.link);
+  }
+};
+
+    // Bouton Supprimer (panier)
+    const deleteBtn = document.createElement("button");
+    deleteBtn.innerHTML = "🗑️";
+    deleteBtn.style = `
+      margin-left:10px;
+      padding:4px 8px;
+      font-size:14px;
+      border:none;
+      border-radius:6px;
+      background:#fff;
+      color:white;
+      cursor:pointer;
+      transition:0.2s;
+    `;
+    deleteBtn.onmouseover = () => deleteBtn.style.background = "#d32f2f";
+    deleteBtn.onmouseout = () => deleteBtn.style.background = "#e53935";
+
+    deleteBtn.onclick = async (e) => {
+      e.stopPropagation(); // très important pour ne pas déclencher click de la notif
+      if (!confirm("Supprimer cette notification ?")) return;
+
+      const { error } = await supabase
+  .from("notif_market")
+  .update({ is_deleted: true })
+  .eq("id", n.id);
+
+      if (error) {
+        console.error("Erreur suppression notif:", error);
+        return;
+      }
+
+      // Supprimer le div directement
+      item.remove();
+
+      // Mettre à jour le badge
+      if (!n.is_read) unreadCount--;
+      updateNotifBadge(unreadCount);
+    };
+
+    item.appendChild(contentDiv);
+    item.appendChild(deleteBtn);
+    list.appendChild(item);
+  }
+
+  updateNotifBadge(unreadCount);
+}
+
+  function handleInternalLink(link) {
+  if (!link) return;
+
+  try {
+    // Séparer le chemin et les paramètres
+    const url = new URL(link, window.location.origin);
+    const path = url.pathname;
+    const params = url.searchParams;
+
+    /* =========================
+       🏪 BOUTIQUE
+    ========================= */
+    if (path === "/shop") {
+      const shopId = params.get("id");
+      if (shopId) {
+        window.location.href = `/shop?id=${shopId}`;
+      }
+      return;
+    }
+
+    /* =========================
+       📦 PRODUIT
+    ========================= */
+    if (path === "/product") {
+      const productId = params.get("id");
+      if (productId) {
+        window.location.href = `/product?id=${productId}`;
+      }
+      return;
+    }
+
+    /* =========================
+       👤 PROFIL
+    ========================= */
+    if (path === "/profile") {
+      const userId = params.get("id");
+      if (userId) {
+        window.location.href = `/profile?id=${userId}`;
+      }
+      return;
+    }
+
+    /* =========================
+       💬 COMMENTAIRE (ancre)
+    ========================= */
+    if (path === "/shop" && url.hash) {
+      window.location.href = `/shop${url.search}${url.hash}`;
+      return;
+    }
+
+    /* =========================
+       🔗 AUTRES LIENS
+    ========================= */
+    window.location.href = link;
+
+  } catch (err) {
+    console.error("Erreur handleInternalLink :", err);
+    window.location.href = link;
+  }
+}
+// 🔹 Badge compteur
+function updateNotifBadge(count) {
+  const badge = document.getElementById("notifCount");
+  badge.textContent = count;
+  badge.style.display = count > 0 ? "inline-block" : "none";
+}
+
+// 🔹 Realtime Supabase
+function initNotifRealtime() {
+  if (!currentUser || notifChannel) return;
+
+  notifChannel = supabase
+    .channel("notif-market")
+    .on(
+      "postgres_changes",
+      {
+        event: "INSERT",
+        schema: "public",
+        table: "notif_market",
+        filter: `user_id=eq.${currentUser.id}`
+      },
+      () => {
+        loadNotifications();
+      }
+    )
+    .subscribe();
+}
+
+// 🔹 Boutons UI
+function initNotifUI() {
+  const btn = document.getElementById("notifBtn");
+  const overlay = document.getElementById("notifOverlay");
+  const close = document.getElementById("closeNotif");
+
+  if (!btn || !overlay || !close) return;
+
+  btn.onclick = () => {
+    overlay.style.display = "flex";
+    loadNotifications();
+  };
+
+  close.onclick = () => {
+    overlay.style.display = "none";
+  };
+
+  overlay.onclick = (e) => {
+    if (e.target === overlay) {
+      overlay.style.display = "none";
+    }
+  };
+}
+
+// 🔹 Notifications produits
+async function notifyNewProduct(shopId, productId, productName) {
+  if (!currentUser) return;
+
+  const { data: shop } = await supabase
+    .from("shops")
+    .select("owner_id, name")
+    .eq("id", shopId)
+    .single();
+
+  if (!shop || !shop.owner_id) return;
+
+  if (shop.owner_id !== currentUser.id) {
+    await supabase.from("notif_market").insert({
+      user_id: shop.owner_id,
+      actor_id: currentUser.id,
+      type: "new_product",
+      title: "🆕 Nouveau produit ajouté",
+      message: `${currentUser.username} a ajouté "${productName}" dans votre boutique "${shop.name}"`,
+      link: `#product-${productId}`, // ancre locale ou id produit
+      is_read: false
+    });
+  }
+}
+
+async function notifyDeletedProduct(shopId, productName) {
+  if (!currentUser) return;
+
+  const { data: shop } = await supabase
+    .from("shops")
+    .select("owner_id, name")
+    .eq("id", shopId)
+    .single();
+
+  if (!shop || !shop.owner_id) return;
+
+  if (shop.owner_id !== currentUser.id) {
+    await supabase.from("notif_market").insert({
+      user_id: shop.owner_id,
+      actor_id: currentUser.id,
+      type: "deleted_product",
+      title: "❌ Produit supprimé",
+      message: `${currentUser.username} a supprimé "${productName}" dans votre boutique "${shop.name}"`,
+      is_read: false
+    });
+  }
+}
+
+// 🔹 INIT GLOBAL
+function initNotifications() {
+  if (!currentUser) return;
+  initNotifUI();
+  loadNotifications();
+  initNotifRealtime();
+}
+
+// 🚀 Appel après login
+initNotifications();
+
+     
   
     const waitForTopBtn = setInterval(() => {
   const topBtn = document.getElementById("topShopsBtn");
@@ -1050,257 +1873,8 @@ div.onclick = () => {
       
       
 
-    
-btnFavorisNotifications.onclick = async () => {
-  // cacher boutiques & produits
-  favoritesShopsList.style.display = "none";
-  favoritesProductsList.style.display = "none";
-
-  // afficher notifications
-  favoritesList.style.display = "block";
-
-  // charger notifications
-  await loadFavoriteNotifications();
- await initNotificationsRealtime();
-};
-
   
-updateFavoritesBadge();
-  
-  let notificationsChannel = null;
-
-function initNotificationsRealtime() {
-  // 🔒 Sécurité absolue
-  if (!currentUser || !currentUser.id) {
-    console.warn("Realtime non initialisé : utilisateur absent");
-    return;
-  }
-
-  // 🔒 Éviter double abonnement
-  if (notificationsChannel) {
-    return;
-  }
-
-  notificationsChannel = supabase
-    .channel('favorite-notifications-' + currentUser.id)
-    .on(
-      'postgres_changes',
-      {
-        event: 'INSERT',
-        schema: 'public',
-        table: 'favorite_notifications',
-        filter: `user_id=eq.${currentUser.id}`
-      },
-      payload => {
-        console.log("🔔 Nouvelle notification reçue", payload);
-
-        // 🔹 Mettre à jour badge (sécurisé)
-        updateFavoritesBadge();
-
-        // 🔹 Rafraîchir la liste SI le modal est ouvert
-        if (
-          typeof favoritesModal !== "undefined" &&
-          typeof favoritesList !== "undefined" &&
-          favoritesModal &&
-          favoritesList &&
-          favoritesModal.style.display === "flex"
-        ) {
-          loadFavoriteNotifications(favoritesList);
-        }
-      }
-    )
-    .subscribe(status => {
-      console.log("📡 Realtime notifications :", status);
-    });
-}
-  
-// ===================================================
-// 🔔 NOTIFICATIONS FAVORIS + BADGE (VERSION STABLE)
-// ===================================================
-
-// 🔹 Créer notification pour utilisateurs favoris
-async function notifyFavoriteUsers(target, type, action) {
-  try {
-    if (!currentUser) return;
-
-    let users = [];
-
-    if (type === "shop") {
-      const { data } = await supabase
-        .from("favorite_shops")
-        .select("user_id")
-        .eq("shop_id", target.id);
-
-      users = data?.map(u => u.user_id) || [];
-    }
-
-    if (type === "product") {
-      const { data: prodFavs } = await supabase
-        .from("favorite_products")
-        .select("user_id")
-        .eq("product_id", target.id);
-
-      const { data: shopFavs } = await supabase
-        .from("favorite_shops")
-        .select("user_id")
-        .eq("shop_id", target.shop_id);
-
-      users = [
-        ...new Set([
-          ...(prodFavs?.map(u => u.user_id) || []),
-          ...(shopFavs?.map(u => u.user_id) || [])
-        ])
-      ];
-    }
-
-    if (!users.length) return;
-
-    const notifications = users.map(user_id => ({
-      user_id,
-      type,
-      target_id: target.id,
-      message:
-        type === "shop"
-          ? `La boutique "${target.name}" a été ${action}`
-          : `Le produit "${target.name}" a été ${action}`,
-      read: false,
-      created_at: new Date().toISOString()
-    }));
-
-    await supabase.from("favorite_notifications").insert(notifications);
-    updateFavoritesBadge();
-
-  } catch (err) {
-    console.error("❌ Erreur notification :", err);
-  }
-}
-
-// 🔹 Badge sur bouton favoris
-
-  
-  async function updateFavoritesBadge() {
-  console.log("🔔 updateFavoritesBadge appelée");
-
-  if (!currentUser || !currentUser.id) {
-    console.warn("⛔ currentUser non défini");
-    return;
-  }
-
-  const favoritesBtn = document.getElementById("favoritesBtn");
-  if (!favoritesBtn) {
-    console.warn("⛔ favoritesBtn introuvable dans le DOM");
-    return;
-  }
-
-  const { count, error } = await supabase
-    .from("favorite_notifications")
-    .select("*", { count: "exact", head: true })
-    .eq("user_id", currentUser.id)
-    .eq("read", false);
-
-  if (error) {
-    console.error("❌ Erreur Supabase badge :", error);
-    return;
-  }
-
-  console.log("🔔 Notifications non lues :", count);
-
-  let badge = favoritesBtn.querySelector(".favorites-badge");
-
-  if (!badge) {
-    badge = document.createElement("span");
-    badge.className = "favorites-badge";
-    badge.style.cssText = `
-      background:red;
-      color:white;
-      border-radius:50%;
-      padding:2px 6px;
-      font-size:12px;
-      margin-left:6px;
-      display:none;
-    `;
-    favoritesBtn.appendChild(badge);
-  }
-
-  if (count > 0) {
-    badge.textContent = count;
-    badge.style.display = "inline-block";
-  } else {
-    badge.style.display = "none";
-  }
-}
-// 🔹 Charger notifications dans Favoris
-async function loadFavoriteNotifications() {
-  if (!currentUser) return;
-
-  const container = document.getElementById("favoritesList");
-  container.innerHTML = "<p>Chargement...</p>";
-
-  const { data } = await supabase
-    .from("favorite_notifications")
-    .select("*")
-    .eq("user_id", currentUser.id)
-    .order("created_at", { ascending: false });
-
-  container.innerHTML = "";
-
-  if (!data || data.length === 0) {
-    container.innerHTML = "<p>Aucune notification.</p>";
-    return;
-  }
-
-  data.forEach(n => {
-    const div = document.createElement("div");
-    div.style.cssText = `
-      padding:10px;
-      border-bottom:1px solid #eee;
-      cursor:pointer;
-      background:${n.read ? "#fff" : "#4caf50"};
-    `;
-    div.textContent = n.message;
-
-    div.onclick = async () => {
-      await supabase
-        .from("favorite_notifications")
-        .update({ read: true })
-        .eq("id", n.id);
-
-      updateFavoritesBadge();
-
-      if (n.type === "shop") {
-        const { data: shop } = await supabase
-          .from("shops")
-          .select("*")
-          .eq("id", n.target_id)
-          .single();
-        if (shop) openShop(shop);
-      }
-
-      if (n.type === "product") {
-        const { data: product } = await supabase
-          .from("shop_products")
-          .select("*")
-          .eq("id", n.target_id)
-          .single();
-        if (product) {
-          const { data: shop } = await supabase
-            .from("shops")
-            .select("*")
-            .eq("id", product.shop_id)
-            .single();
-          if (shop) openShop(shop);
-        }
-      }
-    };
-
-    container.appendChild(div);
-  });
-}
-
-// 🔹 Initialiser badge au chargement
-updateFavoritesBadge();
-
-
+ 
 // ====== CHARGER BOUTIQUES (PRO + STATUS PREMIUM) ======
 async function loadShops() {
   try {
@@ -1358,6 +1932,8 @@ async function loadShops() {
     shops.forEach(shop => {
       const div = document.createElement("div");
       div.className = "shopCard";
+      
+      div.dataset.category = shop.category || ""; // 🔹 IMPORTANT pour le filtre
       div.dataset.description = shop.description || "";
 
       div.innerHTML = `
@@ -1512,7 +2088,10 @@ async function updateShopFavoriteCount(shopId, btn) {
 }
 
 // 🔹 Ajouter ou retirer des favoris (toggle)
-async function toggleFavoriteShop(shopId, btn) {
+
+  
+
+  async function toggleFavoriteShop(shopId, btn) {
   if (!currentUser) {
     alert("Connecte-toi pour suivre une boutique");
     return;
@@ -1521,7 +2100,19 @@ async function toggleFavoriteShop(shopId, btn) {
   const icon = btn.querySelector(".favIcon");
   const text = btn.querySelector(".favText");
 
-  // Vérifier si déjà suivi
+  // 🔎 récupérer la boutique
+  const { data: shop, error: shopError } = await supabase
+    .from("shops")
+    .select("owner_id, name")
+    .eq("id", shopId)
+    .single();
+
+  if (shopError || !shop) {
+    console.error("Erreur boutique :", shopError);
+    return;
+  }
+
+  // 🔍 vérifier si déjà suivi
   const { data: existing } = await supabase
     .from("favorite_shops")
     .select("id")
@@ -1530,7 +2121,7 @@ async function toggleFavoriteShop(shopId, btn) {
     .maybeSingle();
 
   if (existing) {
-    // Supprimer
+    // ❌ UNFOLLOW
     await supabase
       .from("favorite_shops")
       .delete()
@@ -1539,22 +2130,46 @@ async function toggleFavoriteShop(shopId, btn) {
     icon.textContent = "🤍";
     text.textContent = "Suivre";
     btn.classList.remove("active");
+
   } else {
-    // Ajouter
+    // ✅ FOLLOW
     await supabase
       .from("favorite_shops")
-      .insert({ shop_id: shopId, user_id: currentUser.id });
+      .insert({
+        shop_id: shopId,
+        user_id: currentUser.id
+      });
 
     icon.textContent = "❤️";
     text.textContent = "Abonnés";
     btn.classList.add("active");
+
+    // 🔔 Notification simple (si ce n’est pas sa propre boutique)
+    if (shop.owner_id && shop.owner_id !== currentUser.id) {
+      // récupérer le username de l’utilisateur qui suit
+      const { data: userData } = await supabase
+        .from("profiles")
+        .select("username")
+        .eq("id", currentUser.id)
+        .maybeSingle();
+
+      const followerName = userData?.username || "Quelqu’un";
+
+      await supabase.from("notif_market").insert({
+        user_id: shop.owner_id,        // destinataire
+        actor_id: currentUser.id,      // celui qui agit
+        type: "favorite_shop",
+        title: "⭐ Nouvelle boutique suivie",
+        message: `${followerName} a commencé à suivre votre boutique "${shop.name}"`,
+        link: `/shop.html?id=${shopId}`, // version simple comme avant
+        is_read: false
+      });
+    }
   }
 
-  // 🔥 Mettre à jour le compteur global après chaque action
+  // 🔄 mettre à jour le compteur global (affiché sur le bouton)
   await updateShopFavoriteCount(shopId, btn);
 }
-
-
 // ===================== INITIALISATION BOUTONS FAVORIS SUR LA PAGE =====================
 function setupFavoriteShopButtons() {
   document.querySelectorAll(".favoriteShopBtn").forEach(btn => {
@@ -1680,7 +2295,7 @@ async function openShop(shop) {
 }
 
 // ===================== FONCTIONS FAVORIS PRODUITS =====================
-async function toggleFavoriteProduct(productId, btn) {
+async function toggleFavoriteProduct(productId, btn, productOwnerId) {
   if (!currentUser) {
     alert("Connecte-toi pour suivre un produit");
     return;
@@ -1694,6 +2309,7 @@ async function toggleFavoriteProduct(productId, btn) {
     .maybeSingle();
 
   if (existing) {
+    // ❌ RETIRER FAVORI
     await supabase
       .from("favorite_products")
       .delete()
@@ -1701,7 +2317,9 @@ async function toggleFavoriteProduct(productId, btn) {
 
     btn.textContent = "🤍";
     btn.classList.remove("active");
+
   } else {
+    // ✅ AJOUTER FAVORI
     await supabase
       .from("favorite_products")
       .insert({
@@ -1711,9 +2329,24 @@ async function toggleFavoriteProduct(productId, btn) {
 
     btn.textContent = "❤️";
     btn.classList.add("active");
+
+    // 🔔 NOTIFICATION FAVORI PRODUIT (AVEC NOM)
+    if (productOwnerId && productOwnerId !== currentUser.id) {
+
+      const actorName = currentUser.username || "Un utilisateur";
+
+      await supabase.from("notif_market").insert({
+        user_id: productOwnerId,       // destinataire
+        actor_id: currentUser.id,      // celui qui agit
+        type: "favorite_product",
+        title: "❤️ Produit suivi",
+        message: `${actorName} a ajouté votre produit en favori`,
+        link: `/product?id=${productId}`,
+        is_read: false
+      });
+    }
   }
 }
-
 async function initFavoriteProduct(productId, btn) {
   if (!currentUser) return;
 
@@ -1727,8 +2360,12 @@ async function initFavoriteProduct(productId, btn) {
   if (data) {
     btn.textContent = "❤️";
     btn.classList.add("active");
+  } else {
+    btn.textContent = "🤍";
+    btn.classList.remove("active");
   }
 }
+
 
 // 🔹 RÉFÉRENCES
 const favoritesBtn = document.getElementById("favoritesBtn");
@@ -1933,7 +2570,6 @@ async function loadShopLikes() {
   if (!currentShop) return;
 
   try {
-    // Récupérer les likes avec les usernames
     const { data: likes, error } = await supabase
       .from('shop_likes')
       .select('user_id, user:profiles(username)')
@@ -1941,15 +2577,12 @@ async function loadShopLikes() {
 
     if (error) { console.error("Erreur loadShopLikes:", error); return; }
 
-    // Mettre à jour le compteur
     const count = likes?.length || 0;
     likeCountEl.textContent = count;
 
-    // Vérifier si currentUser a déjà liké
     const userLiked = likes?.some(l => l.user_id === currentUser?.id);
     likeShopBtn.style.opacity = userLiked ? 0.6 : 1;
 
-    // Préparer le contenu de la liste des utilisateurs
     if (likes && likes.length > 0) {
       shopLikesList.innerHTML = likes
         .map(l => `<div style="padding:2px 4px;">${l.user?.username || 'Anonyme'}</div>`)
@@ -1967,12 +2600,11 @@ async function loadShopLikes() {
 // Like / Unlike au clic sur le bouton 👍
 // =====================
 likeShopBtn.onclick = async (e) => {
-  e.stopPropagation(); // éviter que le clic ferme la liste
+  e.stopPropagation();
 
   if (!currentUser || !currentShop) return;
 
   try {
-    // Vérifier si l'utilisateur a déjà liké
     const { data: existing } = await supabase
       .from('shop_likes')
       .select('*')
@@ -1980,52 +2612,129 @@ likeShopBtn.onclick = async (e) => {
       .eq('user_id', currentUser.id);
 
     if (existing && existing.length > 0) {
-      // Retirer le like
+      // ❌ UNLIKE
       const { error } = await supabase
         .from('shop_likes')
         .delete()
         .eq('shop_id', currentShop.id)
         .eq('user_id', currentUser.id);
+
       if (error) { console.error(error); return; }
+
+      // 🔄 Mettre à jour notif existante si nécessaire
+      if (currentShop.owner_id && currentShop.owner_id !== currentUser.id) {
+        const { data: existingNotif } = await supabase
+          .from("notif_market")
+          .select("id, actors_count")
+          .eq("user_id", currentShop.owner_id)
+          .eq("type", "shop_like")
+          .eq("link", `/shop?id=${currentShop.id}`)
+          .eq("is_read", false)
+          .maybeSingle();
+
+        if (existingNotif) {
+          const newCount = (existingNotif.actors_count || 1) - 1;
+          if (newCount > 0) {
+            const newMessage =
+              newCount === 1
+                ? `1 personne aime votre boutique "${currentShop.name}"`
+                : `${newCount} personnes aiment votre boutique "${currentShop.name}"`;
+
+            await supabase
+              .from("notif_market")
+              .update({ actors_count: newCount, message: newMessage })
+              .eq("id", existingNotif.id);
+          } else {
+            // Supprimer la notif si plus personne ne like
+            await supabase
+              .from("notif_market")
+              .delete()
+              .eq("id", existingNotif.id);
+          }
+        }
+      }
+
     } else {
-      // Ajouter le like
+      // ✅ LIKE
       const { error } = await supabase
         .from('shop_likes')
         .insert({ shop_id: currentShop.id, user_id: currentUser.id });
+
       if (error) { console.error(error); return; }
+
+      // 🔔 Notification regroupée
+      if (currentShop.owner_id && currentShop.owner_id !== currentUser.id) {
+        // Récupérer le nom de l’utilisateur
+        const { data: userProfile } = await supabase
+          .from('profiles')
+          .select('username')
+          .eq('id', currentUser.id)
+          .maybeSingle();
+
+        const likerName = userProfile?.username || "Quelqu’un";
+
+        // Chercher une notif similaire non lue
+        const { data: existingNotif } = await supabase
+          .from("notif_market")
+          .select("id, actors_count")
+          .eq("user_id", currentShop.owner_id)
+          .eq("type", "shop_like")
+          .eq("link", `/shop?id=${currentShop.id}`)
+          .eq("is_read", false)
+          .maybeSingle();
+
+        if (existingNotif) {
+          const newCount = (existingNotif.actors_count || 1) + 1;
+          const newMessage =
+            newCount === 2
+              ? `${likerName} et 1 autre personne aiment votre boutique "${currentShop.name}"`
+              : `${likerName} et ${newCount - 1} autres personnes aiment votre boutique "${currentShop.name}"`;
+
+          await supabase
+            .from("notif_market")
+            .update({ actors_count: newCount, message: newMessage })
+            .eq("id", existingNotif.id);
+
+        } else {
+          // Nouvelle notif
+          await supabase.from("notif_market").insert({
+            user_id: currentShop.owner_id,
+            actor_id: currentUser.id,
+            type: "shop_like",
+            title: "❤️ Nouveau like",
+            message: `${likerName} aime votre boutique "${currentShop.name}"`,
+            link: `/shop?id=${currentShop.id}`,
+            actors_count: 1,
+            is_read: false
+          });
+        }
+      }
     }
 
     await loadShopLikes();
+
   } catch (err) {
     console.error("Erreur likeShopBtn:", err);
   }
 };
-
 // =====================
-// Afficher la liste des utilisateurs qui ont liké au clic sur le point
+// Afficher la liste des utilisateurs qui ont liké
 // =====================
 likeCountContainer.onclick = (e) => {
-  e.stopPropagation(); // éviter fermeture immédiate
-  shopLikesList.style.display = shopLikesList.style.display === 'block' ? 'none' : 'block';
+  e.stopPropagation();
+  shopLikesList.style.display =
+    shopLikesList.style.display === 'block' ? 'none' : 'block';
 
-  // Positionner la liste sous le point
   const rect = likeShopBtn.getBoundingClientRect();
-    shopLikesList.style.top = `${rect.bottom + window.scrollY + 6}px`;
-    shopLikesList.style.left = `${rect.left + window.scrollX}px`;
+  shopLikesList.style.top = `${rect.bottom + window.scrollY + 6}px`;
+  shopLikesList.style.left = `${rect.left + window.scrollX}px`;
 };
-
-// =====================
-// Masquer la liste si clic en dehors
-// =====================
-shopLikesList.style.display =
-      shopLikesList.style.display === 'block' ? 'none' : 'block';
-
 
 // =====================
 // Initialisation
 // =====================
 loadShopLikes();
-// =====================
+  // =====================
 // Charger les commentaires et replies
 // =====================
 async function loadShopComments(scrollToId = null) {
@@ -2050,7 +2759,7 @@ async function loadShopComments(scrollToId = null) {
       commentsList.innerHTML = "<p>Aucun commentaire</p>";
       return;
     }
-    
+
     function renderComment(c, parentEl, level = 0) {
       const div = document.createElement('div');
       div.id = `comment-${c.id}`;
@@ -2103,7 +2812,7 @@ async function loadShopComments(scrollToId = null) {
       transition:0.2s;"
       onmouseover="this.style.background='#b2ebf2'" 
       onmouseout="this.style.background='#e0f7fa'">
-    👍 Like <span class="likeCount">0</span>
+    👍  <span class="likeCount">0</span>
   </button>
 
     ${c.user_id === currentUser?.id 
@@ -2141,282 +2850,203 @@ async function loadShopComments(scrollToId = null) {
   "></div>
 `;
 
-  parentEl.appendChild(div);
-    
-      // ===== MODIFIER COMMENTAIRE =====
-const editBtn = div.querySelector('.editCommentBtn');
-if (editBtn) {
-  editBtn.onclick = () => {
-    const p = div.querySelector('p');
-    const originalText = p.textContent;
+      parentEl.appendChild(div);
 
-    const input = document.createElement('input');
-    input.type = 'text';
-    input.value = originalText;
-    input.style.width = '100%';
-    input.style.padding = '4px';
-
-    const saveBtn = document.createElement('button');
-    saveBtn.textContent = 'Sauvegarder';
-    saveBtn.style.marginTop = '4px';
-
-    p.replaceWith(input);
-    div.appendChild(saveBtn);
-    editBtn.disabled = true;
-
-    saveBtn.onclick = async () => {
-      const newText = input.value.trim();
-      if (!newText) return;
-
-      const { error } = await supabase
-        .from('shop_comments')
-        .update({ content: newText })
-        .eq('id', c.id)
-        .eq('user_id', currentUser.id);
-
-      if (error) {
-        alert("Erreur modification");
-        console.error(error);
-        return;
-      }
-
-      loadShopComments();
-    };
-  };
-}
-      
       // ===== Répondre =====
       const replyBtn = div.querySelector('.replyBtn');
-      if (replyBtn) {
-        replyBtn.onclick = () => {
-          if (div.querySelector('input')) return;
-          const input = document.createElement('input');
-          input.type = 'text';
-          input.placeholder = 'Écrire une réponse...';
-          input.style.width = '100%';
-          input.style.padding = '4px 6px';
-          input.style.borderRadius = '6px';
-          input.style.border = '1px solid #ccc';
-          input.style.marginBottom = '4px';
+      replyBtn.onclick = () => {
+        const input = document.createElement('input');
+        input.placeholder = "Écrire une réponse...";
+        const sendBtn = document.createElement('button');
+        sendBtn.textContent = "Envoyer";
 
-          const sendBtn = document.createElement('button');
-          sendBtn.textContent = 'Envoyer';
-          sendBtn.style.padding = '4px 8px';
-          sendBtn.style.borderRadius = '6px';
-          sendBtn.style.border = 'none';
-          sendBtn.style.background = '#007bff';
-          sendBtn.style.color = 'white';
-          sendBtn.style.cursor = 'pointer';
+        div.appendChild(input);
+        div.appendChild(sendBtn);
+        replyBtn.disabled = true;
 
-          div.appendChild(input);
-          div.appendChild(sendBtn);
-          replyBtn.disabled = true;
+        sendBtn.onclick = async () => {
+          const text = input.value.trim();
+          if (!text) return;
 
-          sendBtn.onclick = async () => {
-            const text = input.value.trim();
-            if (!text) return;
-            const { data: inserted, error } = await supabase.from('shop_comments').insert({
+          const { data: inserted, error } = await supabase
+            .from('shop_comments')
+            .insert({
               shop_id: currentShop.id,
               user_id: currentUser.id,
               content: text,
               parent_id: c.id
-            }).select().single();
+            })
+            .select()
+            .single();
 
-            if (error) { alert("Erreur ajout réponse"); console.error(error); return; }
+          if (error) return console.error(error);
 
-            // ⚡ Notification pour l'auteur du commentaire parent
-            if (c.user_id !== currentUser.id) {
-              await supabase.from('notifications').insert({
-                user_id: c.user_id,
-                actor_id: currentUser.id,
-                type: 'reply_comment',
-                comment_id: inserted.id,
-                shop_id: currentShop.id
-              });
-            }
+          // 🔔 NOTIFICATION UNIFIÉE (REPLY)
+if (c.user_id !== currentUser.id) {
+  // Récupérer le username de l’utilisateur qui répond
+  const { data: userProfile } = await supabase
+    .from('profiles')
+    .select('username')
+    .eq('id', currentUser.id)
+    .maybeSingle();
 
-            loadShopComments(inserted.id);
-          };
+  const replierName = userProfile?.username || "Quelqu’un";
+
+  await supabase.from("notif_market").insert({
+    user_id: c.user_id,           // destinataire : celui qui a commenté
+    actor_id: currentUser.id,     // celui qui agit
+    type: "reply",
+    title: "Nouvelle réponse 💬",
+    message: `${replierName} a répondu à votre commentaire`,
+    link: `/shop.html?id=${currentShop.id}#comment-${inserted.id}`,
+    is_read: false
+  });
+}
+
+loadShopComments(inserted.id);
         };
-      }
-
-      // ===== Supprimer =====
-      const delBtn = div.querySelector('.deleteCommentBtn');
-      if (delBtn) {
-        delBtn.onclick = async () => {
-          if (!confirm("Supprimer ce commentaire ?")) return;
-          const { error } = await supabase.from('shop_comments').delete().eq('id', c.id);
-          if (error) { alert("Erreur suppression"); console.error(error); return; }
-          loadShopComments();
-        };
-      }
+      };
 
       // ===== Likes =====
       const likeBtn = div.querySelector('.likeCommentBtn');
-      if (likeBtn) {
-        loadCommentLikes(c.id, likeBtn);
-        likeBtn.onclick = () => toggleCommentLike(c.id, likeBtn);
-      }
+      loadCommentLikes(c.id, likeBtn);
+      likeBtn.onclick = () => toggleCommentLike(c.id, likeBtn);
 
       // ===== Replies =====
-      const childReplies = data.filter(x => x.parent_id === c.id);
-      const repliesContainer = div.querySelector('.repliesContainer');
-      childReplies.forEach(r => renderComment(r, repliesContainer, level + 1));
+      const replies = data.filter(x => x.parent_id === c.id);
+      const container = div.querySelector('.repliesContainer');
+      replies.forEach(r => renderComment(r, container, level + 1));
     }
 
     data.filter(c => !c.parent_id).forEach(c => renderComment(c, commentsList));
 
-    // Scroll vers un commentaire spécifique
     if (scrollToId) {
-      requestAnimationFrame(() => {
+      setTimeout(() => {
         const el = document.getElementById(`comment-${scrollToId}`);
-        if (el) {
-          el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          el.style.background = '#fffbcc';
-          setTimeout(() => el.style.background = '', 2000);
-        }
-      });
+        if (el) el.scrollIntoView({ behavior: "smooth" });
+      }, 200);
     }
 
-  } catch (err) {
-    console.error("Erreur loadShopComments :", err);
-    commentsList.innerHTML = "<p style='color:red;'>Erreur chargement commentaires</p>";
+  } catch (e) {
+    console.error(e);
   }
 }
 
-  // Ouvrir / fermer le panneau de notifications
-notifBtn.onclick = () => {
-  if (!notifPanel) return;
-  notifPanel.style.display = notifPanel.style.display === "none" ? "block" : "none";
-  if (notifPanel.style.display === "block") {
-    loadNotifications(); // Recharge les notifications à l'ouverture
-  }
-};
-  // =====================
-// Envoyer un commentaire principal
+// =====================
+// Envoyer commentaire principal
 // =====================
 sendCommentBtn.onclick = async () => {
   if (!currentShop || !currentUser) return;
+
   const content = commentInput.value.trim();
   if (!content) return;
 
-  const { data: inserted, error } = await supabase.from('shop_comments')
-    .insert({ shop_id: currentShop.id, user_id: currentUser.id, content })
-    .select().single();
+  const { data: inserted, error } = await supabase
+    .from("shop_comments")
+    .insert({
+      shop_id: currentShop.id,
+      user_id: currentUser.id,
+      content
+    })
+    .select()
+    .single();
 
-  if (error) { alert("Impossible d'envoyer"); console.error(error); return; }
+  if (error) return console.error(error);
 
-  commentInput.value = "";
-  loadShopComments(inserted.id);
+  // 🔔 NOTIFICATION UNIFIÉE (COMMENTAIRE)
+if (currentShop.owner_id !== currentUser.id) {
+  // Récupérer le username de l’utilisateur qui commente
+  const { data: userProfile } = await supabase
+    .from('profiles')
+    .select('username')
+    .eq('id', currentUser.id)
+    .maybeSingle();
+
+  const commenterName = userProfile?.username || "Quelqu’un";
+
+  await supabase.from("notif_market").insert({
+    user_id: currentShop.owner_id,
+    actor_id: currentUser.id,
+    type: "comment",
+    title: "Nouveau commentaire 💬",
+    message: `${commenterName} a commenté votre boutique`,
+    link: `/shop.html?id=${currentShop.id}#comment-${inserted.id}`,
+    is_read: false
+  });
+}
+
+commentInput.value = "";
+loadShopComments(inserted.id);
 };
 
 // =====================
-// Charger notifications
-// =====================
-async function loadNotifications() {
-  if (!currentUser) return;
-  notifList.innerHTML = "<p>Chargement...</p>";
-
-  const { data, error } = await supabase.from("notifications")
-    .select(`
-      id,
-      type,
-      is_read,
-      created_at,
-      actor:actor_id(username),
-      comment_id
-    `)
-    .eq("user_id", currentUser.id)
-    .order("created_at", { ascending: false });
-
-  if (error) { console.error(error); notifList.innerHTML = "<p style='color:red;'>Erreur</p>"; return; }
-
-  if (!data || data.length === 0) {
-    notifList.innerHTML = "<p>Aucune notification</p>";
-    updateNotifCount();
-    return;
-  }
-
-  notifList.innerHTML = "";
-
-  data.forEach(n => {
-    const div = document.createElement("div");
-    div.style.padding = "8px 10px";
-    div.style.borderBottom = "1px solid #ddd";
-    div.style.cursor = "pointer";
-    div.style.background = n.is_read ? "#fff" : "#e8f4ff";
-    div.style.borderLeft = n.is_read ? "4px solid transparent" : "4px solid #007bff";
-
-    const date = new Date(n.created_at);
-    const diff = Math.floor((Date.now() - date)/60000);
-    let timeText = diff < 1 ? "à l'instant" : diff < 60 ? `il y a ${diff} min` : `il y a ${Math.floor(diff/60)} h`;
-
-    let message = "🔔 Nouvelle notification";
-    if (n.type === "reply_comment") {
-      message = `💬 <strong>${n.actor?.username || "Quelqu’un"}</strong> a répondu à votre commentaire`;
-    }
-
-    div.innerHTML = `
-      <div style="font-size:13px; color:#000;">${message}</div>
-      <div style="font-size:11px; color:#777; margin-top:3px;">${timeText}</div>
-    `;
-
-    div.onclick = async () => {
-      await supabase.from("notifications").update({ is_read: true }).eq("id", n.id);
-      notifPanel.style.display = "none";
-      if (n.comment_id) loadShopComments(n.comment_id);
-      loadNotifications();
-    };
-
-    notifList.appendChild(div);
-  });
-
-  updateNotifCount();
-}
-  function scrollToComment(commentId) {
-  // Récupérer l'élément
-  const el = document.getElementById(`comment-${commentId}`);
-  if (!el) return;
-
-  // Scroll avec animation
-  el.scrollIntoView({ behavior: "smooth", block: "center" });
-
-  // Petit effet visuel pour montrer le commentaire
-  const originalBg = el.style.background;
-  el.style.background = "#fffbcc"; // surlignage temporaire
-  setTimeout(() => el.style.background = originalBg, 2000);
-}
-  
-// =====================
-// Mettre à jour compteur notifications
-// =====================
-function updateNotifCount() {
-  const unread = notifList.querySelectorAll("div[style*='background: rgb(232, 244, 255)']").length;
-  notifCountEl.style.display = unread > 0 ? "inline-block" : "none";
-  notifCountEl.textContent = unread;
-}
-
-// =====================
-// Likes commentaire
+// Likes commentaire (inchangé)
 // =====================
 async function loadCommentLikes(commentId, btn) {
-  const { data, error } = await supabase.from("comment_likes").select("*").eq("comment_id", commentId);
-  if (!error) btn.textContent = `${data?.length || 0} ❤️`;
+  const { data } = await supabase
+    .from("comment_likes")
+    .select("*")
+    .eq("comment_id", commentId);
+
+  btn.querySelector(".likeCount").textContent = data?.length || 0;
 }
 
 async function toggleCommentLike(commentId, btn) {
-  if (!currentUser) return alert("Connectez-vous pour liker !");
-  const { data: existing } = await supabase.from("comment_likes")
-    .select("*").eq("comment_id", commentId).eq("user_id", currentUser.id);
+  if (!currentUser) return;
 
-  if (existing?.length > 0) {
-    await supabase.from("comment_likes").delete().eq("id", existing[0].id);
+  // Vérifier si déjà liké
+  const { data } = await supabase
+    .from("comment_likes")
+    .select("*")
+    .eq("comment_id", commentId)
+    .eq("user_id", currentUser.id);
+
+  if (data.length) {
+    // ❌ UNLIKE
+    await supabase.from("comment_likes").delete().eq("id", data[0].id);
+
   } else {
-    await supabase.from("comment_likes").insert({ comment_id: commentId, user_id: currentUser.id });
+    // ✅ LIKE
+    await supabase.from("comment_likes").insert({
+      comment_id: commentId,
+      user_id: currentUser.id
+    });
+
+    // 🔔 NOTIFICATION (si ce n’est pas son propre commentaire)
+    const { data: comment } = await supabase
+      .from("shop_comments")
+      .select("user_id, shop_id")
+      .eq("id", commentId)
+      .maybeSingle();
+
+    if (comment && comment.user_id !== currentUser.id) {
+      // Récupérer le username de celui qui like
+      const { data: userProfile } = await supabase
+        .from("profiles")
+        .select("username")
+        .eq("id", currentUser.id)
+        .maybeSingle();
+
+      const likerName = userProfile?.username || "Quelqu’un";
+
+      await supabase.from("notif_market").insert({
+        user_id: comment.user_id,         // destinataire : auteur du commentaire
+        actor_id: currentUser.id,         // celui qui agit
+        type: "comment_like",
+        title: "❤️ Nouveau like sur votre commentaire",
+        message: `${likerName} a aimé votre commentaire`,
+        link: `/shop.html?id=${comment.shop_id}#comment-${commentId}`,
+        is_read: false
+      });
+    }
   }
 
+  // 🔄 Mettre à jour le nombre de likes affiché
   loadCommentLikes(commentId, btn);
 }
+
+    
+
               
 async function loadShopStats(shopId) {
   if (!shopId) return;
