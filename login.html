@@ -224,6 +224,7 @@ document.addEventListener('DOMContentLoaded', () => {
   /* ================= MOT DE PASSE OUBLIÉ ================= */
   forgotPasswordLink.onclick = async (e) => {
     e.preventDefault();
+
     const email = emailInput.value.trim();
     if (!email) {
       errorMsg.textContent = "Entre ton email pour récupérer ton compte";
@@ -245,6 +246,7 @@ document.addEventListener('DOMContentLoaded', () => {
   /* ================= AUTH ================= */
   actionBtn.onclick = async () => {
     errorMsg.textContent = "";
+
     const email = emailInput.value.trim();
     const password = passwordInput.value.trim();
     const username = usernameInput.value.trim();
@@ -255,8 +257,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     try {
+
+      /* ===== LOGIN ===== */
       if (isLogin) {
-        const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email,
+          password
+        });
+
         if (error) throw error;
 
         if (!data.user.email_confirmed_at) {
@@ -269,26 +277,60 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
 
-      if (!isLogin) {
-        const { error: signUpError } = await supabase.auth.signUp({
-          email,
-          password,
-          options: {
-            data: { username },
-            emailRedirectTo: "https://fiacre06.github.io/Sell-live/login.html"
-          }
-        });
+      /* ===== SIGNUP ===== */
+      const { error: signUpError } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: { username },
+          emailRedirectTo: "https://fiacre06.github.io/Sell-live/login.html"
+        }
+      });
 
-        if (signUpError) throw signUpError;
+      if (signUpError) throw signUpError;
 
-        alert("✅ Inscription réussie 🎉\n\nUn email de confirmation t'a été envoyé.");
-        sidebar.classList.remove('open');
-      }
+      alert("✅ Inscription réussie 🎉\n\nUn email de confirmation t'a été envoyé.");
+      sidebar.classList.remove('open');
 
     } catch (err) {
       errorMsg.textContent = err.message || "Erreur inconnue";
     }
   };
+
+  /* ================= PROFILE AUTO CREATE ================= */
+  supabase.auth.onAuthStateChange(async (event, session) => {
+    if (event !== "SIGNED_IN" || !session?.user) return;
+
+    const user = session.user;
+
+    const { data: existingProfile, error: selectError } = await supabase
+      .from("profiles")
+      .select("id")
+      .eq("id", user.id)
+      .maybeSingle();
+
+    if (selectError) {
+      console.error("Erreur vérification profil :", selectError);
+      return;
+    }
+
+    if (existingProfile) return;
+
+    const { error: insertError } = await supabase
+      .from("profiles")
+      .insert({
+        id: user.id,
+        email: user.email,
+        username: user.user_metadata?.username || "",
+        is_acheteur: true,
+        is_vendeur: true,
+        is_premium: false
+      });
+
+    if (insertError) {
+      console.error("Erreur création profil :", insertError);
+    }
+  });
 
 });
 </script>
