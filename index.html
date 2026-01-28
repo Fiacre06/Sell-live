@@ -639,6 +639,15 @@ header.topbar .top-actions button {
   transform:translateY(-2px);
   opacity:.9;
 }
+
+ .whatsapp-band{
+  background:#16a34a;
+  color:white;
+  padding:10px 14px;
+  border-radius:8px;
+  font-weight:600;
+  text-align:center;
+ }
 </style>
 </head>
 <body>
@@ -775,12 +784,7 @@ header.topbar .top-actions button {
    <!-- Livraison -->
 <div id="shopViewLivraison"></div>
 
-<!-- WhatsApp -->
-<div id="shopViewWhatsapp"></div>
-    <p><strong>Produits disponibles</strong></p>
-    <div id="shopProductsScroll"></div>
-    <button id="contactShopBtn">Contacter la boutique</button>
-  
+
     <!-- Likes et commentaires -->
     <div style="display:flex; align-items:center; gap:8px; margin-top:6px;">
 
@@ -2306,14 +2310,14 @@ async function openShop(shop) {
       `;
     }
 
-    // ================= WHATSAPP BUTTON =================
+    // ================= WHATSAPP NUMERO (BANDE VERTE) =================
     const whatsappDiv = document.getElementById("shopViewWhatsapp");
     if (shop.whatsapp) {
       const phone = shop.whatsapp.replace(/\s+/g, '');
       whatsappDiv.innerHTML = `
-        <a href="https://wa.me/${phone}" target="_blank" class="whatsapp-btn">
-          📱 Contacter sur WhatsApp
-        </a>
+        <div class="whatsapp-band">
+          📞 ${phone}
+        </div>
       `;
     } else {
       whatsappDiv.innerHTML = "";
@@ -2388,7 +2392,7 @@ async function openShop(shop) {
     shopProductsScroll.innerHTML =
       "<p style='color:red;'>Erreur chargement boutique</p>";
   }
-}
+ }
 
 // ===================== FONCTIONS FAVORIS PRODUITS =====================
 async function toggleFavoriteProduct(productId, btn, productOwnerId) {
