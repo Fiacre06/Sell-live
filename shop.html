@@ -4,22 +4,27 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Shop – Sell Live Marketplace</title>
+<title>Online Shop – Sell Live Marketplace</title>
 
-<meta name="description" content="Discover shops and products on Sell Live. Contact sellers directly via WhatsApp and buy easily." />
+<meta name="description" content="Discover this online shop on Sell Live. View products, prices, and contact the shop owner directly via WhatsApp.">
 
-<meta name="keywords" content="online shop, buy products, marketplace shop, contact seller whatsapp" />
+<meta name="keywords" content="online shop, boutique en ligne, marketplace shop, seller shop, ecommerce store">
 
 <meta name="robots" content="index, follow">
 
-<meta property="og:title" content="Shop – Sell Live Marketplace">
-<meta property="og:description" content="Browse products, discover shops and contact sellers instantly via WhatsApp.">
+<link rel="canonical" href="https://fiacre06.github.io/Sell-live/shop.html">
+
+<!-- Open Graph -->
+<meta property="og:title" content="Online Shop – Sell Live">
+<meta property="og:description" content="Visit this shop on Sell Live and contact the owner directly via WhatsApp.">
 <meta property="og:url" content="https://fiacre06.github.io/Sell-live/shop.html">
 <meta property="og:type" content="website">
+<meta property="og:image" content="https://fiacre06.github.io/Sell-live/assets/preview.png">
 
-
-<title>Vitrine Boutique</title>
-
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Online Shop – Sell Live">
+<meta name="twitter:description" content="Discover shops and products on Sell Live marketplace.">
 <style>
 :root{
   --primary:#2e8b57;
@@ -40,14 +45,12 @@ body{
   color:var(--text);
 }
 
-/* ================= LAYOUT ================= */
 .container{
   max-width:1200px;
   margin:auto;
   padding:20px;
 }
 
-/* ================= HEADER ================= */
 .header{
   display:flex;
   flex-wrap:wrap;
@@ -66,7 +69,6 @@ body{
   font-size:1.8rem;
 }
 
-/* ================= BUTTONS ================= */
 button{
   border:none;
   border-radius:999px;
@@ -96,14 +98,12 @@ button{
   background:#246b45;
 }
 
-/* ================= OWNER ================= */
 .owner{
-  margin:20px 5px 10px;
+  margin:20px 5px 5px;
   font-size:.95rem;
   color:var(--muted);
 }
 
-/* ================= INVITE ================= */
 .site-invite{
   background:var(--card);
   padding:20px;
@@ -115,19 +115,12 @@ button{
   margin-bottom:30px;
 }
 
-.site-invite p{
-  margin:0;
-  line-height:1.5;
-}
-
-/* ================= PRODUCTS ================= */
 .products-grid{
   display:grid;
   grid-template-columns:repeat(auto-fill,minmax(230px,1fr));
   gap:22px;
 }
 
-/* ================= PRODUCT CARD ================= */
 .productCard{
   background:var(--card);
   border-radius:18px;
@@ -166,7 +159,6 @@ button{
   color:var(--primary);
 }
 
-/* ================= RESPONSIVE ================= */
 @media(max-width:600px){
   .header{
     text-align:center;
@@ -187,6 +179,9 @@ button{
 
   <div class="owner" id="shopOwner">Propriétaire : ...</div>
 
+  <!-- AJOUT INFO LIVRAISON + WHATSAPP -->
+  <div class="owner" id="shopExtras"></div>
+
   <div class="site-invite">
     <p>
       Bienvenue dans notre boutique en ligne.  
@@ -204,9 +199,12 @@ import { supabase } from './supabase.js';
 
 const urlParams = new URLSearchParams(window.location.search);
 const shopId = urlParams.get('id');
+
 const shopNameEl = document.getElementById('shopName');
 const shopOwnerEl = document.getElementById('shopOwner');
+const shopExtrasEl = document.getElementById('shopExtras');
 const productsContainer = document.getElementById('productsContainer');
+
 const copyLinkBtn = document.getElementById('copyLinkBtn');
 const visitSiteBtn = document.getElementById('visitSiteBtn');
 
@@ -217,8 +215,7 @@ if (!shopId) {
 
 copyLinkBtn.onclick = () => {
   navigator.clipboard.writeText(window.location.href)
-    .then(() => alert("Lien copié !"))
-    .catch(err => alert("Erreur copie lien : " + err));
+    .then(() => alert("Lien copié !"));
 };
 
 visitSiteBtn.onclick = () => {
@@ -248,15 +245,34 @@ async function loadShop() {
       .single();
     if (owner) ownerName = owner.username;
   }
+
   shopOwnerEl.textContent = "Propriétaire : " + ownerName;
 
-  const { data: products, error: prodError } = await supabase
+  /* ===== LIVRAISON + WHATSAPP ===== */
+  let extrasHTML = "";
+
+  extrasHTML += shop.livraison
+    ? "🚚 Livraison disponible<br>"
+    : "📦 Livraison non disponible<br>";
+
+  if (shop.whatsapp) {
+    const phone = shop.whatsapp.replace(/\s+/g,'');
+    extrasHTML += `
+      📱 <a href="https://wa.me/${phone}" target="_blank">
+        Contacter sur WhatsApp
+      </a>
+    `;
+  }
+
+  shopExtrasEl.innerHTML = extrasHTML;
+
+  const { data: products } = await supabase
     .from('shop_products')
     .select('*')
     .eq('shop_id', shopId)
     .order('created_at', { ascending: false });
 
-  if (prodError || !products?.length) {
+  if (!products || products.length === 0) {
     productsContainer.innerHTML = "<p>Aucun produit disponible</p>";
     return;
   }
