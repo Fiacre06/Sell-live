@@ -641,7 +641,6 @@ header.topbar .top-actions button {
 }
 
 
-
  .whatsapp-band{
   background:#16a34a;
   color:white;
@@ -775,6 +774,7 @@ header.topbar .top-actions button {
   <!-- Les boutiques seront injectées ici par JS -->
   
 </div>
+ 
 <!-- MODAL VUE BOUTIQUE -->
   <div id="shopViewModal">
   <div id="shopViewContent">
@@ -783,13 +783,16 @@ header.topbar .top-actions button {
     <p id="shopViewDesc"></p>
     <p><strong>Catégorie:</strong> <span id="shopViewCategory"></span></p>
     <p><strong>Lieu:</strong> <span id="shopViewLocation"></span></p>
-   
-  <!-- ===== BADGE LIVRAISON ===== -->
+      <!-- ===== BADGE LIVRAISON ===== -->
   <div id="shopViewLivraison" style="margin-top:10px;"></div>
 
   <!-- ===== NUMERO WHATSAPP (BANDE VERTE) ===== -->
   <div id="shopViewWhatsapp" style="margin-top:10px;"></div>
-   
+
+    <p><strong>Produits disponibles</strong></p>
+    <div id="shopProductsScroll"></div>
+    <button id="contactShopBtn">Contacter la boutique</button>
+  
 
     <!-- Likes et commentaires -->
     <div style="display:flex; align-items:center; gap:8px; margin-top:6px;">
