@@ -601,11 +601,8 @@ header.topbar .top-actions button {
     placeholder="Lieu"
   >
 
-  
-<input type="hidden" id="latitude">
+  <input type="hidden" id="latitude">
 <input type="hidden" id="longitude">
-
-<button id="createShopBtn">💾 Créer la boutique</button>
 
   <input
     type="file"
@@ -762,67 +759,92 @@ function renderUserIdentity() {
     window.location.href = 'index.html';
   });
 
-  const createShopBtn = document.getElementById('createShopBtn');
-const latitudeInput = document.getElementById('latitude');
-const longitudeInput = document.getElementById('longitude');
+  // ===============================
+// INPUTS CACHÉS (déjà dans ton HTML)
+// <input type="hidden" id="latitude">
+// <input type="hidden" id="longitude">
+// Bouton existant : createShopBtn
+// ===============================
 
-createShopBtn.addEventListener('click', async () => {
 
-  if (!navigator.geolocation) {
-    alert("❌ La géolocalisation n'est pas supportée");
-    return;
-  }
+// 🔹 Fonction pour récupérer la position de l'utilisateur
+function getUserLocation() {
+  return new Promise((resolve, reject) => {
 
-  navigator.geolocation.getCurrentPosition(
-    async (position) => {
-      latitudeInput.value = position.coords.latitude;
-      longitudeInput.value = position.coords.longitude;
-
-      await saveShop(); // 👉 on enregistre APRÈS localisation
-    },
-    (error) => {
-      alert("⚠️ Autorise la localisation pour créer ta boutique");
-      console.error(error);
+    if (!navigator.geolocation) {
+      reject("La géolocalisation n'est pas supportée");
+      return;
     }
-  );
-});
-  async function saveShop() {
-  const shopName = document.getElementById('shopName').value.trim();
-  const latitude = Number(document.getElementById('latitude').value);
-  const longitude = Number(document.getElementById('longitude').value);
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        resolve({
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude
+        });
+      },
+      (error) => {
+        reject(error.message);
+      }
+    );
+  });
+}
+
+
+// 🔹 TON BOUTON EXISTANT (NE PAS EN CRÉER UN AUTRE)
+document.getElementById("createShopBtn").addEventListener("click", async () => {
+
+  const shopName = document.getElementById("shopName").value;
+  const latitudeInput = document.getElementById("latitude");
+  const longitudeInput = document.getElementById("longitude");
 
   if (!shopName) {
-    alert("⚠️ Nom de boutique requis");
+    alert("⚠️ Le nom de la boutique est obligatoire");
     return;
   }
 
-  if (!latitude || !longitude) {
-    alert("⚠️ Position non détectée");
-    return;
-  }
-
+  // 🔐 Récupérer l'utilisateur connecté
   const { data: { user } } = await supabase.auth.getUser();
+
   if (!user) {
-    alert("⚠️ Connecte-toi");
+    alert("⚠️ Tu dois être connecté pour créer une boutique");
     return;
   }
 
-  const { error } = await supabase
-    .from('shops')
-    .insert([{
-      name: shopName,
-      owner_id: user.id,
-      latitude,
-      longitude
-    }]);
-
-  if (error) {
-    console.error(error);
-    alert("❌ Erreur : " + error.message);
-  } else {
-    alert("✅ Boutique créée avec localisation !");
+  // 🌍 Tentative de récupération de la position
+  try {
+    const location = await getUserLocation();
+    latitudeInput.value = location.latitude;
+    longitudeInput.value = location.longitude;
+  } catch (err) {
+    console.warn("Localisation refusée :", err);
+    // 👉 On continue quand même (comme Facebook)
   }
-    }
+
+  // 💾 ENREGISTREMENT DE LA BOUTIQUE (TON INSERT NORMAL)
+  try {
+    const { error } = await supabase
+      .from("shops")
+      .insert([{
+        name: shopName,
+        owner_id: user.id,
+        latitude: latitudeInput.value ? parseFloat(latitudeInput.value) : null,
+        longitude: longitudeInput.value ? parseFloat(longitudeInput.value) : null
+      }]);
+
+    if (error) throw error;
+
+    alert("✅ Boutique créée avec succès !");
+    
+    // Reset
+    latitudeInput.value = "";
+    longitudeInput.value = "";
+
+  } catch (error) {
+    console.error(error);
+    alert("❌ Erreur lors de la création de la boutique");
+  }
+});
   // ===== CREER BOUTIQUE =====
 submitShopBtn.onclick = async () => {
   const name = shopName.value.trim();
