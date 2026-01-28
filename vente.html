@@ -602,12 +602,11 @@ header.topbar .top-actions button {
   >
 
   
-
-<button type="button" id="getLocationBtn">📍 Localiser ma boutique</button>
-
 <input type="hidden" id="latitude">
 <input type="hidden" id="longitude">
-  
+
+<button id="createShopBtn">💾 Créer la boutique</button>
+
   <input
     type="file"
     id="shopImage"
@@ -763,42 +762,48 @@ function renderUserIdentity() {
     window.location.href = 'index.html';
   });
 
-  const getLocationBtn = document.getElementById('getLocationBtn');
+  const createShopBtn = document.getElementById('createShopBtn');
 const latitudeInput = document.getElementById('latitude');
 const longitudeInput = document.getElementById('longitude');
 
-getLocationBtn.onclick = () => {
+createShopBtn.addEventListener('click', async () => {
+
   if (!navigator.geolocation) {
-    alert("La géolocalisation n'est pas supportée par votre navigateur");
+    alert("❌ La géolocalisation n'est pas supportée");
     return;
   }
 
   navigator.geolocation.getCurrentPosition(
-  (position) => {
-    const latitude = position.coords.latitude;
-    const longitude = position.coords.longitude;
+    async (position) => {
+      latitudeInput.value = position.coords.latitude;
+      longitudeInput.value = position.coords.longitude;
 
-    console.log("GPS récupéré :", latitude, longitude);
+      await saveShop(); // 👉 on enregistre APRÈS localisation
+    },
+    (error) => {
+      alert("⚠️ Autorise la localisation pour créer ta boutique");
+      console.error(error);
+    }
+  );
+});
+  async function saveShop() {
+  const shopName = document.getElementById('shopName').value.trim();
+  const latitude = Number(document.getElementById('latitude').value);
+  const longitude = Number(document.getElementById('longitude').value);
 
-    saveShop(latitude, longitude);
-  },
-  (error) => {
-    alert("Impossible de récupérer la localisation");
-    console.error(error);
-  },
-  {
-    enableHighAccuracy: true
+  if (!shopName) {
+    alert("⚠️ Nom de boutique requis");
+    return;
   }
-);
-  
-  async function saveShop(latitude, longitude) {
-  const shopName = document.getElementById('shopName').value;
 
-  const { data: userData } = await supabase.auth.getUser();
-  const user = userData.user;
+  if (!latitude || !longitude) {
+    alert("⚠️ Position non détectée");
+    return;
+  }
 
+  const { data: { user } } = await supabase.auth.getUser();
   if (!user) {
-    alert("Utilisateur non connecté");
+    alert("⚠️ Connecte-toi");
     return;
   }
 
@@ -807,19 +812,17 @@ getLocationBtn.onclick = () => {
     .insert([{
       name: shopName,
       owner_id: user.id,
-      latitude: latitude,
-      longitude: longitude
+      latitude,
+      longitude
     }]);
 
   if (error) {
     console.error(error);
-    alert("Erreur lors de l'enregistrement");
+    alert("❌ Erreur : " + error.message);
   } else {
-    alert("✅ Boutique enregistrée avec localisation !");
+    alert("✅ Boutique créée avec localisation !");
   }
-  }
-
-
+    }
   // ===== CREER BOUTIQUE =====
 submitShopBtn.onclick = async () => {
   const name = shopName.value.trim();
