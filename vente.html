@@ -774,58 +774,50 @@ getLocationBtn.onclick = () => {
   }
 
   navigator.geolocation.getCurrentPosition(
-    (position) => {
-      const lat = position.coords.latitude;
-      const lng = position.coords.longitude;
+  (position) => {
+    const latitude = position.coords.latitude;
+    const longitude = position.coords.longitude;
 
-      latitudeInput.value = lat;
-      longitudeInput.value = lng;
+    console.log("GPS récupéré :", latitude, longitude);
 
-      alert(`Position enregistrée ✅\nLatitude: ${lat}\nLongitude: ${lng}`);
-    },
-    (error) => {
-      alert("Impossible de récupérer la position : " + error.message);
-    }
-  );
-};
-  async function saveShop() {
+    saveShop(latitude, longitude);
+  },
+  (error) => {
+    alert("Impossible de récupérer la localisation");
+    console.error(error);
+  },
+  {
+    enableHighAccuracy: true
+  }
+);
+  
+  async function saveShop(latitude, longitude) {
   const shopName = document.getElementById('shopName').value;
-  const latitudeInput = document.getElementById('latitude');
-  const longitudeInput = document.getElementById('longitude');
 
-  // Récupération de l'utilisateur actuel
-  const {
-    data: { user }
-  } = await supabase.auth.getUser();
+  const { data: userData } = await supabase.auth.getUser();
+  const user = userData.user;
+
   if (!user) {
-    alert("⚠️ Connecte-toi avant d'enregistrer une boutique !");
+    alert("Utilisateur non connecté");
     return;
   }
 
-  // Vérification des coordonnées
-  if (!latitudeInput.value || !longitudeInput.value) {
-    alert("⚠️ Ta position n'a pas été détectée !");
-    return;
+  const { error } = await supabase
+    .from('shops')
+    .insert([{
+      name: shopName,
+      owner_id: user.id,
+      latitude: latitude,
+      longitude: longitude
+    }]);
+
+  if (error) {
+    console.error(error);
+    alert("Erreur lors de l'enregistrement");
+  } else {
+    alert("✅ Boutique enregistrée avec localisation !");
   }
-
-  try {
-    const { data, error } = await supabase
-      .from('shops')
-      .insert([{
-        name: shopName,
-        owner_id: user.id,
-        latitude: parseFloat(latitudeInput.value),
-        longitude: parseFloat(longitudeInput.value)
-      }]);
-
-    if (error) throw error;
-
-    alert("Boutique enregistrée avec succès !");
-  } catch (err) {
-    console.error(err);
-    alert("Erreur lors de l'enregistrement : " + err.message);
   }
-}
 
 
   // ===== CREER BOUTIQUE =====
