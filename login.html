@@ -137,9 +137,8 @@ forgotPassword.onclick = async () => {
   }
 
   const { error } = await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: window.location.origin + "/reset-password.html"
-  });
-
+    redirectTo: "https://fiacre06.github.io/Sell-live/reset-password.html"
+    });
   if (error) {
     errorMsg.textContent = error.message;
     return;
