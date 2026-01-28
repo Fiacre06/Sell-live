@@ -49,7 +49,7 @@ main p { font-size:1.1em; line-height:1.6; color:#333; }
      Marché-Agricole est la plateforme incontournable pour les acteurs du secteur agricole.
 Découvrez, achetez et vendez des produits agricoles de qualité en toute sécurité,
 connectez-vous directement avec des producteurs et fournisseurs locaux,
-et optimisez vos échanges pour développer votre activité rapidement
+et optimisez vos échanges pour développer votre activité rapidement.
     
   </p>
 </main>
@@ -130,26 +130,24 @@ togglePass.onclick = () => {
 };
 
 /* ================= MOT DE PASSE OUBLIÉ ================= */
-forgotPasswordLink.onclick = async (e) => {
-    e.preventDefault();
+forgotPassword.onclick = async () => {
+  const email = emailInput.value.trim();
 
-    const email = emailInput.value.trim();
-    if (!email) {
-      errorMsg.textContent = "Entre ton email pour récupérer ton compte";
-      return;
-    }
+  if (!email) {
+    errorMsg.textContent = "Entre ton email pour réinitialiser le mot de passe";
+    return;
+  }
 
-    const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: "https://fiacre06.github.io/Sell-live/reset-password.html"
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: "https://fiacre06.github.io/Sell-live/reset-password.html"
     });
+  if (error) {
+    errorMsg.textContent = error.message;
+    return;
+  }
 
-    if (error) {
-      errorMsg.textContent = error.message;
-      return;
-    }
-
-    alert("📩 Email de récupération envoyé !");
-  };
+  alert("📩 Un email de réinitialisation a été envoyé !");
+};
 
 /* ================= AUTH ================= */
 actionBtn.onclick = async () => {
