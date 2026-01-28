@@ -48,7 +48,7 @@ main p { font-size:1.1em; line-height:1.6; color:#333; }
   <p>
     Marché-Agricole est votre boutique en ligne pour acheter et vendre des produits agricoles en toute simplicité.
     Parcourez les produits, contactez les vendeurs directement et gérez vos commandes facilement.
-    Inscrivez-vous pour profiter de toutes les fonctionnalités et découvrez une expérience conviviale et rapide.
+    Inscrivez-vous pour profiter de toutes les fonctionnalités et découvrez une expérience conviviale et rapide
   </p>
 </main>
 
@@ -65,9 +65,11 @@ main p { font-size:1.1em; line-height:1.6; color:#333; }
   </div>
 
   <button id="actionBtn" class="action-btn">Se connecter</button>
+  <p id="forgotPassword" style="text-align:center;color:#2e8b57;cursor:pointer;font-size:0.9em;margin-top:10px;">
+  Mot de passe oublié ?
+  </p>
   <div class="error" id="errorMsg"></div>
 </div>
-
 <script type="module">
 import { supabase } from './supabase.js';
 
@@ -86,6 +88,9 @@ const emailInput = document.getElementById('email');
 const passwordInput = document.getElementById('password');
 const togglePass = document.getElementById('togglePass');
 
+/* ✅ AJOUT */
+const forgotPassword = document.getElementById('forgotPassword');
+
 let isLogin = true;
 
 /* ================= UI ================= */
@@ -96,6 +101,7 @@ loginBtn.onclick = () => {
   formTitle.textContent = "Connexion";
   actionBtn.textContent = "Se connecter";
   errorMsg.textContent = "";
+  forgotPassword.style.display = "block"; // ✅ AJOUT
 };
 
 signupBtn.onclick = () => {
@@ -105,6 +111,7 @@ signupBtn.onclick = () => {
   formTitle.textContent = "Inscription";
   actionBtn.textContent = "S'inscrire";
   errorMsg.textContent = "";
+  forgotPassword.style.display = "none"; // ✅ AJOUT
 };
 
 closeSidebar.onclick = () => {
@@ -118,6 +125,27 @@ closeSidebar.onclick = () => {
 togglePass.onclick = () => {
   passwordInput.type =
     passwordInput.type === "password" ? "text" : "password";
+};
+
+/* ================= MOT DE PASSE OUBLIÉ ================= */
+forgotPassword.onclick = async () => {
+  const email = emailInput.value.trim();
+
+  if (!email) {
+    errorMsg.textContent = "Entre ton email pour réinitialiser le mot de passe";
+    return;
+  }
+
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: window.location.origin + "/reset-password.html"
+  });
+
+  if (error) {
+    errorMsg.textContent = error.message;
+    return;
+  }
+
+  alert("📩 Un email de réinitialisation a été envoyé !");
 };
 
 /* ================= AUTH ================= */
@@ -173,7 +201,6 @@ supabase.auth.onAuthStateChange(async (event, session) => {
 
   const user = session.user;
 
-  // Vérifier si le profil existe déjà
   const { data: existingProfile } = await supabase
     .from("profiles")
     .select("id")
@@ -182,7 +209,6 @@ supabase.auth.onAuthStateChange(async (event, session) => {
 
   if (existingProfile) return;
 
-  // Créer le profil
   const { error } = await supabase.from("profiles").insert({
     id: user.id,
     email: user.email,
