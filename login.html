@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <title>Marché-Agricole</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <style>
 /* 🔒 STYLES INCHANGÉS */
 body, html { margin:0; padding:0; font-family: Arial, sans-serif; background:#f2f7f4; }
@@ -21,109 +20,21 @@ main { max-width:900px; margin:50px auto; padding:0 20px; text-align:center; }
 main h2 { font-size:2em; color:#2e8b57; margin-bottom:20px; }
 main p { font-size:1.1em; line-height:1.6; color:#333; }
 
-.sidebar {
-  position:fixed;
-  top:0;
-  right:-400px;
-  width:350px;
-  height:100%;
-  background:white;
-  box-shadow:-4px 0 12px rgba(0,0,0,0.2);
-  padding:30px 20px;
-  transition:right 0.3s ease;
-  z-index:2000;
-  overflow-y:auto;
-}
+.sidebar { position:fixed; top:0; right:-400px; width:350px; height:100%; background:white; box-shadow:-4px 0 12px rgba(0,0,0,0.2); padding:30px 20px; transition:right 0.3s ease; z-index:2000; overflow-y:auto; }
 .sidebar.open { right:0; }
-
-.sidebar .close-btn {
-  position:absolute;
-  top:15px;
-  right:15px;
-  font-size:1.5em;
-  background:none;
-  border:none;
-  cursor:pointer;
-  color:#555;
-}
-
-.sidebar h3 {
-  text-align:center;
-  color:#2e8b57;
-  margin-bottom:20px;
-}
-
-.sidebar input {
-  width:95%;
-  max-width:300px;
-  padding:10px;
-  margin:15px 25px;
-  display:block;
-  border-radius:6px;
-  border:1px solid #ccc;
-  font-size:1em;
-}
-
-.password-wrapper {
-  position:relative;
-}
-
-.password-wrapper input {
-  width:100%;
-  padding:10px;
-  border-radius:6px;
-  border:1px solid #ccc;
-  font-size:1em;
-  padding-right:40px;
-}
-
-.password-wrapper .toggle-pass {
-  position:absolute;
-  top:50%;
-  right:10px;
-  transform:translateY(-50%);
-  cursor:pointer;
-  font-size:1.1em;
-  color:#555;
-}
-
-.sidebar button.action-btn {
-  width:90%;
-  padding:10px;
-  background:#2e8b57;
-  border:none;
-  color:white;
-  font-weight:bold;
-  border-radius:6px;
-  cursor:pointer;
-  margin:15px 25px;
-  transition:0.2s;
-}
-
-.sidebar button.action-btn:hover {
-  background:#27ae60;
-}
-
-.sidebar .error {
-  color:red;
-  font-size:0.9em;
-  margin-top:10px;
-  text-align:center;
-}
-
-.forgot-link {
-  display:block;
-  text-align:center;
-  margin-top:10px;
-  color:#2e8b57;
-  font-size:14px;
-  cursor:pointer;
-}
+.sidebar .close-btn { position:absolute; top:15px; right:15px; font-size:1.5em; background:none; border:none; cursor:pointer; color:#555; }
+.sidebar h3 { text-align:center; color:#2e8b57; margin-bottom:20px; }
+.password-wrapper { position:relative; }
+.password-wrapper input { width:100%; padding:10px; margin:8px 0; border-radius:6px; border:1px solid #ccc; font-size:1em; padding-right:40px; }
+.password-wrapper .toggle-pass { position:absolute; top:50%; right:10px; transform:translateY(-50%); cursor:pointer; font-size:1.1em; color:#555; }
+.sidebar input:not(.toggle-pass) { width:95%; max-width:300px; padding:10px; margin:15px 25px; display:block; border-radius:6px; border:1px solid #ccc; font-size:1em; }
+.sidebar button.action-btn { width:90%; padding:10px; background:#2e8b57; border:none; color:white; font-weight:bold; border-radius:6px; cursor:pointer; margin:15px 25px; transition:0.2s; }
+.sidebar button.action-btn:hover { background:#27ae60; }
+.sidebar .error { color:red; font-size:0.9em; margin-top:10px; text-align:center; }
 </style>
 </head>
 
 <body>
-
 <header>
   <h1>Marché-Agricole</h1>
   <div class="header-buttons">
@@ -135,35 +46,26 @@ main p { font-size:1.1em; line-height:1.6; color:#333; }
 <main>
   <h2>Bienvenue sur Marché-Agricole</h2>
   <p>
-    Marché-Agricole est la plateforme incontournable pour les acteurs du secteur agricole.
-Découvrez, achetez et vendez des produits agricoles de qualité en toute sécurité,
-connectez-vous directement avec des producteurs et fournisseurs locaux,
-et optimisez vos échanges pour développer votre activité rapidement.
-      </p>
+    Marché-Agricole est votre boutique en ligne pour acheter et vendre des produits agricoles en toute simplicité.
+    Parcourez les produits, contactez les vendeurs directement et gérez vos commandes facilement.
+    Inscrivez-vous pour profiter de toutes les fonctionnalités et découvrez une expérience conviviale et rapide.
+  </p>
 </main>
 
-<!-- ===== SIDEBAR AUTH ===== -->
 <div class="sidebar" id="sidebar">
   <button class="close-btn" id="closeSidebar">✖</button>
-
   <h3 id="formTitle">Connexion</h3>
 
-  <!-- Username (INSCRIPTION SEULEMENT) -->
   <input type="text" id="username" placeholder="Nom d'utilisateur" style="display:none;">
-
-  <!-- Email -->
   <input type="email" id="email" placeholder="Email">
 
-  <!-- Mot de passe -->
   <div class="password-wrapper">
     <input type="password" id="password" placeholder="Mot de passe">
-    <span class="toggle-pass" id="togglePass">👁</span>
+    <span class="toggle-pass" id="togglePass">&#128065;</span>
   </div>
 
   <button id="actionBtn" class="action-btn">Se connecter</button>
-
   <div class="error" id="errorMsg"></div>
-  <span class="forgot-link" id="forgotPasswordLink">Mot de passe oublié ?</span>
 </div>
 
 <script type="module">
@@ -171,139 +73,129 @@ import { supabase } from './supabase.js';
 
 document.addEventListener('DOMContentLoaded', () => {
 
-  const sidebar = document.getElementById('sidebar');
-  const closeSidebar = document.getElementById('closeSidebar');
-  const loginBtn = document.getElementById('loginBtn');
-  const signupBtn = document.getElementById('signupBtn');
+const sidebar = document.getElementById('sidebar');
+const closeSidebar = document.getElementById('closeSidebar');
+const loginBtn = document.getElementById('loginBtn');
+const signupBtn = document.getElementById('signupBtn');
 
-  const formTitle = document.getElementById('formTitle');
-  const actionBtn = document.getElementById('actionBtn');
-  const errorMsg = document.getElementById('errorMsg');
-  const usernameInput = document.getElementById('username');
-  const emailInput = document.getElementById('email');
-  const passwordInput = document.getElementById('password');
-  const togglePass = document.getElementById('togglePass');
-  const forgotPasswordLink = document.getElementById('forgotPasswordLink');
+const formTitle = document.getElementById('formTitle');
+const actionBtn = document.getElementById('actionBtn');
+const errorMsg = document.getElementById('errorMsg');
+const usernameInput = document.getElementById('username');
+const emailInput = document.getElementById('email');
+const passwordInput = document.getElementById('password');
+const togglePass = document.getElementById('togglePass');
 
-  // 🔒 IMPORTANT : empêcher tout comportement submit
-  actionBtn.type = "button";
+let isLogin = true;
 
-  let isLogin = true;
+/* ================= UI ================= */
+loginBtn.onclick = () => {
+  isLogin = true;
+  sidebar.classList.add('open');
+  usernameInput.style.display = 'none';
+  formTitle.textContent = "Connexion";
+  actionBtn.textContent = "Se connecter";
+  errorMsg.textContent = "";
+};
 
-  /* ================= UI ================= */
-  loginBtn.onclick = () => {
-    isLogin = true;
-    sidebar.classList.add('open');
-    usernameInput.style.display = 'none';
-    formTitle.textContent = "Connexion";
-    actionBtn.textContent = "Se connecter";
-    errorMsg.textContent = "";
-    forgotPasswordLink.style.display = "block";
-  };
+signupBtn.onclick = () => {
+  isLogin = false;
+  sidebar.classList.add('open');
+  usernameInput.style.display = 'block';
+  formTitle.textContent = "Inscription";
+  actionBtn.textContent = "S'inscrire";
+  errorMsg.textContent = "";
+};
 
-  signupBtn.onclick = () => {
-    isLogin = false;
-    sidebar.classList.add('open');
-    usernameInput.style.display = 'block';
-    formTitle.textContent = "Inscription";
-    actionBtn.textContent = "S'inscrire";
-    errorMsg.textContent = "";
-    forgotPasswordLink.style.display = "none";
-  };
+closeSidebar.onclick = () => {
+  sidebar.classList.remove('open');
+  emailInput.value = "";
+  passwordInput.value = "";
+  usernameInput.value = "";
+  errorMsg.textContent = "";
+};
 
-  closeSidebar.onclick = () => {
-    sidebar.classList.remove('open');
-    emailInput.value = "";
-    passwordInput.value = "";
-    usernameInput.value = "";
-    errorMsg.textContent = "";
-  };
+togglePass.onclick = () => {
+  passwordInput.type =
+    passwordInput.type === "password" ? "text" : "password";
+};
 
-  togglePass.onclick = () => {
-    passwordInput.type =
-      passwordInput.type === "password" ? "text" : "password";
-  };
+/* ================= AUTH ================= */
+actionBtn.onclick = async () => {
+  errorMsg.textContent = "";
 
-  /* ================= AUTH ================= */
-  actionBtn.onclick = async (e) => {
-    e.preventDefault(); // 🔥 BLOQUE LE REFRESH
-    errorMsg.textContent = "";
+  const email = emailInput.value.trim();
+  const password = passwordInput.value.trim();
+  const username = usernameInput.value.trim();
 
-    const email = emailInput.value.trim();
-    const password = passwordInput.value.trim();
-    const username = usernameInput.value.trim();
+  if (!email || !password || (!isLogin && !username)) {
+    errorMsg.textContent = "Remplis tous les champs";
+    return;
+  }
 
-    if (!email || !password || (!isLogin && !username)) {
-      errorMsg.textContent = "Remplis tous les champs";
+  /* ===== LOGIN ===== */
+  if (isLogin) {
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password
+    });
+
+    if (error) {
+      errorMsg.textContent = error.message;
       return;
     }
 
-    try {
+    window.location.href = "index.html";
+    return;
+  }
 
-      /* ===== LOGIN ===== */
-      if (isLogin) {
-        const { data, error } = await supabase.auth.signInWithPassword({
-          email,
-          password
-        });
-
-        if (error) throw error;
-
-        if (!data.user.email_confirmed_at) {
-          await supabase.auth.signOut();
-          errorMsg.textContent = "⚠️ Confirme ton email avant de te connecter";
-          return;
-        }
-
-        window.location.href = "index.html";
-        return;
-      }
-
-      /* ===== SIGNUP ===== */
-      const { error: signUpError } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          data: { username },
-          emailRedirectTo: "https://fiacre06.github.io/Sell-live/login.html"
-        }
-      });
-
-      if (signUpError) throw signUpError;
-
-      // ✅ ICI L’ALERT FONCTIONNE MAINTENANT
-      alert("✅ Compte créé ! Tu peux maintenant te connecter.");
-
-      sidebar.classList.remove('open');
-
-    } catch (err) {
-      errorMsg.textContent = err.message || "Erreur inconnue";
+  /* ===== SIGNUP ===== */
+  const { error: signUpError } = await supabase.auth.signUp({
+    email,
+    password,
+    options: {
+      data: { username }
     }
-  };
-
-  /* ================= PROFILE AUTO CREATE ================= */
-  supabase.auth.onAuthStateChange(async (event, session) => {
-    if (event !== "SIGNED_IN" || !session?.user) return;
-
-    const user = session.user;
-
-    const { data: existingProfile } = await supabase
-      .from("profiles")
-      .select("id")
-      .eq("id", user.id)
-      .maybeSingle();
-
-    if (existingProfile) return;
-
-    await supabase.from("profiles").insert({
-      id: user.id,
-      email: user.email,
-      username: user.user_metadata?.username || "",
-      is_acheteur: true,
-      is_vendeur: true,
-      is_premium: false
-    });
   });
+
+  if (signUpError) {
+    errorMsg.textContent = signUpError.message;
+    return;
+  }
+
+  alert("✅ Compte créé ! Tu peux maintenant te connecter.");
+  sidebar.classList.remove('open');
+};
+
+/* ================= PROFILE AUTO CREATE ================= */
+supabase.auth.onAuthStateChange(async (event, session) => {
+  if (event !== "SIGNED_IN" || !session?.user) return;
+
+  const user = session.user;
+
+  // Vérifier si le profil existe déjà
+  const { data: existingProfile } = await supabase
+    .from("profiles")
+    .select("id")
+    .eq("id", user.id)
+    .single();
+
+  if (existingProfile) return;
+
+  // Créer le profil
+  const { error } = await supabase.from("profiles").insert({
+    id: user.id,
+    email: user.email,
+    username: user.user_metadata?.username || "user",
+    is_acheteur: true,
+    is_vendeur: true,
+    is_premium: false
+  });
+
+  if (error) {
+    console.error("Impossible de créer le profil :", error);
+  }
+});
 
 });
 </script>
