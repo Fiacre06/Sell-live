@@ -649,6 +649,7 @@ header.topbar .top-actions button {
   font-weight:600;
   text-align:center;
  }
+
  /* ===== FILTRE LIVRAISON ===== */
 .filter-livraison {
   position: relative;
@@ -663,28 +664,38 @@ header.topbar .top-actions button {
   cursor: pointer;
   font-weight: 600;
 }
- /* Menu options */
+
+/* ===== OPTIONS LIVRAISON (CENTRÉES) ===== */
 .livraison-options {
-  position: absolute;
-  top: 45px;
-  left: 0;
+  position: fixed; /* 🔥 clé du centrage */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  
   background: white;
-  border-radius: 12px;
-  box-shadow: 0 10px 25px rgba(0,0,0,.15);
+  border-radius: 16px;
+  box-shadow: 0 15px 40px rgba(0,0,0,.25);
   overflow: hidden;
-  z-index: 50;
+  z-index: 2000;
+
+  min-width: 260px;
+  text-align: center;
 }
 
+/* Option */
 .livraison-options div {
-  padding: 10px 16px;
+  padding: 14px 20px;
   cursor: pointer;
-  white-space: nowrap;
+  font-weight: 600;
+  font-size: 15px;
 }
 
+/* Hover */
 .livraison-options div:hover {
   background: #f3f4f6;
 }
 
+/* Masqué */
 .hidden {
   display: none;
 }
