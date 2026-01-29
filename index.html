@@ -581,7 +581,7 @@ header.topbar .top-actions button {
   padding: 8px 14px;
   border-radius: 12px;
   border: none;
-  background-color: #2e7d32;
+  background-color: #2e8b57;
   color: white;
   font-weight: 600;
   cursor: pointer;
@@ -602,9 +602,9 @@ header.topbar .top-actions button {
 .topBtn {
   flex: 0 0 auto;          /* empêche les boutons de s’étirer */
   padding: 8px 14px;
-  border-radius: 12px;
+  border-radius: 999px;
   border: none;
-  background-color: #2e7d32;
+  background-color: #2e8b57;
   color: white;
   font-weight: 600;
   cursor: pointer;
@@ -648,6 +648,48 @@ header.topbar .top-actions button {
   border-radius:999px;
   font-weight:600;
   text-align:center;
+ }
+ /* ===== FILTRE LIVRAISON ===== */
+.filter-livraison {
+  position: relative;
+}
+
+#livraisonFilterBtn {
+  background: #2e8b57;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-weight: 600;
+}
+ /* Menu options */
+.livraison-options {
+  position: absolute;
+  top: 45px;
+  left: 0;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0,0,0,.15);
+  overflow: hidden;
+  z-index: 50;
+}
+
+.livraison-options div {
+  padding: 10px 16px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.livraison-options div:hover {
+  background: #f3f4f6;
+}
+
+.hidden {
+  display: none;
+}
+ #resetFilterBtn{
+  background: #2e8b57;
  }
 </style>
 </head>
@@ -726,9 +768,13 @@ header.topbar .top-actions button {
   
   <!-- CONTENEUR BOUTONS HORIZONTAUX -->
 <div class="topButtons">
+ <button id="resetFilterBtn" class="topBtn secondary">🔄 Toutes les boutiques</button>
+ 
   <button id="topShopsBtn" class="topBtn">🔥 Top boutiques</button>
   <button id="filterCategoryBtn" class="topBtn">📂 Catégories</button>
-  <button id="resetFilterBtn" class="topBtn secondary">🔄 Toutes les boutiques</button>
+   <button id="livraisonFilterBtn">🚚 Livraison</button>
+  
+  
   <button id="nearbyShopsBtn">
   📍 Boutiques proches
 </button>
@@ -752,6 +798,12 @@ header.topbar .top-actions button {
       <button id="closeCategoryBtn">Fermer</button>
     </div>
 
+  </div>
+</div>
+
+  <div id="livraisonOptions" class="livraison-options hidden">
+    <div data-value="true">🚚 Disponible</div>
+    <div data-value="false">📦 Non disponible</div>
   </div>
 </div>
 
@@ -1422,12 +1474,13 @@ function applyCategoryFilter(mainCategory, subCategory) {
    RESET : TOUTES LES BOUTIQUES
 ============================== */
 resetFilterBtn.onclick = () => {
-  console.log("🔄 Reset filtre");
-  document.querySelectorAll(".shopCard").forEach(card => {
-    card.style.display = "block";
-  });
-};
+  console.log("🔄 Reset total filtres");
 
+  selectedCategory = null;
+  livraisonFilter = null;
+
+  loadShops();
+};
 /* ==============================
    RECHERCHE
 ============================== */
@@ -1953,16 +2006,51 @@ div.onclick = () => {
 }, 100);
       
       
+let selectedCategory = null;
+let livraisonFilter = null;
 
+document.addEventListener("DOMContentLoaded", () => {
+  console.log("🚀 Page chargée → chargement boutiques");
+  loadShops();
+});
+
+const livraisonBtn = document.getElementById("livraisonFilterBtn");
+const livraisonOptions = document.getElementById("livraisonOptions");
+
+livraisonBtn.onclick = () => {
+  livraisonOptions.classList.toggle("hidden");
+};
+document.querySelectorAll("#livraisonOptions div").forEach(option => {
+  option.onclick = () => {
+    livraisonFilter = option.dataset.value === "true";
+    livraisonOptions.classList.add("hidden");
+
+    loadShops(); // 🔥 recharger les boutiques avec filtre
+  };
+});
   
  
 // ====== CHARGER BOUTIQUES (PRO + STATUS PREMIUM) ======
 async function loadShops() {
+  
+
   try {
-    const { data: shops, error } = await supabase
+    let query = supabase
       .from('shops')
       .select('*')
       .order('created_at', { ascending: false });
+
+    // 🔹 Filtre catégorie
+    if (selectedCategory) {
+      query = query.eq('category', selectedCategory);
+    }
+
+    // 🔹 Filtre livraison
+    if (livraisonFilter !== null) {
+      query = query.eq('livraison', livraisonFilter);
+    }
+
+    const { data: shops, error } = await query;
 
     if (error) {
       console.error("Erreur loadShops:", error);
@@ -1973,8 +2061,7 @@ async function loadShops() {
     if (!shops || shops.length === 0) {
       shopsList.innerHTML = "<p>Aucune boutique trouvée</p>";
       return;
-    }
-
+     }
     // 🔹 Récupérer les profils des propriétaires
     const ownerIds = shops.map(s => s.owner_id);
     const { data: profiles } = await supabase
