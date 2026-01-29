@@ -2963,6 +2963,49 @@ async function loadShopComments(scrollToId = null) {
 
       parentEl.appendChild(div);
 
+     // ===== MODIFIER COMMENTAIRE =====
+const editBtn = div.querySelector('.editCommentBtn');
+if (editBtn) {
+  editBtn.onclick = () => {
+    const p = div.querySelector('p');
+    const originalText = p.textContent;
+
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.value = originalText;
+    input.style.width = '100%';
+    input.style.padding = '4px';
+
+    const saveBtn = document.createElement('button');
+    saveBtn.textContent = 'Sauvegarder';
+    saveBtn.style.marginTop = '4px';
+
+    p.replaceWith(input);
+    div.appendChild(saveBtn);
+    editBtn.disabled = true;
+
+    saveBtn.onclick = async () => {
+      const newText = input.value.trim();
+      if (!newText) return;
+
+      const { error } = await supabase
+        .from('shop_comments')
+        .update({ content: newText })
+        .eq('id', c.id)
+        .eq('user_id', currentUser.id);
+
+      if (error) {
+        alert("Erreur modification");
+        console.error(error);
+        return;
+      }
+
+      loadShopComments();
+    };
+  };
+}
+      
+
       // ===== Répondre =====
       const replyBtn = div.querySelector('.replyBtn');
       replyBtn.onclick = () => {
@@ -3017,7 +3060,16 @@ if (c.user_id !== currentUser.id) {
 loadShopComments(inserted.id);
         };
       };
-
+  // ===== Supprimer =====
+      const delBtn = div.querySelector('.deleteCommentBtn');
+      if (delBtn) {
+        delBtn.onclick = async () => {
+          if (!confirm("Supprimer ce commentaire ?")) return;
+          const { error } = await supabase.from('shop_comments').delete().eq('id', c.id);
+          if (error) { alert("Erreur suppression"); console.error(error); return; }
+          loadShopComments();
+        };
+ }
       // ===== Likes =====
       const likeBtn = div.querySelector('.likeCommentBtn');
       loadCommentLikes(c.id, likeBtn);
