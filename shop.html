@@ -165,6 +165,45 @@ button{
     justify-content:center;
   }
 }
+  /* ===== LIVRAISON BADGE ===== */
+.livraison-badge{
+  display:inline-block;
+  padding:8px 14px;
+  border-radius:999px;
+  font-size:.85rem;
+  font-weight:600;
+  margin-bottom:8px;
+}
+
+.livraison-oui{
+  background:#e6f6ee;
+  color:#2e8b57;
+  border:1px solid #2e8b57;
+}
+
+.livraison-non{
+  background:#fceaea;
+  color:#b91c1c;
+  border:1px solid #b91c1c;
+}
+
+/* ===== WHATSAPP BUTTON ===== */
+.whatsapp-btn{
+  display:inline-block;
+  margin-top:6px;
+  padding:10px 16px;
+  border-radius:999px;
+  background:#25D366;
+  color:white;
+  font-weight:600;
+  text-decoration:none;
+  transition:.2s;
+}
+
+.whatsapp-btn:hover{
+  opacity:.9;
+  transform:translateY(-2px);
+}
 </style>
 </head>
 
@@ -252,17 +291,17 @@ async function loadShop() {
   let extrasHTML = "";
 
   extrasHTML += shop.livraison
-    ? "🚚 Livraison disponible<br>"
-    : "📦 Livraison non disponible<br>";
+  ? `<span class="livraison-badge livraison-oui">🚚 Livraison disponible</span><br>`
+  : `<span class="livraison-badge livraison-non">📦 Livraison non disponible</span><br>`;
 
-  if (shop.whatsapp) {
-    const phone = shop.whatsapp.replace(/\s+/g,'');
-    extrasHTML += `
-      📱 <a href="https://wa.me/${phone}" target="_blank">
-        Contacter sur WhatsApp
-      </a>
-    `;
-  }
+if (shop.whatsapp) {
+  const phone = shop.whatsapp.replace(/\s+/g,'');
+  extrasHTML += `
+    <a href="https://wa.me/${phone}" target="_blank" class="whatsapp-btn">
+      Contacter la boutique
+    </a>
+  `;
+}
 
   shopExtrasEl.innerHTML = extrasHTML;
 
