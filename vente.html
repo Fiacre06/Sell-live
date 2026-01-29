@@ -524,8 +524,131 @@ header.topbar .top-actions button {
   }
 }
   
+/* ================== CREATE SHOP SECTION ================== */
+#createShopSection{
+  background:#ffffff;
+  max-width:520px;
+  margin:40px auto;
+  padding:28px;
+  border-radius:22px;
+  box-shadow:0 20px 40px rgba(0,0,0,.08);
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+}
 
-  
+/* ===== TITRE ===== */
+#createShopSection h3{
+  margin:0 0 10px;
+  font-size:1.5rem;
+  color:#2e8b57;
+  text-align:center;
+}
+
+/* ===== INPUTS / TEXTAREA ===== */
+#createShopSection input,
+#createShopSection textarea{
+  width:100%;
+  padding:14px 16px;
+  border-radius:14px;
+  border:1px solid #e5e7eb;
+  font-size:.95rem;
+  outline:none;
+  transition:.2s;
+  background:#f9fafb;
+}
+
+#createShopSection textarea{
+  min-height:90px;
+  resize:vertical;
+}
+
+/* Focus */
+#createShopSection input:focus,
+#createShopSection textarea:focus{
+  border-color:#2e8b57;
+  background:#ffffff;
+  box-shadow:0 0 0 3px rgba(46,139,87,.12);
+}
+
+/* ===== CATEGORY INPUT ===== */
+#shopCategory{
+  cursor:pointer;
+  background:#f0fdf4;
+  border:1px dashed #2e8b57;
+  font-weight:600;
+  color:#166534;
+}
+
+/* ===== LOCATION ===== */
+#shopLocation{
+  background:#f9fafb;
+}
+
+/* ===== LIVRAISON CHECKBOX ===== */
+#createShopSection label{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-weight:600;
+  color:#374151;
+  background:#f0fdf4;
+  padding:12px 14px;
+  border-radius:14px;
+  border:1px solid #bbf7d0;
+  cursor:pointer;
+}
+
+#createShopSection input[type="checkbox"]{
+  width:18px;
+  height:18px;
+  accent-color:#2e8b57;
+}
+
+/* ===== WHATSAPP INPUT ===== */
+#whatsapp{
+  border:1px solid #25D366;
+  background:#f0fdf4;
+  font-weight:500;
+}
+
+/* ===== IMAGE INPUT ===== */
+#shopImage{
+  padding:10px;
+  background:#f9fafb;
+  border:1px dashed #d1d5db;
+  cursor:pointer;
+}
+
+/* ===== SUBMIT BUTTON ===== */
+#submitShopBtn{
+  margin-top:10px;
+  padding:15px;
+  border:none;
+  border-radius:999px;
+  background:linear-gradient(135deg,#2e8b57,#3cb371);
+  color:white;
+  font-size:1rem;
+  font-weight:700;
+  cursor:pointer;
+  transition:.25s;
+  box-shadow:0 10px 25px rgba(46,139,87,.35);
+}
+
+#submitShopBtn:hover{
+  transform:translateY(-2px);
+  opacity:.95;
+}
+
+#submitShopBtn:active{
+  transform:scale(.97);
+  }
+  /* ================== MOBILE ================== */
+@media(max-width:480px){
+  #createShopSection{
+    padding:20px;
+  }
+  }
 </style>
 </head>
 <body>
@@ -622,6 +745,20 @@ header.topbar .top-actions button {
     placeholder="Lieu"
   >
 
+ <!-- Livraison -->
+<label style="display:block;margin-top:10px;">
+  <input type="checkbox" id="livraison">
+  🚚 Livraison disponible
+</label>
+
+<!-- WhatsApp -->
+<input
+  type="tel"
+  id="whatsapp"
+  placeholder="Numéro WhatsApp (ex: +229XXXXXXXX)"
+  style="width:100%;margin-top:10px;"
+>
+  
   <input type="hidden" id="latitude">
 <input type="hidden" id="longitude">
 
@@ -866,15 +1003,23 @@ document.getElementById("createShopBtn").addEventListener("click", async () => {
     alert("❌ Erreur lors de la création de la boutique");
   }
 });
-  // ===== CREER BOUTIQUE =====
+
+   // ===== CREER BOUTIQUE =====
 submitShopBtn.onclick = async () => {
   const name = shopName.value.trim();
-  if (!name) { alert("Nom obligatoire"); return; }
+  if (!name) {
+    alert("Nom obligatoire");
+    return;
+  }
 
   if (!selectedShopCategory) {
     alert("Veuillez choisir une catégorie");
     return;
   }
+
+  // 🔹 NOUVEAU : récupération livraison & whatsapp
+  const livraison = document.getElementById("livraison")?.checked || false;
+  const whatsapp = document.getElementById("whatsapp")?.value.trim() || null;
 
   let imageUrl = null;
   const file = shopImage.files[0];
@@ -883,38 +1028,54 @@ submitShopBtn.onclick = async () => {
     const compressedFile = await compressImage(file, 900, 0.7);
     const fileName = `shop_${currentUser.id}_${Date.now()}.jpg`;
 
-    await supabase.storage
+    const { error: uploadError } = await supabase.storage
       .from("shops")
       .upload(fileName, compressedFile, {
         contentType: "image/jpeg"
       });
+
+    if (uploadError) {
+      alert(uploadError.message);
+      return;
+    }
 
     imageUrl = supabase.storage
       .from("shops")
       .getPublicUrl(fileName).data.publicUrl;
   }
 
-  const { error } = await supabase.from("shops").insert({
-    owner_id: currentUser.id,
-    name,
-    description: shopDesc.value,
-    category: selectedShopCategory, // ✅ ICI
-    location: shopLocation.value,
-    image_url: imageUrl,
-    premium_level: currentProfile?.premium_level || 'free'
-  });
+  // 🔹 INSERT COMPLET AVEC LIVRAISON & WHATSAPP
+  const { error } = await supabase
+    .from("shops")
+    .insert({
+      owner_id: currentUser.id,
+      name,
+      description: shopDesc.value,
+      category: selectedShopCategory,
+      location: shopLocation.value,
+      image_url: imageUrl,
+      livraison: livraison,     // ✅ AJOUTÉ
+      whatsapp: whatsapp,       // ✅ AJOUTÉ
+      premium_level: currentProfile?.premium_level || "free"
+    });
 
   if (error) {
     alert(error.message);
     return;
   }
 
-  // Reset
+  // 🔄 RESET FORMULAIRE
   shopName.value = "";
   shopDesc.value = "";
   shopCategoryInput.value = "";
   shopLocation.value = "";
   shopImage.value = "";
+  if (document.getElementById("livraison")) {
+    document.getElementById("livraison").checked = false;
+  }
+  if (document.getElementById("whatsapp")) {
+    document.getElementById("whatsapp").value = "";
+  }
   selectedShopCategory = null;
 
   shopFullModal.style.display = "none";
