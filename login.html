@@ -1,13 +1,14 @@
-<!DOCTYPE html>
+  <!DOCTYPE html>
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MANG – Marché Agricole Nouvelle Génération</title>
 
-<title>Marché Agricole en Ligne | Marketplace agricole moderne</title>
-
-<meta name="description" content="Marketplace agricole avec messagerie instantanée, boutiques et livraison.">
 <style>
+/* =====================================================
+   VARIABLES
+===================================================== */
 :root{
   --green:#1f8a5b;
   --green-dark:#166b45;
@@ -15,116 +16,91 @@
   --dark:#102a23;
   --gray:#5f6f68;
   --radius:22px;
-  --shadow:0 18px 45px rgba(0,0,0,.15);
+  --shadow:0 20px 50px rgba(0,0,0,.15);
 }
 
-/* ================= RESET ================= */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-body {
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  background: var(--bg);
-  color: var(--dark);
-  overflow-x: hidden;
+/* =====================================================
+   RESET
+===================================================== */
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  background:var(--bg);
+  color:var(--dark);
+  overflow-x:hidden;
 }
 
-/* ================= SPLASH SCREEN ================= */
-#splash {
-  position: fixed;
-  inset: 0;
-  background: linear-gradient(135deg, #f0fff5, #d9f0e5);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
-  animation: fadeOut 1s ease forwards;
-  animation-delay: 3s;
-  transition: opacity 0.5s ease;
+/* =====================================================
+   SPLASH SCREEN
+===================================================== */
+#splash{
+  position:fixed;
+  inset:0;
+  background:linear-gradient(135deg,#e8fff2,#d7f2e5);
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  z-index:9999;
+  animation:fadeOut 1.2s ease forwards;
+  animation-delay:3.2s;
 }
-
-#splash img {
-  width: 350px;
-  hight: 350px;
-  margin-bottom: 15px;
-  animation: logoPulse 2s ease-in-out infinite;
-  transform-origin: center;
-  filter: drop-shadow(0 6px 12px rgba(0,0,0,0.15));
+#splash img{width:220px;animation:logoPulse 1.6s infinite}
+#splash h1{
+  margin-top:26px;
+  font-size:2.2em;
+  font-weight:900;
+  color:var(--green-dark);
+  text-align:center;
 }
-
-#splash span {
-  font-size: 5em;
-  font-weight: 900;
-  letter-spacing: 1.5px;
-  color: #166b45;
-  opacity: 0;
-  animation: textFadeIn 1s ease forwards;
-  animation-delay: 0.5s;
-  text-align: center;
+@keyframes logoPulse{
+  0%{transform:scale(1)}
+  50%{transform:scale(1.08)}
+  100%{transform:scale(1)}
 }
+@keyframes fadeOut{to{opacity:0;visibility:hidden}}
 
-/* ================= ANIMATIONS ================= */
-@keyframes logoPulse {
-  0% { transform: scale(1) rotate(0deg); }
-  25% { transform: scale(1.05) rotate(-2deg); }
-  50% { transform: scale(1.08) rotate(0deg); }
-  75% { transform: scale(1.05) rotate(2deg); }
-  100% { transform: scale(1) rotate(0deg); }
-}
-
-@keyframes textFadeIn {
-  0% { opacity: 0; transform: translateY(20px); }
-  100% { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes fadeOut {
-  0% { opacity: 1; visibility: visible; }
-  100% { opacity: 0; visibility: hidden; }
-}
-
-/* ================= HEADER ================= */
+/* =====================================================
+   HEADER
+===================================================== */
 header{
   background:
-    linear-gradient(rgba(16,42,35,.8),rgba(16,42,35,.9)),
-    url("https://images.unsplash.com/photo-1606788075765-42f7bba2d9d1?auto=format&fit=crop&w=1600&q=80");
-  background-size:cover;
-  background-position:center;
+    linear-gradient(rgba(16,42,35,.85),rgba(16,42,35,.92)),
+    url("assets/img/hero-people.jpg") center/cover no-repeat;
   color:#fff;
-  padding:90px 20px 110px;
+  padding:90px 20px 120px;
 }
-
+.nav{
+  max-width:1200px;
+  margin:0 auto 70px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+.nav img{height:52px}
 .hero{
-  max-width:1100px;
+  max-width:900px;
   margin:auto;
   text-align:center;
 }
-
-.hero h1{
-  font-size:2.8rem;
+.hero h2{
+  font-size:3rem;
   font-weight:900;
-  margin-bottom:22px;
+  margin-bottom:20px;
 }
-
 .hero p{
-  font-size:1.15em;
-  max-width:760px;
-  margin:0 auto 36px;
+  font-size:1.2em;
   line-height:1.7;
+  margin-bottom:38px;
 }
-
-/* ACTIONS (IMPORTANT) */
 .hero-actions{
   display:flex;
   justify-content:center;
-  gap:16px;
+  gap:18px;
   flex-wrap:wrap;
 }
-
 .hero-actions button{
-  padding:16px 46px;
+  padding:16px 48px;
   border-radius:999px;
   border:none;
   font-weight:900;
@@ -132,26 +108,18 @@ header{
   cursor:pointer;
   box-shadow:var(--shadow);
 }
-
-#loginBtn{
-  background:#fff;
-  color:var(--green-dark);
-}
-
+#loginBtn{background:#fff;color:var(--green-dark)}
 #signupBtn{
   background:linear-gradient(135deg,var(--green),var(--green-dark));
   color:#fff;
 }
-
-/* TRUST */
 .trust{
-  margin-top:40px;
+  margin-top:45px;
   display:flex;
   justify-content:center;
-  gap:18px;
+  gap:16px;
   flex-wrap:wrap;
 }
-
 .trust span{
   background:rgba(255,255,255,.15);
   padding:12px 20px;
@@ -159,197 +127,151 @@ header{
   font-weight:600;
 }
 
-/* ================= MAIN ================= */
+/* =====================================================
+   MAIN
+===================================================== */
 main{
   max-width:1200px;
   margin:100px auto;
   padding:0 20px;
 }
-
-/* ================= SECTION TITLES ================= */
-section{
-  margin-bottom:110px;
-}
-
-section h2{
+section{margin-bottom:120px}
+section h3{
+  text-align:center;
   font-size:2.4em;
   font-weight:900;
-  text-align:center;
   margin-bottom:18px;
-  line-height:1.25;
-  color:var(--dark);
 }
-
 .subtitle{
   text-align:center;
-  color:var(--gray);
   max-width:820px;
-  margin:0 auto 65px;
+  margin:0 auto 70px;
+  color:var(--gray);
+  font-size:1.1em;
   line-height:1.8;
-  font-size:1.08em;
 }
 
-/* ================= FEATURES GRID ================= */
+/* FEATURES */
 .features{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
   gap:32px;
 }
-
-/* ================= FEATURE CARD ================= */
 .feature{
-  background:#ffffff;
-  padding:34px 30px;
+  background:#fff;
+  padding:34px;
   border-radius:var(--radius);
-  box-shadow:
-    0 12px 30px rgba(0,0,0,.08),
-    inset 0 0 0 1px rgba(0,0,0,.03);
-  transition:all .3s ease;
-  position:relative;
-  overflow:hidden;
+  box-shadow:var(--shadow);
+  transition:.3s;
 }
-
-/* Subtle top accent */
-.feature::before{
-  content:"";
-  position:absolute;
-  top:0;
-  left:0;
-  width:100%;
-  height:4px;
-  background:linear-gradient(90deg,var(--green),var(--green-dark));
-}
-
-/* Hover effect */
-.feature:hover{
-  transform:translateY(-10px);
-  box-shadow:0 22px 55px rgba(0,0,0,.15);
-}
-
-/* ================= FEATURE CONTENT ================= */
-.feature h3{
-  font-size:1.25em;
-  font-weight:800;
-  margin-bottom:14px;
+.feature:hover{transform:translateY(-10px)}
+.feature h4{
   color:var(--green-dark);
+  margin-bottom:12px;
 }
+.feature p{color:var(--gray);line-height:1.7}
 
-.feature p{
-  font-size:.98em;
-  line-height:1.75;
-  color:var(--gray);
+/* IMAGE SECTIONS */
+.image-section{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:50px;
+  align-items:center;
 }
-
-/* ================= ICON EMPHASIS ================= */
-.feature h3::first-letter{
-  font-size:1.4em;
+.image-section img{
+  width:100%;
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
 }
+.image-section h4{font-size:2em;margin-bottom:14px}
+.image-section p{line-height:1.8;color:var(--gray)}
 
-/* ================= MOBILE ================= */
-@media(max-width:768px){
-  section h2{
-    font-size:2em;
-  }
-
-  .subtitle{
-    font-size:1em;
-    margin-bottom:45px;
-  }
-
-  .feature{
-    padding:28px 24px;
-  }
-}
-/* ================= SIDEBAR (CRUCIAL) ================= */
+/* =====================================================
+   SIDEBAR AUTH
+===================================================== */
 .sidebar{
   position:fixed;
   top:0;
-  right:-380px;
-  width:360px;
-  height:100%;
+  right:-420px;
+  width:380px;
+  max-width:100%;
+  height:100vh;
   background:#fff;
-  box-shadow:-20px 0 50px rgba(0,0,0,.3);
-  padding:30px 24px;
+  box-shadow:-10px 0 40px rgba(0,0,0,.2);
+  padding:30px;
   transition:.35s;
-  z-index:5000;
+  z-index:9998;
 }
-
 .sidebar.open{right:0}
-
 .close-btn{
-  position:absolute;
-  top:14px;
-  right:16px;
-  border:none;
   background:none;
+  border:none;
   font-size:1.4em;
   cursor:pointer;
+  float:right;
 }
-
 .sidebar h3{
-  text-align:center;
+  margin:40px 0 20px;
+  font-size:1.6em;
   color:var(--green-dark);
-  margin-bottom:22px;
 }
-
 .sidebar input{
   width:100%;
   padding:14px;
-  margin:10px 0;
-  border-radius:14px;
-  border:1px solid #d1d5db;
+  margin-bottom:14px;
+  border-radius:12px;
+  border:1px solid #ccc;
+  font-size:1em;
 }
-
 .password-wrapper{position:relative}
-
 .toggle-pass{
   position:absolute;
-  right:14px;
+  right:15px;
   top:50%;
   transform:translateY(-50%);
   cursor:pointer;
 }
-
 .action-btn{
   width:100%;
   padding:14px;
-  margin-top:18px;
   border:none;
   border-radius:999px;
+  font-weight:900;
   background:linear-gradient(135deg,var(--green),var(--green-dark));
   color:#fff;
-  font-weight:900;
   cursor:pointer;
+  margin-top:10px;
 }
-
 .error{
-  color:#dc2626;
+  color:red;
   text-align:center;
   margin-top:10px;
+}
+
+/* MOBILE */
+@media(max-width:900px){
+  .hero h2{font-size:2.2em}
+  .image-section{grid-template-columns:1fr}
 }
 </style>
 </head>
 
 <body>
 
-<!-- SPLASH SCREEN -->
+<!-- SPLASH -->
 <div id="splash">
-  <!-- Remplace "logo.png" par le nom exact de ton fichier uploadé dans assets/img/ -->
-  <img src="assets/img/logo.png" alt="Logo Marché Agricole" style="width:120px;">
-  <span style="font-size:1.1em; font-weight:800; letter-spacing:.5px; color:#166b45;">
-    Le Marché Agricole Nouvelle Génération
-
-  </span>
+  <img src="assets/img/logo.jpg" alt="Logo MANG">
+  <h1>Marché Agricole<br>Nouvelle Génération</h1>
 </div>
 
 <header>
-  <div class="hero">
-    <h1>Le Marché Agricole Nouvelle Génération</h1>
+  <div class="nav">
+    <img src="assets/img/logo.jpg" alt="MANG">
+  </div>
 
-    <p>
-      Vendez, achetez et échangez directement avec les acteurs agricoles.
-      Une plateforme simple, humaine et efficace.
-    </p>
+  <div class="hero">
+    <h2>MANG – Le marché agricole nouvelle génération</h2>
+    <p>La plateforme qui connecte producteurs et acheteurs agricoles sans intermédiaires.</p>
 
     <div class="hero-actions">
       <button id="loginBtn">Se connecter</button>
@@ -357,92 +279,69 @@ section h2{
     </div>
 
     <div class="trust">
-      <span>🌱 100% Agricole</span>
-      <span>💬 Messagerie directe</span>
-      <span>🏪 Boutiques visibles</span>
-      <span>🚚 Livraison flexible</span>
+      <span>🌱 Agricole</span>
+      <span>💬 Messagerie</span>
+      <span>🏪 Boutiques</span>
+      <span>📈 Visibilité</span>
     </div>
   </div>
 </header>
 
 <main>
-<section>
-  <h2>Une plateforme pensée pour l’agriculture réelle</h2>
 
-  <p class="subtitle">
-    Marché Agricole Nouvelle Génération est une plateforme numérique conçue pour
-    connecter directement tous les acteurs du monde agricole :
-    producteurs, vendeurs, prestataires de services et acheteurs,
-    sans intermédiaires inutiles.
-  </p>
+<section>
+  <h3>Pourquoi choisir MANG ?</h3>
+  <p class="subtitle">Une nouvelle façon de vendre et d’acheter localement.</p>
 
   <div class="features">
-
-    <div class="feature">
-      <h3>📦 Publiez vos produits et services</h3>
-      <p>
-        Vendez des produits agricoles (fruits, légumes, céréales, élevage)
-        ou proposez des services agricoles (labour, transport, traitement,
-        location de matériel).  
-        La publication est simple, rapide et accessible à tous.
-      </p>
-    </div>
-
-    <div class="feature">
-      <h3>💬 Discutez directement</h3>
-      <p>
-        Grâce à la messagerie instantanée intégrée, échangez librement
-        avec acheteurs et vendeurs avant toute transaction.
-        Posez vos questions, négociez et construisez une relation de confiance.
-      </p>
-    </div>
-
-    <div class="feature">
-      <h3>🏪 Boutiques et profils visibles</h3>
-      <p>
-        Chaque vendeur dispose d’une boutique ou d’un profil public,
-        visible par tous.  
-        Cela permet aux acheteurs d’identifier facilement les vendeurs,
-        leurs produits et leur sérieux.
-      </p>
-    </div>
-
-    <div class="feature">
-      <h3>📈 Développez votre activité</h3>
-      <p>
-        Donnez plus de visibilité à votre activité agricole,
-        touchez de nouveaux clients et augmentez vos ventes
-        grâce à une plateforme accessible partout, sur mobile comme sur ordinateur.
-      </p>
-    </div>
-
+    <div class="feature"><h4>📦 Produits</h4><p>Publie facilement tes produits agricoles.</p></div>
+    <div class="feature"><h4>💬 Discussion</h4><p>Négocie directement avec les acheteurs.</p></div>
+    <div class="feature"><h4>🏪 Boutique</h4><p>Un profil crédible et visible.</p></div>
   </div>
+</section>
+<section class="image-section">
+  <img src="assets/img/community.jpg" alt="Producteurs et acheteurs heureux">
+  <div>
+    <h4>Une communauté agricole unie</h4>
+    <p>
+      MANG rassemble producteurs, productrices et acheteurs
+      autour d’un objectif commun :
+      mieux vendre, mieux acheter et mieux collaborer.
+    </p>
+  </div>
+</section>
+
+<section class="image-section">
+  <div>
+    <h4>Ils parlent de MANG</h4>
+    <p>
+      Les utilisateurs recommandent MANG parce qu’ils y trouvent
+      des opportunités réelles, des contacts directs
+      et une nouvelle manière de faire du commerce agricole.
+    </p>
+  </div>
+  <img src="assets/img/testimonial.jpg" alt="Témoignage utilisateur">
 </section>
 </main>
 
-<!-- SIDEBAR (TON JS S’ACCROCHE ICI) -->
+<!-- SIDEBAR AUTH -->
 <div class="sidebar" id="sidebar">
   <button class="close-btn" id="closeSidebar">✖</button>
   <h3 id="formTitle">Connexion</h3>
-
-  <input type="text" id="username" placeholder="Nom d'utilisateur" style="display:none;">
-  <input type="email" id="email" placeholder="Email">
-
+  <input id="username" placeholder="Nom d'utilisateur" style="display:none">
+  <input id="email" type="email" placeholder="Email">
   <div class="password-wrapper">
-    <input type="password" id="password" placeholder="Mot de passe">
+    <input id="password" type="password" placeholder="Mot de passe">
     <span class="toggle-pass" id="togglePass">👁</span>
   </div>
-
   <button id="actionBtn" class="action-btn">Se connecter</button>
-  <p id="forgotPassword" style="text-align:center;color:#2e8b57;cursor:pointer;margin-top:10px;">
+  <p id="forgotPassword" style="text-align:center;color:var(--green);cursor:pointer;margin-top:10px;">
     Mot de passe oublié ?
   </p>
-
   <div class="error" id="errorMsg"></div>
 </div>
 
 <!-- 🔥 TON SCRIPT SUPABASE RESTE IDENTIQUE 🔥 -->
-
 
 <script type="module">
 import { supabase } from './supabase.js';
