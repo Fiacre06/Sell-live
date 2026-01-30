@@ -702,11 +702,93 @@ header.topbar .top-actions button {
  #resetFilterBtn{
   background: #2e8b57;
  }
+ /* ================= HEADER ================= */
+.main-header{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  background:#ffffff;
+  box-shadow:0 6px 20px rgba(0,0,0,.06);
+  z-index:1000;
+}
+
+.header-container{
+  max-width:1200px;
+  margin:auto;
+  padding:12px 20px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+
+/* LOGO */
+.logo-box{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.logo-box img{
+  height:46px;
+  width:auto;
+}
+
+.logo-text{
+  font-size:1.4em;
+  font-weight:900;
+  color:#2e7d32;
+  letter-spacing:1px;
+}
+
+/* NAV */
+.header-nav{
+  display:flex;
+  gap:22px;
+}
+
+.header-nav a{
+  text-decoration:none;
+  font-weight:600;
+  color:#333;
+  padding:6px 10px;
+  border-radius:6px;
+  transition:.25s;
+}
+
+.header-nav a:hover{
+  background:#e8f5e9;
+  color:#2e7d32;
+}
+
+.header-nav a.active{
+  background:#2e7d32;
+  color:#fff;
+}
+
+/* ESPACE POUR LE HEADER FIXE */
+body{
+  padding-top:80px;
+}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  .header-nav{
+    display:none;
+  }
+}
 </style>
 </head>
 <body>
 
 <header class="topbar">
+
+   <!-- LOGO -->
+    <div class="logo-box">
+      <img src="assets/img/logo.jpg" alt="MANG - Marché Agricole Nouvelle Génération">
+      <span class="logo-text">MANG</span>
+    </div>
+ 
 <div id="userHeader">
    <span id="userEmail"></span>
 </div>
