@@ -1,72 +1,423 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Marché Agricole en Ligne</title>
 
-<title>Login or Signup – Sell Live</title>
-
-<meta name="description" content="Login or create an account on Sell Live to start buying and selling products online.">
-
-<meta name="robots" content="index, follow">
-
-<link rel="canonical" href="https://fiacre06.github.io/Sell-live/login.html">
-
-<!-- Open Graph -->
-<meta property="og:title" content="Login – Sell Live">
-<meta property="og:description" content="Access your Sell Live account to buy and sell products online.">
-<meta property="og:url" content="https://fiacre06.github.io/Sell-live/login.html">
-<meta property="og:type" content="website">
 <style>
-/* 🔒 STYLES INCHANGÉS */
-body, html { margin:0; padding:0; font-family: Arial, sans-serif; background:#f2f7f4; }
-header { background:#2e8b57; color:white; text-align:center; padding:40px 20px 20px 20px; }
-header h1 { margin:0; font-size:2.2em; }
-.header-buttons { margin-top:20px; display:flex; justify-content:center; gap:15px; }
-.header-buttons button { padding:12px 25px; border:none; border-radius:6px; font-weight:bold; cursor:pointer; transition:0.2s; font-size:1em; }
-.header-buttons .login-btn { background:#fff; color:#2e8b57; }
-.header-buttons .login-btn:hover { background:#d9f0e0; }
-.header-buttons .signup-btn { background:#27ae60; color:#fff; }
-.header-buttons .signup-btn:hover { background:#2ecc71; }
+:root{
+  --green:#1f8a5b;
+  --green-dark:#166b45;
+  --bg:#f4faf6;
+  --dark:#102a23;
+  --gray:#5f6f68;
+  --radius:22px;
+  --shadow:0 18px 45px rgba(0,0,0,.15);
+}
 
-main { max-width:900px; margin:50px auto; padding:0 20px; text-align:center; }
-main h2 { font-size:2em; color:#2e8b57; margin-bottom:20px; }
-main p { font-size:1.1em; line-height:1.6; color:#333; }
+/* ================= RESET ================= */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--dark);
+  overflow-x: hidden;
+}
 
-.sidebar { position:fixed; top:0; right:-400px; width:350px; height:100%; background:white; box-shadow:-4px 0 12px rgba(0,0,0,0.2); padding:30px 20px; transition:right 0.3s ease; z-index:2000; overflow-y:auto; }
-.sidebar.open { right:0; }
-.sidebar .close-btn { position:absolute; top:15px; right:15px; font-size:1.5em; background:none; border:none; cursor:pointer; color:#555; }
-.sidebar h3 { text-align:center; color:#2e8b57; margin-bottom:20px; }
-.password-wrapper { position:relative; }
-.password-wrapper input { width:100%; padding:10px; margin:8px 0; border-radius:6px; border:1px solid #ccc; font-size:1em; padding-right:40px; }
-.password-wrapper .toggle-pass { position:absolute; top:50%; right:10px; transform:translateY(-50%); cursor:pointer; font-size:1.1em; color:#555; }
-.sidebar input:not(.toggle-pass) { width:95%; max-width:300px; padding:10px; margin:15px 25px; display:block; border-radius:6px; border:1px solid #ccc; font-size:1em; }
-.sidebar button.action-btn { width:90%; padding:10px; background:#2e8b57; border:none; color:white; font-weight:bold; border-radius:6px; cursor:pointer; margin:15px 25px; transition:0.2s; }
-.sidebar button.action-btn:hover { background:#27ae60; }
-.sidebar .error { color:red; font-size:0.9em; margin-top:10px; text-align:center; }
+/* ================= SPLASH SCREEN ================= */
+#splash {
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(135deg, #f0fff5, #d9f0e5);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  animation: fadeOut 1s ease forwards;
+  animation-delay: 3s;
+  transition: opacity 0.5s ease;
+}
+
+#splash img {
+  width: 130px;
+  margin-bottom: 20px;
+  animation: logoPulse 1.5s ease-in-out infinite;
+  transform-origin: center;
+  filter: drop-shadow(0 6px 12px rgba(0,0,0,0.15));
+}
+
+#splash span {
+  font-size: 2em;
+  font-weight: 900;
+  letter-spacing: 1.5px;
+  color: #166b45;
+  opacity: 0;
+  animation: textFadeIn 1s ease forwards;
+  animation-delay: 0.5s;
+  text-align: center;
+}
+
+/* ================= ANIMATIONS ================= */
+@keyframes logoPulse {
+  0% { transform: scale(1) rotate(0deg); }
+  25% { transform: scale(1.05) rotate(-2deg); }
+  50% { transform: scale(1.08) rotate(0deg); }
+  75% { transform: scale(1.05) rotate(2deg); }
+  100% { transform: scale(1) rotate(0deg); }
+}
+
+@keyframes textFadeIn {
+  0% { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeOut {
+  0% { opacity: 1; visibility: visible; }
+  100% { opacity: 0; visibility: hidden; }
+}
+
+/* ================= HEADER ================= */
+header{
+  background:
+    linear-gradient(rgba(16,42,35,.8),rgba(16,42,35,.9)),
+    url("https://images.unsplash.com/photo-1606788075765-42f7bba2d9d1?auto=format&fit=crop&w=1600&q=80");
+  background-size:cover;
+  background-position:center;
+  color:#fff;
+  padding:90px 20px 110px;
+}
+
+.hero{
+  max-width:1100px;
+  margin:auto;
+  text-align:center;
+}
+
+.hero h1{
+  font-size:2.8rem;
+  font-weight:900;
+  margin-bottom:22px;
+}
+
+.hero p{
+  font-size:1.15em;
+  max-width:760px;
+  margin:0 auto 36px;
+  line-height:1.7;
+}
+
+/* ACTIONS (IMPORTANT) */
+.hero-actions{
+  display:flex;
+  justify-content:center;
+  gap:16px;
+  flex-wrap:wrap;
+}
+
+.hero-actions button{
+  padding:16px 46px;
+  border-radius:999px;
+  border:none;
+  font-weight:900;
+  font-size:1.05em;
+  cursor:pointer;
+  box-shadow:var(--shadow);
+}
+
+#loginBtn{
+  background:#fff;
+  color:var(--green-dark);
+}
+
+#signupBtn{
+  background:linear-gradient(135deg,var(--green),var(--green-dark));
+  color:#fff;
+}
+
+/* TRUST */
+.trust{
+  margin-top:40px;
+  display:flex;
+  justify-content:center;
+  gap:18px;
+  flex-wrap:wrap;
+}
+
+.trust span{
+  background:rgba(255,255,255,.15);
+  padding:12px 20px;
+  border-radius:999px;
+  font-weight:600;
+}
+
+/* ================= MAIN ================= */
+main{
+  max-width:1200px;
+  margin:100px auto;
+  padding:0 20px;
+}
+
+/* ================= SECTION TITLES ================= */
+section{
+  margin-bottom:110px;
+}
+
+section h2{
+  font-size:2.4em;
+  font-weight:900;
+  text-align:center;
+  margin-bottom:18px;
+  line-height:1.25;
+  color:var(--dark);
+}
+
+.subtitle{
+  text-align:center;
+  color:var(--gray);
+  max-width:820px;
+  margin:0 auto 65px;
+  line-height:1.8;
+  font-size:1.08em;
+}
+
+/* ================= FEATURES GRID ================= */
+.features{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:32px;
+}
+
+/* ================= FEATURE CARD ================= */
+.feature{
+  background:#ffffff;
+  padding:34px 30px;
+  border-radius:var(--radius);
+  box-shadow:
+    0 12px 30px rgba(0,0,0,.08),
+    inset 0 0 0 1px rgba(0,0,0,.03);
+  transition:all .3s ease;
+  position:relative;
+  overflow:hidden;
+}
+
+/* Subtle top accent */
+.feature::before{
+  content:"";
+  position:absolute;
+  top:0;
+  left:0;
+  width:100%;
+  height:4px;
+  background:linear-gradient(90deg,var(--green),var(--green-dark));
+}
+
+/* Hover effect */
+.feature:hover{
+  transform:translateY(-10px);
+  box-shadow:0 22px 55px rgba(0,0,0,.15);
+}
+
+/* ================= FEATURE CONTENT ================= */
+.feature h3{
+  font-size:1.25em;
+  font-weight:800;
+  margin-bottom:14px;
+  color:var(--green-dark);
+}
+
+.feature p{
+  font-size:.98em;
+  line-height:1.75;
+  color:var(--gray);
+}
+
+/* ================= ICON EMPHASIS ================= */
+.feature h3::first-letter{
+  font-size:1.4em;
+}
+
+/* ================= MOBILE ================= */
+@media(max-width:768px){
+  section h2{
+    font-size:2em;
+  }
+
+  .subtitle{
+    font-size:1em;
+    margin-bottom:45px;
+  }
+
+  .feature{
+    padding:28px 24px;
+  }
+}
+/* ================= SIDEBAR (CRUCIAL) ================= */
+.sidebar{
+  position:fixed;
+  top:0;
+  right:-380px;
+  width:360px;
+  height:100%;
+  background:#fff;
+  box-shadow:-20px 0 50px rgba(0,0,0,.3);
+  padding:30px 24px;
+  transition:.35s;
+  z-index:5000;
+}
+
+.sidebar.open{right:0}
+
+.close-btn{
+  position:absolute;
+  top:14px;
+  right:16px;
+  border:none;
+  background:none;
+  font-size:1.4em;
+  cursor:pointer;
+}
+
+.sidebar h3{
+  text-align:center;
+  color:var(--green-dark);
+  margin-bottom:22px;
+}
+
+.sidebar input{
+  width:100%;
+  padding:14px;
+  margin:10px 0;
+  border-radius:14px;
+  border:1px solid #d1d5db;
+}
+
+.password-wrapper{position:relative}
+
+.toggle-pass{
+  position:absolute;
+  right:14px;
+  top:50%;
+  transform:translateY(-50%);
+  cursor:pointer;
+}
+
+.action-btn{
+  width:100%;
+  padding:14px;
+  margin-top:18px;
+  border:none;
+  border-radius:999px;
+  background:linear-gradient(135deg,var(--green),var(--green-dark));
+  color:#fff;
+  font-weight:900;
+  cursor:pointer;
+}
+
+.error{
+  color:#dc2626;
+  text-align:center;
+  margin-top:10px;
+}
 </style>
 </head>
 
 <body>
+
+<!-- SPLASH SCREEN -->
+<div id="splash">
+  <!-- Remplace "logo.png" par le nom exact de ton fichier uploadé dans assets/img/ -->
+  <img src="assets/img/logo.png" alt="Logo Marché Agricole" style="width:120px;">
+  <span style="font-size:1.4em; font-weight:800; letter-spacing:.5px; color:#166b45;">
+    Le marché agricole nouvelle génération
+
+  </span>
+</div>
+
 <header>
-  <h1>Marché-Agricole</h1>
-  <div class="header-buttons">
-    <button class="login-btn" id="loginBtn">Se connecter</button>
-    <button class="signup-btn" id="signupBtn">S'inscrire</button>
+  <div class="hero">
+    <h1>Le marché agricole nouvelle génération</h1>
+
+    <p>
+      Vendez, achetez et échangez directement avec les acteurs agricoles.
+      Une plateforme simple, humaine et efficace.
+    </p>
+
+    <div class="hero-actions">
+      <button id="loginBtn">Se connecter</button>
+      <button id="signupBtn">S'inscrire</button>
+    </div>
+
+    <div class="trust">
+      <span>🌱 100% Agricole</span>
+      <span>💬 Messagerie directe</span>
+      <span>🏪 Boutiques visibles</span>
+      <span>🚚 Livraison flexible</span>
+    </div>
   </div>
 </header>
 
 <main>
-  <h2>Bienvenue sur Marché-Agricole</h2>
-  <p>
-     Marché-Agricole est la plateforme incontournable pour les acteurs du secteur agricole.
-Découvrez, achetez et vendez des produits agricoles de qualité en toute sécurité,
-connectez-vous directement avec des producteurs et fournisseurs locaux,
-et optimisez vos échanges pour développer votre activité rapidement.
-    
+<section>
+  <h2>Une plateforme pensée pour l’agriculture réelle</h2>
+
+  <p class="subtitle">
+    Marché Agricole en Ligne est une plateforme numérique conçue pour
+    connecter directement tous les acteurs du monde agricole :
+    producteurs, vendeurs, prestataires de services et acheteurs,
+    sans intermédiaires inutiles.
   </p>
+
+  <div class="features">
+
+    <div class="feature">
+      <h3>📦 Publiez vos produits et services</h3>
+      <p>
+        Vendez des produits agricoles (fruits, légumes, céréales, élevage)
+        ou proposez des services agricoles (labour, transport, traitement,
+        location de matériel).  
+        La publication est simple, rapide et accessible à tous.
+      </p>
+    </div>
+
+    <div class="feature">
+      <h3>💬 Discutez directement</h3>
+      <p>
+        Grâce à la messagerie instantanée intégrée, échangez librement
+        avec acheteurs et vendeurs avant toute transaction.
+        Posez vos questions, négociez et construisez une relation de confiance.
+      </p>
+    </div>
+
+    <div class="feature">
+      <h3>🏪 Boutiques et profils visibles</h3>
+      <p>
+        Chaque vendeur dispose d’une boutique ou d’un profil public,
+        visible par tous.  
+        Cela permet aux acheteurs d’identifier facilement les vendeurs,
+        leurs produits et leur sérieux.
+      </p>
+    </div>
+
+    <div class="feature">
+      <h3>📈 Développez votre activité</h3>
+      <p>
+        Donnez plus de visibilité à votre activité agricole,
+        touchez de nouveaux clients et augmentez vos ventes
+        grâce à une plateforme accessible partout, sur mobile comme sur ordinateur.
+      </p>
+    </div>
+
+  </div>
+</section>
 </main>
 
+<!-- SIDEBAR (TON JS S’ACCROCHE ICI) -->
 <div class="sidebar" id="sidebar">
   <button class="close-btn" id="closeSidebar">✖</button>
   <h3 id="formTitle">Connexion</h3>
@@ -76,15 +427,20 @@ et optimisez vos échanges pour développer votre activité rapidement.
 
   <div class="password-wrapper">
     <input type="password" id="password" placeholder="Mot de passe">
-    <span class="toggle-pass" id="togglePass">&#128065;</span>
+    <span class="toggle-pass" id="togglePass">👁</span>
   </div>
 
   <button id="actionBtn" class="action-btn">Se connecter</button>
-  <p id="forgotPassword" style="text-align:center;color:#2e8b57;cursor:pointer;font-size:0.9em;margin-top:10px;">
-  Mot de passe oublié ?
+  <p id="forgotPassword" style="text-align:center;color:#2e8b57;cursor:pointer;margin-top:10px;">
+    Mot de passe oublié ?
   </p>
+
   <div class="error" id="errorMsg"></div>
 </div>
+
+<!-- 🔥 TON SCRIPT SUPABASE RESTE IDENTIQUE 🔥 -->
+
+
 <script type="module">
 import { supabase } from './supabase.js';
 
