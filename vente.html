@@ -150,7 +150,7 @@ header.topbar .top-actions button {
 /* ===== MODAL ===== */
 #shopFullModal {
   position: fixed;
-  top: 0; left: 0;
+  top: 0; left: -12px;
   width: 100%; height: 100%;
   background: rgba(0,0,0,0.5);
   display: none;
@@ -666,7 +666,179 @@ header.topbar .top-actions button {
  padding: 0px;
 }
 
-  
+  /* ============================= */
+/* 🛒 SECTION PRODUITS BOUTIQUE */
+/* ============================= */
+
+#shopProductsSection {
+  background: #f9fbfa;
+  padding: 16px;
+  border-radius: 16px;
+}
+
+/* ===== TITRE ===== */
+#shopProductsTitle {
+  font-size: 1.3rem;
+  margin-bottom: 12px;
+  color: #1b5e20;
+  font-weight: 700;
+}
+
+/* ============================= */
+/* ➕ FORMULAIRE AJOUT PRODUIT */
+/* ============================= */
+
+.cardForm {
+  background: #ffffff;
+  padding: 16px;
+  border-radius: 14px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+/* INPUTS & SELECT */
+.cardForm input,
+.cardForm textarea,
+.cardForm select {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1.5px solid #e0e0e0;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.cardForm textarea {
+  resize: none;
+}
+
+/* FOCUS */
+.cardForm input:focus,
+.cardForm textarea:focus,
+.cardForm select:focus {
+  border-color: #2e7d32;
+  box-shadow: 0 0 0 2px rgba(46, 125, 50, 0.15);
+}
+
+/* FILE INPUT */
+.cardForm input[type="file"] {
+  padding: 8px;
+  background: #f5f5f5;
+}
+
+/* ============================= */
+/* ➕ BOUTON AJOUT PRODUIT */
+/* ============================= */
+
+.addBtn {
+  background: linear-gradient(135deg, #2e7d32, #43a047);
+  color: #fff;
+  padding: 12px;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.addBtn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(46, 125, 50, 0.35);
+}
+
+.addBtn:active {
+  transform: scale(0.98);
+}
+
+/* ============================= */
+/* 📋 LISTE DES PRODUITS */
+/* ============================= */
+
+.productsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 14px;
+}
+
+/* ===== CARTE PRODUIT ===== */
+.productCard {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 12px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.productCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.1);
+}
+
+/* IMAGE PRODUIT */
+.productCard img {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+/* NOM */
+.productCard h4 {
+  font-size: 1rem;
+  margin: 6px 0 2px;
+  color: #263238;
+}
+
+/* DESCRIPTION */
+.productCard p {
+  font-size: 0.85rem;
+  color: #616161;
+}
+
+/* PRIX */
+.productCard strong {
+  margin-top: 4px;
+  color: #1b5e20;
+  font-size: 1rem;
+}
+
+/* BOUTON SUPPRESSION */
+.deleteProductBtn {
+  border: none;
+  border-radius: 10px;
+  padding: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 6px;
+  transition: opacity 0.2s ease;
+}
+
+.deleteProductBtn:hover {
+  opacity: 0.85;
+}
+
+/* ============================= */
+/* 📱 RESPONSIVE */
+/* ============================= */
+
+@media (max-width: 480px) {
+  #shopProductsTitle {
+    font-size: 1.15rem;
+  }
+
+  .productCard img {
+    height: 120px;
+  }
+}
 </style>
 </head>
 <body>
@@ -800,22 +972,70 @@ header.topbar .top-actions button {
   </button>
 </div>
 
-    <!-- Ajouter produits à une boutique -->
-    <div id="shopProductsSection" style="display:none; margin-top:20px;">
-      <h3 id="shopProductsTitle">Boutique</h3>
-      <div id="addProductForm">
-        <input id="productName" placeholder="Nom du produit">
-        <textarea id="productDesc" placeholder="Description"></textarea>
-        <input id="productPrice" placeholder="Prix en FCFA" type="number">
-        <input type="file" id="productImage" accept="image/*">
-        <button id="submitProductBtn" class="addBtn">Ajouter le produit</button>
-      </div>
-      <div id="productsContainer"></div>
-    </div>
+    <!-- ============================= -->
+<!-- 🛒 PRODUITS DE LA BOUTIQUE -->
+<!-- ============================= -->
+<div id="shopProductsSection" style="display:none; margin-top:20px;">
+
+  <h3 id="shopProductsTitle">Produits de la boutique</h3>
+
+  <!-- ➕ FORMULAIRE AJOUT PRODUIT -->
+  <div id="addProductForm" class="cardForm">
+
+    <input
+      type="text"
+      id="productName"
+      placeholder="Nom du produit"
+      required
+    >
+
+    <textarea
+      id="productDesc"
+      placeholder="Description du produit"
+      rows="3"
+    ></textarea>
+
+    <input
+      type="number"
+      id="productPrice"
+      placeholder="Prix en FCFA"
+      min="0"
+      required
+    >
+
+    <!-- 📦 DISPONIBILITÉ -->
+    <select id="productAvailability">
+      <option value="now">✅ Disponible maintenant</option>
+      <option value="1_week">⏳ Dans 1 semaine</option>
+      <option value="2_weeks">⏳ Dans 2 semaines</option>
+      <option value="1_month">📅 Dans 1 mois</option>
+      <option value="2_months">📅 Dans 2 mois</option>
+      <option value="3_months">📅 Dans 3 mois</option>
+      <option value="6_months">📅 Dans 6 mois</option>
+      <option value="1_year">📆 Dans 1 an</option>
+    </select>
+
+    <!-- 🖼️ IMAGE PRODUIT -->
+    <input
+      type="file"
+      id="productImage"
+      accept="image/*"
+    >
+
+    <button
+      id="submitProductBtn"
+      class="addBtn"
+      type="button"
+    >
+      ➕ Ajouter le produit
+    </button>
 
   </div>
-</div>
 
+  <!-- 📋 LISTE DES PRODUITS -->
+  <div id="productsContainer" class="productsGrid"></div>
+
+</div>
 <script type="module">
 import { supabase } from './supabase.js';
 
@@ -1546,7 +1766,6 @@ async function openShop(shop){
   await loadShopProducts(shop.id);
 }
 
-
 // ===== CHARGER PRODUITS BOUTIQUE =====
 async function loadShopProducts(shopId) {
   const productsContainer = document.getElementById("productsContainer");
@@ -1572,7 +1791,8 @@ async function loadShopProducts(shopId) {
 
   if (error) {
     console.error("Erreur chargement produits :", error);
-    productsContainer.innerHTML = "<p style='color:red;'>Erreur chargement produits</p>";
+    productsContainer.innerHTML =
+      "<p style='color:red;'>Erreur chargement produits</p>";
     return;
   }
 
@@ -1586,9 +1806,18 @@ async function loadShopProducts(shopId) {
     div.className = "productCard";
 
     div.innerHTML = `
-      ${product.image_url ? `<img src="${product.image_url}" alt="${product.name}">` : ""}
+      ${product.image_url ? `
+        <img src="${product.image_url}" alt="${product.name}">
+      ` : ""}
+
       <h4>${product.name}</h4>
       <p>${product.description || ""}</p>
+
+      <!-- ✅ DISPONIBILITÉ -->
+      <p style="font-weight:600;color:#2e7d32;">
+        ${formatAvailability(product.availability)}
+      </p>
+
       <strong>${product.price} FCFA</strong>
 
       <button class="deleteProductBtn"
@@ -1601,7 +1830,6 @@ async function loadShopProducts(shopId) {
     div.querySelector(".deleteProductBtn").onclick = async () => {
       if (!confirm(`⚠️ Supprimer le produit "${product.name}" ?`)) return;
 
-      // 1️⃣ Supprimer le produit
       const { error: deleteError } = await supabase
         .from("shop_products")
         .delete()
@@ -1613,7 +1841,6 @@ async function loadShopProducts(shopId) {
         return;
       }
 
-      // 2️⃣ Notification suppression
       await supabase.from("notif_market").insert({
         user_id: currentUser.id,
         actor_id: currentUser.id,
@@ -1631,6 +1858,20 @@ async function loadShopProducts(shopId) {
   }
 }
 
+// ===== FORMAT DISPONIBILITÉ =====
+function formatAvailability(value) {
+  const map = {
+    now: "✅ Disponible",
+    "1_week": "⏳ Disponible dans 1 semaine",
+    "2_weeks": "⏳ Disponible dans 2 semaines",
+    "1_month": "📅 Disponible dans 1 mois",
+    "2_months": "📅 Disponible dans 2 mois",
+    "3_months": "📅 Disponible dans 3 mois",
+    "6_months": "📅 Disponible dans 6 mois",
+    "1_year": "📆 Disponible dans 1 an"
+  };
+  return map[value] || "⏳ Indisponible";
+}
 
 // ===== AJOUT PRODUIT BOUTIQUE =====
 submitProductBtn.onclick = async () => {
@@ -1640,9 +1881,13 @@ submitProductBtn.onclick = async () => {
   }
 
   const name = productName.value.trim();
-  const desc = productDesc.value.trim();
+  const description = productDesc.value.trim();
   const price = Number(productPrice.value);
   const file = productImage.files[0];
+
+  // ⚠️ RÉCUPÉRER LA DISPONIBILITÉ
+  const availabilitySelect = document.getElementById("productAvailability");
+  const availability = availabilitySelect ? availabilitySelect.value : "now";
 
   if (!name || !price) {
     alert("Nom et prix obligatoires");
@@ -1693,32 +1938,30 @@ submitProductBtn.onclick = async () => {
         .getPublicUrl(fileName).data.publicUrl;
     }
 
-    // 🔹 Insertion produit
-    const { data: newProduct, error } = await supabase
-      .from("shop_products")
-      .insert({
-        shop_id: currentShop.id,
-        name,
-        description: desc,
-        price,
-        image_url: imageUrl
-      })
-      .select()
-      .single();
+    // 🔹 INSERT PRODUIT
+    const { error } = await supabase.from("shop_products").insert({
+      shop_id: currentShop.id,
+      name,
+      description,
+      price,
+      image_url: imageUrl,
+      availability
+    });
 
     if (error) {
-      console.error("Erreur ajout produit :", error);
-      alert("Impossible d’ajouter le produit");
+      console.error("Erreur Supabase :", error);
+      alert("❌ Erreur lors de l'ajout du produit");
       return;
     }
 
-    // 🔔 Notification ajout produit
+    alert("✅ Produit ajouté avec succès");
+
     await supabase.from("notif_market").insert({
       user_id: currentUser.id,
       actor_id: currentUser.id,
       type: "product",
       title: "Nouveau produit",
-      message: `Le produit "${newProduct.name}" a été ajouté dans la boutique "${shopName}"`,
+      message: `Le produit "${name}" a été ajouté dans la boutique "${shopName}"`,
       link: `/shop?id=${currentShop.id}`,
       is_read: false
     });
@@ -1728,6 +1971,7 @@ submitProductBtn.onclick = async () => {
     productDesc.value = "";
     productPrice.value = "";
     productImage.value = "";
+    if (availabilitySelect) availabilitySelect.value = "now";
 
     await loadShopProducts(currentShop.id);
 
@@ -1736,7 +1980,7 @@ submitProductBtn.onclick = async () => {
     alert("Erreur inattendue lors de l'ajout");
   }
 };
-  
+
 // ===== INIT =====
 await loadCurrentUser();
 </script>
