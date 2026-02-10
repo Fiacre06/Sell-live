@@ -735,7 +735,23 @@ header.topbar .top-actions button {
  padding: 0px;
 }
 
+.productDesc {
+  font-size: 0.85rem;
+  color: #555;
+  margin: 4px 0;
+}
 
+.productAvailability {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #2e7d32;
+  margin: 4px 0;
+}
+
+.productPrice {
+  margin-top: 6px;
+  font-size: 0.95rem;
+   }
 
 </style>
 </head>
@@ -2473,7 +2489,21 @@ async function openShop(shop) {
     } else {
       whatsappDiv.innerHTML = "";
     }
+function formatAvailability(value) {
+  const map = {
+    now: "✅ Disponible maintenant",
+    "1_week": "⏳ Disponible dans 1 semaine",
+    "2_weeks": "⏳ Disponible dans 2 semaines",
+    "1_month": "📅 Disponible dans 1 mois",
+    "2_months": "📅 Disponible dans 2 mois",
+    "3_months": "📅 Disponible dans 3 mois",
+    "6_months": "📅 Disponible dans 6 mois",
+    "1_year": "📆 Disponible dans 1 an"
+  };
+  return map[value] || "⏳ Indisponible";
+}
 
+   
     // ================= CHARGER PRODUITS =================
     let query = supabase
       .from('shop_products')
@@ -2510,16 +2540,36 @@ async function openShop(shop) {
         "<p>Aucun produit disponible</p>";
     } else {
       products.forEach(p => {
-        const div = document.createElement("div");
-        div.className = "productCard";
-        div.innerHTML = `
-          <img src="${p.image_url || 'https://via.placeholder.com/150'}" alt="${p.name || 'Produit'}">
-          <h5>${p.name || 'Produit'}</h5>
-          <p>${p.price || '-'} FCFA</p>
-          <button class="favoriteProductBtn" data-id="${p.id}">🤍</button>
-        `;
-        shopProductsScroll.appendChild(div);
-      });
+  const div = document.createElement("div");
+  div.className = "productCard";
+
+  div.innerHTML = `
+    <img src="${p.image_url || 'https://via.placeholder.com/150'}"
+         alt="${p.name || 'Produit'}">
+
+    <h5>${p.name || 'Produit'}</h5>
+
+    <!-- 📝 DESCRIPTION -->
+    ${p.description ? `<p class="productDesc">${p.description}</p>` : ""}
+
+    <!-- 📦 DISPONIBILITÉ -->
+    <p class="productAvailability">
+      ${formatAvailability(p.availability)}
+    </p>
+
+    <!-- 💰 PRIX -->
+    <p class="productPrice">
+      <strong>${p.price || '-'} FCFA</strong>
+    </p>
+
+    <!-- ❤️ FAVORIS -->
+    <button class="favoriteProductBtn" data-id="${p.id}">
+      🤍
+    </button>
+  `;
+
+  shopProductsScroll.appendChild(div);
+});
 
       // 🔹 Initialiser favoris produits
       document.querySelectorAll(".favoriteProductBtn").forEach(btn => {
