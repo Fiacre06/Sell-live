@@ -2,45 +2,18 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
   <url>
-    <loc>https://fiacre06.github.io/Sell-live/</loc>
-    <lastmod>2026-01-28</lastmod>
-    <changefreq>daily</changefreq>
+    <loc>https://tonpseudo.github.io/nom-du-repo/</loc>
     <priority>1.0</priority>
   </url>
 
   <url>
-    <loc>https://fiacre06.github.io/Sell-live/index.html</loc>
-    <lastmod>2026-01-28</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>1.0</priority>
-  </url>
-
-  <url>
-    <loc>https://fiacre06.github.io/Sell-live/vente.html</loc>
-    <lastmod>2026-01-28</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.9</priority>
-  </url>
-
-  <url>
-    <loc>https://fiacre06.github.io/Sell-live/shop.html</loc>
-    <lastmod>2026-01-28</lastmod>
-    <changefreq>weekly</changefreq>
+    <loc>https://tonpseudo.github.io/nom-du-repo/vente.html</loc>
     <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>https://fiacre06.github.io/Sell-live/login.html</loc>
-    <lastmod>2026-01-28</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-
-  <url>
-    <loc>https://fiacre06.github.io/Sell-live/reset-password.html</loc>
-    <lastmod>2026-01-28</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.4</priority>
+    <loc>https://tonpseudo.github.io/nom-du-repo/achat.html</loc>
+    <priority>0.8</priority>
   </url>
 
 </urlset>
