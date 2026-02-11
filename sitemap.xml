@@ -2,18 +2,16 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
   <url>
-    <loc>https://tonpseudo.github.io/nom-du-repo/</loc>
+    <loc>https://fiacre06.github.io/Sell-live/</loc>
     <priority>1.0</priority>
   </url>
 
   <url>
-    <loc>https://tonpseudo.github.io/nom-du-repo/vente.html</loc>
-    <priority>0.8</priority>
+    <loc>https://fiacre06.github.io/Sell-live/achat.html</loc>
   </url>
 
   <url>
-    <loc>https://tonpseudo.github.io/nom-du-repo/achat.html</loc>
-    <priority>0.8</priority>
+    <loc>https://fiacre06.github.io/Sell-live/vente.html</loc>
   </url>
 
 </urlset>
