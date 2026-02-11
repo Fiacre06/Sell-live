@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://tonpseudo.github.io/nom-du-repo/sitemap.xml
+Sitemap:https://fiacre06.github.io/Sell-live/sitemap.xml
